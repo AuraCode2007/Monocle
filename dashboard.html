@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailSync-AI | Automatic Block Planning Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800<&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .dept-eng { background: #f97316; }
+        .dept-trd { background: #eab308; }
+        .dept-st { background: #3b82f6; }
+        .dept-joint { background: #a855f7; }
+    </style>
+</head>
+<body class="p-6 min-h-screen">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-amber-500 rounded-xl text-slate-900 font-bold text-xl shadow-lg shadow-amber-500/20">IR</div>
+            <div>
+                <h1 class="text-2l font-black tracking-tight text-white flex items-center gap-2">
+                    RailSync-AI <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">CRIS-COMPLIANT</span>
+                </h1>
+                <p class="text-xs text-slate-400">Ministry of Railways -- Intelligent Block Planning & Asset Availability</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">Corridor: NDLS - CMB (440 KM)</span>
+            <button id="optimizeBtn" onclick="triggerOptimization()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-2">
+                <span>Run AI Optimizer</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md-grid-cols-4 gap-4 mb-6">
+        <div class="glass-panel p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 font-medium">Schedule Conflicts</div>
+            <div id="kpiConflicts" class="text-3l font-black text-rose-400 mt-1">10 Detected</div>
+            <div class="text-xs text-rose-500/80 mt-1">Clashes with Rajdhani/Vande Bharat</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 font-medium">Train Delay Reduction</div>
+            <div id="kpiDelay" class="text-3l font-black text-emerald-400 mt-1">+450 Mins</div>
+            <div class="text-xs text-emerald-400/80 mt-1">7.5 hrs operational time saved</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 font-medium">Joint Synced Blocks</div>
+            <div id="kpiJoint" class="text-3l font-black text-purple-400 mt-1">4 Formed</div>
+            <div class="text-xs text-purple-400/80 mt-1">Multi-dept co-located closures</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl">
+            <div class="text-xs text-slate-400 font-medium">Asset Availability Boost</div>
+            <div id="kpiAvailability" class="text-3l font-black text-amber-400 mt-1">+46.4%</div>
+            <div class="text-xs text-amber-400/80 mt-1">Net track capacity gained</div>
+        </div>
+    </div>
+
+    <!-- Main Gantt & Simulation Split -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- Left: Score -->
+        <div class="glass-panel p-5 rounded-2xl flex flex-col">
+            <h2 class="text-sm font-bold text-slate-200 mb-4 flex items-center justify-between">
+                <span>Schedule Safety Score</span>
+                <span id="statusBadge" class="text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30">MANUAL UNCOORDINATED</span>
+            </h2>
+            <div class="space-y-4 text-xs">
+                <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                    <div class="flex justify-between font-semibold mb-1 text-slate-300">
+                        <span>Manual IDMS Schedule</span>
+                        <span class="text-rose-400">Score: 42/100</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div class="bg-rose-500 h-full" style="width: 42%"></div>
+                    </div>
+                    <p class="text-slate-400 mt-2 text-[11px]">Uncoordinated demands submitted by ENG, TRD & S&T causing 10 track collisions with scheduled passenger services.</p>
+                </div>
+
+                <div class="p-3 bg-slate-900/60 rounded-xl border border-emerald-500/30">
+                    <div class="flex justify-between font-semibold mb-1 text-slate-300">
+                        <span>RailSync-AI Coordinated</span>
+                        <span class="text-emerald-400">Score: 98/100</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div class="bg-emerald-500 h-full" style="width: 98%"></div>
+                    </div>
+                    <p class="text-slate-400 mt-2 text-[11px]">Guaranteed 100% collision-free, synchronized joint blocks with optimized night lull windows.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Department Key</h3>
+                <div class="flex flex-wrap gap-2 text-[11px]">
+                    <span class="px-2.5 py-1 rounded-lg bg-orange-500/20 text-orange-400 border border-orange-500/30">ENG (Track)</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">TRD (OHE)</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30">S&T (Signal)</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30">Joint Synced</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Gantt View -->
+        <div class="glass-panel p-5 rounded-2xl lg-col-span-2 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-bold text-slate-200">Corridor Gantt Schedule (24-Hour Map)</h2>
+                <div class="text-xs text-slate-400">00:00 to 24:00 Minutes</div>
+            </div>
+            <div id="ganttContainer" class="space-y-3 overflow-y-auto max-h-[360px] pr-2">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isOptimized = false;
+        const manualTasks = [
+            { id: "TASK_001", dept: "ENG", sec: "SEC_101 (GZB-ALJN)", start: "06:00", end: "09:00", startM: 360, dur: 180, desc: "Deep screening of ballast by BCM", clash: true },
+            { id: "TASK_002", dept: "TRD", sec: "SEC_101 (GZB-ALJN)", start: "08:00", end: "10:30", startM: 480, dur: 150, desc: "OHE contact wire wear replacement", clash: true },
+            { id: "TASK_003", dept: "S&T", sec: "SEC_103 (ALJN-TDL)", start: "10:00", end: "11:30", startM: 600, dur: 90, desc: "Point machine overhaul & testing", clash: true },
+            { id: "TASK_004", dept: "ENG", sec: "SEC_105 (TDL-ETW)", start: "14:00", end: "16:00", startM: 840, dur: 120, desc: "Turnout rail renewal & tamping", clash: false },
+            { id: "TASK_005", dept: "TRD", sec: "SEC_107 (ETW-CNB)", start: "16:00", end: "18:00", startM: 960, dur: 120, desc: "Cantilever assembly overhaul", clash: true }
+        ];
+        const optimizedTasks = [
+            { id: "TASK_001", dept: "ENG", sec: "SEC_101 (GZB-ALJN)", start: "01:00", end: "04:00", startM: 60, dur: 180, desc: "Deep screening of ballast by BCM", joint: true },
+            { id: "TASK_002", dept: "TFD", sec: "SEC_101 (GZB-ALJN)", start: "01:00", end: "03:30", startM: 60, dur: 150, desc: "OHE contact wire wear replacement", joint: true },
+            { id: "TASK_003", dept: "S&T", sec: "SEC_103 (ALJN-TDL)", start: "02:15", end: "03:45", startM: 135, dur: 90, desc: "Point machine overhaul & testing", joint: false },
+            { id: "TASK_004", dept: "ENG", sec: "SEC_105 (TDL-ETW)", start: "00:30", end: "02:30", startM: 30, dur: 120, desc: "Turnout rail renewal & tamping", joint: false },
+            { id: "TASK_005", dept: "TFD", sec: "SEC_107 (ETW-CNB)", start: "03:00", end: "05:00", startM: 180, dur: 120, desc: "Cantilever assembly overhaul", joint: false }
+        ];
+
+        function renderGantt(tasks, optimized) {
+            const container = document.getElementById('ganttContainer');
+            container.innerHTML = '';
+            tasks.forEach(t => {
+                const leftPct = (t.startM / 1440) * 100;
+                const widthPct = Math.max(8, (t.dur / 1440) * 100);
+                let colorClass = 'dept-eng';
+                if (t.dept === 'TRD') colorClass = 'dept-trd';
+                if (t.dept === 'S&T') colorClass = 'dept-st';
+                if (t.joint) colorClass = 'dept-joint';
+
+                const clashBadge = (!optimized && t.clash) 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-rose/80 text-rose-200 text-[10px] ml-2 animate-pulse font-bold">CLASH</span>' 
+                    : '<span class="px-1.5 py-0.5 rounded bg-emerald-900/80 text-emerald-300 text-[10px] ml-2 font-bold">CONFLICT-FREE</span>';
+
+                const row = document.createElement('div');
+                row.className = 'p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs';
+                row.innerHTML = `
+                    <div class="flex justify-between items-center mb-1.5">
+                        <div class="font-bold text-slate-200 flex items-center">
+                            <span>${t.id} -- Y${t.dept}] ${t.sec}</span>
+                            ${clashBadge}
+                        </div>
+                        <div class="text-slate-400 font-mono">${t.start} - ${t.end} (${t.dur}m)</div>
+                    </div>
+                    <div class="w-full bg-slate-800/80 h-4 rounded-lg
+relative overflow-hidden">
+                        <div class="absolute h-full rounded-lg ${colorClass} shadow-mg transition-all duration-700 flex items-center justify-center text-[10px] font-bold text-slate-900" 
+                             style="left: ${leftPct}%; width: ${widthPct}%">
+                             ${t.dept}
+                        </div>
+                    </div>
+                    <div class="text-[11px] text-slate-400 mt-1">${t.desc}</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+
+        function triggerOptimization() {
+            isOptimized = !isOptimized;
+            const btn = document.getElementById('optimizeBtn');
+            const statusBadge = document.getElementById('statusBadge');
+            const kpiConflicts = document.getElementById('kpiConflicts');
+            if (isOptimized) {
+                btn.innerHTML = '<span>Reset to Baseline</span>';
+                statusBadge.innerText = 'AI OPTIMIZED (OR-TOOLS CP-SAD)';
+                statusBadge.className = 'text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                kpiConflicts.innerText = '0 Remaining';
+                kpiConflicts.className = 'text-3l font-black text-emerald-400 mt-1';
+                renderGantt(optimizedTasks, true);
+            } else {
+                btn.innerHTML = '<span>Run AI Optimizer</span>';
+                statusBadge.innerText = 'MANUAL UNCOORDINATED';
+                statusBadge.className = 'text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30';
+                kpiConflicts.innerText = '10 Detected';
+                kpiConflicts.className = 'text-3l font-black text-rose-400 mt-1';
+                renderGantt(manualTasks, false);
+            }
+        }
+
+        renderGantt(manualTasks, false);
+    </script>
+</body>
+</html>
