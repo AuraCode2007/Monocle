@@ -1,6 +1,4 @@
-// Web Speech API Engine for Indian Railways Voice Commands
-// Native browser speech recognition & speech synthesis
-
+// Robust Web Speech API Engine with Graceful Error Handling & Fallback
 class VoiceAssistantEngine {
   constructor() {
     this.recognition = null;
@@ -14,26 +12,28 @@ class VoiceAssistantEngine {
 
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRec) {
-      this.recognition = new SpeechRec();
-      this.recognition.continuous = false;
-      this.recognition.interimResults = false;
-      this.recognition.lang = 'en-IN'; // Indian English
+      try {
+        this.recognition = new SpeechRec();
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+        this.recognition.lang = 'en-IN';
+      } catch (e) {
+        console.warn('Speech recognition init failed', e);
+      }
     }
   }
 
-  // Voice Synthesis (AI Audio Output)
   speak(text) {
     if (!this.synth) return;
     try {
-      this.synth.cancel(); // Cancel any ongoing speech
+      this.synth.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.05;
+      utterance.rate = 1.0;
       utterance.pitch = 1.0;
       
-      // Look for pleasant English voice
       const voices = this.synth.getVoices();
-      const engVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-GB') || v.lang.includes('en-US'));
-      if (engVoice) utterance.voice = engVoice;
+      const voice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-US') || v.lang.includes('en-GB'));
+      if (voice) utterance.voice = voice;
 
       this.synth.speak(utterance);
     } catch (e) {
@@ -41,25 +41,46 @@ class VoiceAssistantEngine {
     }
   }
 
-  // Start Voice Listening
   listen(onResult, onError) {
     if (!this.recognition) {
-      if (onError) onError('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
+      this.initRecognition();
+    }
+
+    if (!this.recognition) {
+      if (onError) onError('Speech recognition not supported on this browser. Try Chrome/Edge.');
       return;
     }
 
     try {
+      // Abort any existing instance to prevent "already started" error
+      if (this.isListening) {
+        try { this.recognition.abort(); } catch (e) {}
+      }
+
       this.isListening = true;
 
       this.recognition.onresult = (event) => {
         this.isListening = false;
-        const transcript = event.results[0][0].transcript;
-        if (onResult) onResult(transcript);
+        if (event.results && event.results[0] && event.results[0][0]) {
+          const transcript = event.results[0][0].transcript;
+          if (onResult) onResult(transcript);
+        }
       };
 
-      this.recognition.onerror = (err) => {
+      this.recognition.onerror = (event) => {
         this.isListening = false;
-        if (onError) onError(err.error || 'Voice recognition error');
+        const err = event.error;
+        console.warn('Speech recognition event error:', err);
+
+        if (err === 'no-speech') {
+          if (onError) onError('No speech detected. Please speak clearly into your mic.');
+        } else if (err === 'not-allowed' || err === 'service-not-allowed') {
+          if (onError) onError('Microphone access blocked. Please allow mic permissions in browser.');
+        } else if (err === 'network') {
+          if (onError) onError('Network connection error with speech recognition service.');
+        } else {
+          if (onError) onError(`Speech error: ${err}`);
+        }
       };
 
       this.recognition.onend = () => {
@@ -69,13 +90,15 @@ class VoiceAssistantEngine {
       this.recognition.start();
     } catch (e) {
       this.isListening = false;
-      if (onError) onError('Microphone access denied or busy.');
+      if (onError) onError('Unable to start microphone. Please try again.');
     }
   }
 
   stop() {
     if (this.recognition && this.isListening) {
-      this.recognition.stop();
+      try {
+        this.recognition.stop();
+      } catch (e) {}
       this.isListening = false;
     }
   }
