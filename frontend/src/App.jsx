@@ -4,13 +4,14 @@ import MetricCards from './components/MetricCards';
 import GanttView from './components/GanttView';
 import StringChart from './components/StringChart';
 import GisRailwayMap from './components/GisRailwayMap';
+import TrackHealthScorer from './components/TrackHealthScorer';
 import ConflictResolver from './components/ConflictResolver';
 import SimulationSandbox from './components/SimulationSandbox';
 import RollingCalendar from './components/RollingCalendar';
 import NationalGrid from './components/NationalGrid';
 import AiAssistantModal from './components/AiAssistantModal';
 import { useRailwayStore } from './store/useRailwayStore';
-import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays, Globe, Radio } from 'lucide-react';
+import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays, Globe, Radio, Cpu } from 'lucide-react';
 
 export default function App() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
@@ -47,6 +48,12 @@ export default function App() {
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'GIS_MAP' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
         >
           <Radio className="w-4 h-4 text-emerald-400 animate-pulse" /> 🗺️ Geospatial GIS Map
+        </button>
+        <button
+          onClick={() => setActiveTab('ML_SCORER')}
+          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'ML_SCORER' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-lg shadow-cyan-500/10' : 'text-slate-400 hover:text-slate-200')}
+        >
+          <Cpu className="w-4 h-4 text-cyan-400" /> 🤖 ML Derailment Risk Scorer
         </button>
         <button
           onClick={() => setActiveTab('GANTT')}
@@ -88,6 +95,7 @@ export default function App() {
 
       {/* Dynamic Tab Views */}
       {activeTab === 'GIS_MAP' && <GisRailwayMap />}
+      {activeTab === 'ML_SCORER' && <TrackHealthScorer />}
       {activeTab === 'GANTT' && <GanttView />}
       {activeTab === 'STRING_CHART' && <StringChart />}
       {activeTab === 'NATIONAL' && <NationalGrid />}
