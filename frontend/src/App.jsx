@@ -3,14 +3,14 @@ import Header from './components/Header';
 import MetricCards from './components/MetricCards';
 import GanttView from './components/GanttView';
 import StringChart from './components/StringChart';
-import CorridorMap from './components/CorridorMap';
+import GisRailwayMap from './components/GisRailwayMap';
 import ConflictResolver from './components/ConflictResolver';
 import SimulationSandbox from './components/SimulationSandbox';
 import RollingCalendar from './components/RollingCalendar';
 import NationalGrid from './components/NationalGrid';
 import AiAssistantModal from './components/AiAssistantModal';
 import { useRailwayStore } from './store/useRailwayStore';
-import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays, Globe } from 'lucide-react';
+import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays, Globe, Radio } from 'lucide-react';
 
 export default function App() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
@@ -43,10 +43,10 @@ export default function App() {
       {/* Navigation Tabs Bar */}
       <div className="flex items-center gap-2 mb-6 border-b border-slate-800 pb-2 overflow-x-auto text-xs font-semibold">
         <button
-          onClick={() => setActiveTab('NATIONAL')}
-          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'NATIONAL' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
+          onClick={() => setActiveTab('GIS_MAP')}
+          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'GIS_MAP' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
         >
-          <Globe className="w-4 h-4 text-emerald-400" /> 🇮🇳 Pan-India Zonal Grid
+          <Radio className="w-4 h-4 text-emerald-400 animate-pulse" /> 🗺️ Geospatial GIS Map
         </button>
         <button
           onClick={() => setActiveTab('GANTT')}
@@ -61,10 +61,10 @@ export default function App() {
           <Compass className="w-4 h-4 text-cyan-400" /> Time-Distance String Chart
         </button>
         <button
-          onClick={() => setActiveTab('MAP')}
-          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'MAP' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'text-slate-400 hover:text-slate-200')}
+          onClick={() => setActiveTab('NATIONAL')}
+          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'NATIONAL' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
         >
-          <MapPin className="w-4 h-4" /> Corridor Schematic
+          <Globe className="w-4 h-4 text-emerald-400" /> 🇮🇳 Pan-India Zonal Grid
         </button>
         <button
           onClick={() => setActiveTab('SIMULATION')}
@@ -87,10 +87,10 @@ export default function App() {
       </div>
 
       {/* Dynamic Tab Views */}
-      {activeTab === 'NATIONAL' && <NationalGrid />}
+      {activeTab === 'GIS_MAP' && <GisRailwayMap />}
       {activeTab === 'GANTT' && <GanttView />}
       {activeTab === 'STRING_CHART' && <StringChart />}
-      {activeTab === 'MAP' && <CorridorMap />}
+      {activeTab === 'NATIONAL' && <NationalGrid />}
       {activeTab === 'SIMULATION' && <SimulationSandbox />}
       {activeTab === 'PTW' && <ConflictResolver />}
       {activeTab === 'CALENDAR' && <RollingCalendar />}
