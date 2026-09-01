@@ -38,22 +38,22 @@ export default function GisRailwayMap() {
   const tasks = getTasks();
   const substations = getSubstations();
 
-  // 100% Free, High-Res, Watermark-Free Tile URLs
+  // 100% Free, High-Res, ZERO Watermark Tiles (Esri ArcGIS Official Public CDN)
   const TILE_LAYERS = {
     DARK: {
-      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO | Indian Railways GIS',
-      subdomains: 'abcd',
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ | Indian Railways GIS',
+      maxZoom: 16,
     },
     SATELLITE: {
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-      subdomains: 'abc',
+      maxZoom: 18,
     },
     STREET: {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution: '&copy; OpenStreetMap contributors | CRIS Indian Railways',
-      subdomains: 'abc',
+      maxZoom: 19,
     }
   };
 
@@ -105,7 +105,7 @@ export default function GisRailwayMap() {
                 mapStyle === 'DARK' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
-              🌌 Dark GIS
+              🌌 Dark GIS (Esri)
             </button>
             <button
               onClick={() => setMapStyle('SATELLITE')}
@@ -164,11 +164,11 @@ export default function GisRailwayMap() {
         >
           <ChangeMapView center={corridor.mapCenter} zoom={corridor.mapZoom} />
 
-          {/* Watermark-Free High Speed Tile Layer */}
+          {/* 100% Watermark-Free Official Tile Layer */}
           <TileLayer
             attribution={activeTile.attribution}
             url={activeTile.url}
-            subdomains={activeTile.subdomains}
+            maxZoom={activeTile.maxZoom}
           />
 
           {/* Master Glowing Track Polyline */}
