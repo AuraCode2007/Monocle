@@ -1,15 +1,11 @@
 import React from 'react';
+import { useRailwayStore } from '../store/useRailwayStore';
 import { MapPin, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
-export default function CorridorMap({ isOptimized }) {
-  const stations = [
-    { code: 'NDLS', name: 'New Delhi', km: '0 KM', hub: true },
-    { code: 'GZB', name: 'Ghaziabad', km: '26 KM', hub: false },
-    { code: 'ALJN', name: 'Aligarh Jn', km: '131 KM', hub: true },
-    { code: 'TDL', name: 'Tundla Jn', km: '209 KM', hub: true },
-    { code: 'ETW', name: 'Etawah Jn', km: '301 KM', hub: false },
-    { code: 'CNB', name: 'Kanpur Central', km: '440 KM', hub: true },
-  ];
+export default function CorridorMap() {
+  const { isOptimized, getCorridor } = useRailwayStore();
+  const corridor = getCorridor();
+  const stations = corridor.stations;
 
   return (
     <div className="glass-card p-5 rounded-2xl border border-slate-800 mb-6">
@@ -17,12 +13,12 @@ export default function CorridorMap({ isOptimized }) {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <MapPin className="w-4 h-4 text-emerald-400" />
-            Corridor Schematic Track Diagram
+            Corridor Schematic Track Diagram — {corridor.name}
           </h2>
-          <p className="text-xs text-slate-400">Live Track State - Quad Track High Density Route</p>
+          <p className="text-xs text-slate-400">{corridor.zone} | {corridor.division} ({corridor.distance_km} KM)</p>
         </div>
         <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300">
-          Speed: 130 km/h Automatic Block Signalling
+          Max Permissible Speed: {corridor.speed_kmh} km/h
         </span>
       </div>
 
@@ -37,7 +33,7 @@ export default function CorridorMap({ isOptimized }) {
                 {st.code}
               </div>
               <span className="text-xs font-semibold text-slate-200 mt-2">{st.name}</span>
-              <span className="text-[10px] text-slate-500 font-mono">{st.km}</span>
+              <span className="text-[10px] text-slate-500 font-mono">{st.km} KM</span>
             </div>
           ))}
         </div>
@@ -48,23 +44,23 @@ export default function CorridorMap({ isOptimized }) {
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
           <div>
             <div className="text-slate-400 text-[10px]">Active Caution Orders</div>
-            <div className="font-bold text-white">{isOptimized ? '0 Speed Restrictions' : '3 Speed Restrictions (30 km/h)'}</div>
+            <div className="font-bold text-white">{isOptimized ? '0 Speed Restrictions' : '2 Caution Orders (30 km/h)'}</div>
           </div>
         </div>
 
         <div className="p-3 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <AlertCircle className={'w-4 h-4 ' + (isOptimized ? 'text-emerald-400' : 'text-amber-400')} />
           <div>
-            <div className="text-slate-400 text-[10px]">Corridor Section Health</div>
-            <div className="font-bold text-white">{isOptimized ? '100% Optimal Throughput' : 'Heavy Intermittent Bottlenecks'}</div>
+            <div className="text-slate-400 text-[10px]">Track Health Index</div>
+            <div className="font-bold text-white">{isOptimized ? '100% Commercial Availability' : 'Intermittent Maintenance Clashes'}</div>
           </div>
         </div>
 
         <div className="p-3 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <ArrowRight className="w-4 h-4 text-purple-400" />
           <div>
-            <div className="text-slate-400 text-[10px]">Section Controllers on Duty</div>
-            <div className="font-bold text-white">Prayagraj Division (NCR)</div>
+            <div className="text-slate-400 text-[10px]">Operational Division</div>
+            <div className="font-bold text-white">{corridor.division}</div>
           </div>
         </div>
       </div>

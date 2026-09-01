@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import MetricCards from './components/MetricCards';
 import GanttView from './components/GanttView';
@@ -7,9 +7,10 @@ import CorridorMap from './components/CorridorMap';
 import ConflictResolver from './components/ConflictResolver';
 import SimulationSandbox from './components/SimulationSandbox';
 import RollingCalendar from './components/RollingCalendar';
+import NationalGrid from './components/NationalGrid';
 import AiAssistantModal from './components/AiAssistantModal';
 import { useRailwayStore } from './store/useRailwayStore';
-import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays } from 'lucide-react';
+import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays, Globe } from 'lucide-react';
 
 export default function App() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
@@ -20,25 +21,10 @@ export default function App() {
     activeRole,
     activeTab,
     isApiConnected,
-    tasks,
     toggleOptimize,
     setActiveRole,
     setActiveTab,
-    setIsApiConnected,
   } = useRailwayStore();
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/v1/corridor')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.tasks) {
-          setIsApiConnected(true);
-        }
-      })
-      .catch(() => {
-        setIsApiConnected(false);
-      });
-  }, [setIsApiConnected]);
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-7xl mx-auto flex flex-col font-sans">
@@ -57,6 +43,12 @@ export default function App() {
       {/* Navigation Tabs Bar */}
       <div className="flex items-center gap-2 mb-6 border-b border-slate-800 pb-2 overflow-x-auto text-xs font-semibold">
         <button
+          onClick={() => setActiveTab('NATIONAL')}
+          className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'NATIONAL' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
+        >
+          <Globe className="w-4 h-4 text-emerald-400" /> 🇮🇳 Pan-India Zonal Grid
+        </button>
+        <button
           onClick={() => setActiveTab('GANTT')}
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'GANTT' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-slate-200')}
         >
@@ -72,41 +64,42 @@ export default function App() {
           onClick={() => setActiveTab('MAP')}
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'MAP' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'text-slate-400 hover:text-slate-200')}
         >
-          <MapPin className="w-4 h-4" /> Corridor Schematic Map
+          <MapPin className="w-4 h-4" /> Corridor Schematic
         </button>
         <button
           onClick={() => setActiveTab('SIMULATION')}
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'SIMULATION' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200')}
         >
-          <Zap className="w-4 h-4 text-amber-400" /> What-If Emergency Simulator
+          <Zap className="w-4 h-4 text-amber-400" /> What-If Simulator
         </button>
         <button
           onClick={() => setActiveTab('PTW')}
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'PTW' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200')}
         >
-          <ShieldAlert className="w-4 h-4" /> Conflict Resolution & PTW
+          <ShieldAlert className="w-4 h-4" /> Conflict & PTW (PDF)
         </button>
         <button
           onClick={() => setActiveTab('CALENDAR')}
           className={'px-4 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ' + (activeTab === 'CALENDAR' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200')}
         >
-          <CalendarDays className="w-4 h-4 text-purple-400" /> 26-Week Rolling Horizon
+          <CalendarDays className="w-4 h-4 text-purple-400" /> 26-Week Horizon
         </button>
       </div>
 
       {/* Dynamic Tab Views */}
-      {activeTab === 'GANTT' && <GanttView isOptimized={isOptimized} tasks={tasks} />}
+      {activeTab === 'NATIONAL' && <NationalGrid />}
+      {activeTab === 'GANTT' && <GanttView />}
       {activeTab === 'STRING_CHART' && <StringChart />}
-      {activeTab === 'MAP' && <CorridorMap isOptimized={isOptimized} />}
+      {activeTab === 'MAP' && <CorridorMap />}
       {activeTab === 'SIMULATION' && <SimulationSandbox />}
       {activeTab === 'PTW' && <ConflictResolver />}
       {activeTab === 'CALENDAR' && <RollingCalendar />}
 
-      {/* AI Assistant Command Palette */}
+      {/* AI Command Palette */}
       <AiAssistantModal isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
 
       <footer className="mt-auto pt-6 border-t border-slate-800/80 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <span>RailSync-AI Engine © Smart India Hackathon 2026</span>
+        <span>Monocle Engine © Smart India Hackathon 2026</span>
         <span>Dedicated to Ministry of Railways (Government of India)</span>
       </footer>
     </div>

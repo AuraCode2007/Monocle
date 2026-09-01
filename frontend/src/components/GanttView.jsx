@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
+import { useRailwayStore } from '../store/useRailwayStore';
 import { Calendar, Clock, Info, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
-export default function GanttView({ isOptimized, tasks }) {
+export default function GanttView() {
+  const { isOptimized, getSections, getTasks, getCorridor } = useRailwayStore();
   const [selectedTask, setSelectedTask] = useState(null);
 
-  const sections = [
-    { id: 'SEC_101', name: 'GZB - ALJN (UP Line)' },
-    { id: 'SEC_102', name: 'ALJN - GZB (DN Line)' },
-    { id: 'SEC_103', name: 'ALJN - TDL (UP Line)' },
-    { id: 'SEC_104', name: 'TDL - ALJN (DN Line)' },
-    { id: 'SEC_105', name: 'TDL - ETW (UP Line)' },
-    { id: 'SEC_106', name: 'ETW - TDL (DN Line)' },
-    { id: 'SEC_107', name: 'ETW - CNB (UP Line)' },
-    { id: 'SEC_108', name: 'CNB - ETW (DN Line)' },
-  ];
+  const sections = getSections();
+  const tasks = getTasks();
+  const corridor = getCorridor();
 
   return (
     <div className="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col mb-6">
@@ -21,10 +16,10 @@ export default function GanttView({ isOptimized, tasks }) {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Calendar className="w-4 h-4 text-emerald-400" />
-            Corridor Master Gantt Timeline (24-Hour Schedule)
+            24-Hour Master Gantt Timeline — {corridor.name}
           </h2>
           <p className="text-xs text-slate-400">
-            High Density Section: New Delhi (NDLS) to Kanpur Central (CNB) - 440 KM
+            {corridor.zone} | {corridor.division} ({corridor.distance_km} KM)
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs">
@@ -47,7 +42,7 @@ export default function GanttView({ isOptimized, tasks }) {
 
       <div className="space-y-3 overflow-x-auto">
         {sections.map(sec => {
-          const secTasks = tasks ? tasks.filter(t => t.section_id === sec.id) : [];
+          const secTasks = tasks.filter(t => t.section_id === sec.id);
 
           return (
             <div key={sec.id} className="flex items-center gap-3 min-w-[700px] p-2 rounded-xl bg-slate-900/40 hover:bg-slate-900/70 transition-all border border-slate-800/50">
@@ -102,7 +97,7 @@ export default function GanttView({ isOptimized, tasks }) {
             <div className="flex items-center gap-2">
               <span className="font-mono font-bold text-emerald-400">{selectedTask.id}</span>
               <span className="font-bold text-white">[{selectedTask.department}] {selectedTask.description}</span>
-              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">Severity {selectedTask.severity}/5</span>
+              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">Machine: {selectedTask.machine_required || 'Standard Crew'}</span>
             </div>
             <p className="text-slate-400 text-[11px] mt-1">
               Section: {selectedTask.section_name} | Block Type: {selectedTask.block_type} | Duration: {selectedTask.duration_mins} mins
