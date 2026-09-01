@@ -1,11 +1,86 @@
-import React from 'react';
-import { Train, Zap, ShieldCheck, Activity, RefreshCw, UserCheck, Bot, Globe, MapPin } from 'lucide-react';
+import React, { useState } from 'react';
+import { Train, Zap, ShieldCheck, Activity, RefreshCw, UserCheck, Bot, Mic, MicOff, MapPin } from 'lucide-react';
 import { useRailwayStore, CORRIDORS } from '../store/useRailwayStore';
 import { railwayAudio } from '../utils/audioAlerts';
+import { voiceAssistant } from '../utils/voiceAssistant';
 
 export default function Header({ isOptimized, onToggleOptimize, isSolving, activeRole, onRoleChange, isApiConnected, onOpenAssistant }) {
-  const { activeCorridorKey, setCorridor, getCorridor } = useRailwayStore();
+  const [isListening, setIsListening] = useState(false);
+  const [voiceToast, setVoiceToast] = useState(null);
+
+  const {
+    activeCorridorKey,
+    setCorridor,
+    getCorridor,
+    setActiveTab,
+    injectEmergencyDefect,
+    toggleOptimize,
+  } = useRailwayStore();
+
   const currentCorridor = getCorridor();
+
+  const handleVoiceCommand = () => {
+    if (isListening) {
+      voiceAssistant.stop();
+      setIsListening(false);
+      return;
+    }
+
+    setIsListening(true);
+    setVoiceToast('Listening for railway command...');
+
+    voiceAssistant.listen(
+      (transcript) => {
+        setIsListening(false);
+        const q = transcript.toLowerCase();
+        setVoiceToast(`Heard: "${transcript}"`);
+
+        if (q.includes('optimize') || q.includes('solve') || q.includes('run')) {
+          voiceAssistant.speak('Running Google OR-Tools constraint solver. Resolving all inter-department clashes.');
+          toggleOptimize();
+          setTimeout(() => setVoiceToast(null), 4000);
+        } else if (q.includes('emergency') || q.includes('fracture') || q.includes('fail')) {
+          voiceAssistant.speak('Emergency rail fracture simulated at Tundla. Initiating safety isolation.');
+          injectEmergencyDefect();
+          setActiveTab('SIMULATION');
+          setTimeout(() => setVoiceToast(null), 4000);
+        } else if (q.includes('map') || q.includes('gis')) {
+          voiceAssistant.speak('Switching to Geospatial GIS Railway map.');
+          setActiveTab('GIS_MAP');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else if (q.includes('string') || q.includes('trajectory')) {
+          voiceAssistant.speak('Opening Time-Distance String Chart.');
+          setActiveTab('STRING_CHART');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else if (q.includes('gantt') || q.includes('timeline')) {
+          voiceAssistant.speak('Displaying 24-hour master Gantt timeline.');
+          setActiveTab('GANTT');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else if (q.includes('mumbai') || q.includes('western')) {
+          voiceAssistant.speak('Loading Mumbai to Ahmedabad high-speed corridor.');
+          setCorridor('MMCT_ADI');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else if (q.includes('howrah') || q.includes('eastern')) {
+          voiceAssistant.speak('Loading Howrah to Pt Deen Dayal Upadhyaya Grand Chord corridor.');
+          setCorridor('HWH_DDU');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else if (q.includes('risk') || q.includes('health') || q.includes('ml')) {
+          voiceAssistant.speak('Opening AI Machine Learning Track Defect Predictor.');
+          setActiveTab('ML_SCORER');
+          setTimeout(() => setVoiceToast(null), 3000);
+        } else {
+          voiceAssistant.speak(`Searching corridor intelligence for ${transcript}`);
+          onOpenAssistant();
+          setTimeout(() => setVoiceToast(null), 3000);
+        }
+      },
+      (err) => {
+        setIsListening(false);
+        setVoiceToast(`Voice Error: ${err}`);
+        setTimeout(() => setVoiceToast(null), 3500);
+      }
+    );
+  };
 
   const handleOptimizeClick = () => {
     if (!isOptimized) {
@@ -15,7 +90,13 @@ export default function Header({ isOptimized, onToggleOptimize, isSolving, activ
   };
 
   return (
-    <header className="glass-card p-4 rounded-2xl mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800">
+    <header className="glass-card p-4 rounded-2xl mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800 relative">
+      {voiceToast && (
+        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-slate-900 border border-emerald-500/40 text-emerald-400 text-xs font-mono font-bold shadow-2xl z-50 flex items-center gap-2 animate-bounce">
+          <Activity className="w-3.5 h-3.5 animate-spin" /> {voiceToast}
+        </div>
+      )}
+
       <div className="flex items-center gap-3 w-full md:w-auto">
         <div className="p-3 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 flex items-center justify-center">
           <Train className="w-6 h-6 text-slate-950" />
@@ -36,6 +117,20 @@ export default function Header({ isOptimized, onToggleOptimize, isSolving, activ
       </div>
 
       <div className="flex items-center flex-wrap gap-2.5 w-full md:w-auto justify-end">
+        {/* Voice Command Mic Button */}
+        <button
+          onClick={handleVoiceCommand}
+          className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+            isListening
+              ? 'bg-rose-600 text-white border-rose-500 animate-pulse shadow-rose-600/40'
+              : 'bg-slate-900/90 hover:bg-slate-800 text-slate-200 border-slate-700/80 hover:border-emerald-500/40'
+          }`}
+          title="Click to speak (e.g., 'Run optimizer', 'Show GIS map', 'Simulate emergency')"
+        >
+          {isListening ? <Mic className="w-3.5 h-3.5 animate-bounce" /> : <Mic className="w-3.5 h-3.5 text-emerald-400" />}
+          <span>{isListening ? 'Listening...' : 'Voice Mic'}</span>
+        </button>
+
         {/* Pan-India Corridor Switcher */}
         <div className="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
           <MapPin className="w-3.5 h-3.5 text-emerald-400" />
