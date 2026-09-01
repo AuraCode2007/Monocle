@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useRailwayStore } from '../store/useRailwayStore';
@@ -16,6 +16,8 @@ function ChangeMapView({ center, zoom }) {
 }
 
 export default function GisRailwayMap() {
+  const [mapStyle, setMapStyle] = useState('DARK'); // 'DARK' | 'SATELLITE' | 'STREET'
+
   const {
     getCorridor,
     getSections,
@@ -26,7 +28,6 @@ export default function GisRailwayMap() {
     showTrains,
     showBlocks,
     showSubstations,
-    showFlaws,
     toggleLayer,
   } = useRailwayStore();
 
@@ -37,17 +38,36 @@ export default function GisRailwayMap() {
   const tasks = getTasks();
   const substations = getSubstations();
 
-  // Create Custom HTML Icons for Leaflet
+  // 100% Free, High-Res, Watermark-Free Tile URLs
+  const TILE_LAYERS = {
+    DARK: {
+      url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO | Indian Railways GIS',
+      subdomains: 'abcd',
+    },
+    SATELLITE: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+      subdomains: 'abc',
+    },
+    STREET: {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors | CRIS Indian Railways',
+      subdomains: 'abc',
+    }
+  };
+
+  // Custom Leaflet HTML Pin Icons
   const createStationIcon = (st) => L.divIcon({
     className: 'custom-station-icon',
-    html: `<div style="background: ${st.hub ? '#10b981' : '#334155'}; color: ${st.hub ? '#022c22' : '#f8fafc'}; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; border: 1.5px solid ${st.hub ? '#34d399' : '#64748b'}; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-family: monospace;">${st.code}</div>`,
+    html: `<div style="background: ${st.hub ? '#10b981' : '#1e293b'}; color: ${st.hub ? '#022c22' : '#f8fafc'}; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; border: 1.5px solid ${st.hub ? '#34d399' : '#475569'}; box-shadow: 0 4px 12px rgba(0,0,0,0.6); font-family: monospace;">${st.code}</div>`,
     iconSize: [36, 20],
     iconAnchor: [18, 10],
   });
 
   const createTrainIcon = (tr) => L.divIcon({
     className: 'custom-train-icon',
-    html: `<div style="background: ${tr.color || '#10b981'}; color: #022c22; font-size: 11px; font-weight: 900; padding: 3px 6px; border-radius: 9999px; border: 2px solid #ffffff; box-shadow: 0 0 15px ${tr.color || '#10b981'}; display: flex; align-items: center; gap: 3px; font-family: monospace;">🚆 ${tr.number}</div>`,
+    html: `<div style="background: ${tr.color || '#10b981'}; color: #022c22; font-size: 11px; font-weight: 900; padding: 3px 6px; border-radius: 9999px; border: 2px solid #ffffff; box-shadow: 0 0 16px ${tr.color || '#10b981'}; display: flex; align-items: center; gap: 3px; font-family: monospace;">🚆 ${tr.number}</div>`,
     iconSize: [80, 24],
     iconAnchor: [40, 12],
   });
@@ -59,8 +79,8 @@ export default function GisRailwayMap() {
     iconAnchor: [30, 9],
   });
 
-  // Track Line Polyline Coordinates
   const trackLineCoords = stations.map(s => [s.lat, s.lng]);
+  const activeTile = TILE_LAYERS[mapStyle];
 
   return (
     <div className="glass-card p-5 rounded-2xl border border-slate-800 mb-6 flex flex-col">
@@ -75,8 +95,37 @@ export default function GisRailwayMap() {
           </p>
         </div>
 
-        {/* GIS Layer Toggles */}
+        {/* Map Basemap & Layer Controls */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
+          {/* Basemap Switcher */}
+          <div className="flex items-center bg-slate-900/90 rounded-lg p-0.5 border border-slate-700/80 text-[11px]">
+            <button
+              onClick={() => setMapStyle('DARK')}
+              className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                mapStyle === 'DARK' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              🌌 Dark GIS
+            </button>
+            <button
+              onClick={() => setMapStyle('SATELLITE')}
+              className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                mapStyle === 'SATELLITE' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              🛰️ Satellite
+            </button>
+            <button
+              onClick={() => setMapStyle('STREET')}
+              className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                mapStyle === 'STREET' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              🗺️ OpenStreet
+            </button>
+          </div>
+
+          {/* Layer Toggles */}
           <button
             onClick={() => toggleLayer('showTrains')}
             className={`px-2.5 py-1 rounded-lg border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
@@ -107,6 +156,7 @@ export default function GisRailwayMap() {
       {/* Leaflet Map Container */}
       <div className="w-full h-[480px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl relative z-10">
         <MapContainer
+          key={mapStyle}
           center={corridor.mapCenter || [27.5, 78.8]}
           zoom={corridor.mapZoom || 7}
           scrollWheelZoom={true}
@@ -114,25 +164,26 @@ export default function GisRailwayMap() {
         >
           <ChangeMapView center={corridor.mapCenter} zoom={corridor.mapZoom} />
 
-          {/* Dark Matter CartoDB Basemap Tile Layer */}
+          {/* Watermark-Free High Speed Tile Layer */}
           <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CARTO</a> | Indian Railways GIS'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution={activeTile.attribution}
+            url={activeTile.url}
+            subdomains={activeTile.subdomains}
           />
 
           {/* Master Glowing Track Polyline */}
           <Polyline
             positions={trackLineCoords}
             color={isOptimized ? '#10b981' : '#f43f5e'}
-            weight={5}
-            opacity={0.85}
+            weight={6}
+            opacity={0.9}
           />
           <Polyline
             positions={trackLineCoords}
             color="#ffffff"
-            weight={1.5}
-            dashArray="8 8"
-            opacity={0.6}
+            weight={2}
+            dashArray="6 6"
+            opacity={0.8}
           />
 
           {/* Station Markers */}
@@ -143,7 +194,7 @@ export default function GisRailwayMap() {
               icon={createStationIcon(st)}
             >
               <Popup>
-                <div className="text-xs space-y-1">
+                <div className="text-xs space-y-1 p-1">
                   <div className="font-bold text-emerald-400 text-sm flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5" /> {st.name} ({st.code})
                   </div>
@@ -168,10 +219,10 @@ export default function GisRailwayMap() {
               <CircleMarker
                 key={task.id}
                 center={[task.lat, task.lng]}
-                radius={12}
+                radius={13}
                 pathOptions={{
                   fillColor: color,
-                  fillOpacity: 0.6,
+                  fillOpacity: 0.7,
                   color: '#ffffff',
                   weight: 2,
                 }}
@@ -203,13 +254,13 @@ export default function GisRailwayMap() {
               icon={createSubstationIcon(sub)}
             >
               <Popup>
-                <div className="text-xs space-y-1">
+                <div className="text-xs space-y-1 p-1">
                   <div className="font-bold text-yellow-400 text-sm flex items-center gap-1">
                     <Zap className="w-3.5 h-3.5" /> {sub.name}
                   </div>
                   <div className="text-slate-300">Voltage: <span className="font-mono font-bold text-white">25kV AC 50Hz</span></div>
-                  <div className="text-slate-300">Transformer Capacity: <span className="font-mono font-bold text-yellow-400">{sub.capacity}</span></div>
-                  <div className="text-slate-400">SCADA Remote Control: <span className="text-emerald-400 font-bold">ONLINE (FEEDER-1 LIVE)</span></div>
+                  <div className="text-slate-300">Transformer: <span className="font-mono font-bold text-yellow-400">{sub.capacity}</span></div>
+                  <div className="text-slate-400">SCADA Remote: <span className="text-emerald-400 font-bold">ONLINE (FEEDER-1 LIVE)</span></div>
                 </div>
               </Popup>
             </Marker>
@@ -226,13 +277,13 @@ export default function GisRailwayMap() {
                 icon={createTrainIcon(tr)}
               >
                 <Popup>
-                  <div className="text-xs space-y-1">
+                  <div className="text-xs space-y-1 p-1">
                     <div className="font-bold text-white text-sm flex items-center gap-1">
                       <Train className="w-3.5 h-3.5 text-emerald-400" /> {tr.number} - {tr.name}
                     </div>
-                    <div className="text-slate-300">Priority Tier: <span className="font-mono font-bold text-emerald-400">Tier {tr.priority} (Strict No-Delay)</span></div>
-                    <div className="text-slate-300">Current Speed: <span className="font-mono font-bold text-white">{tr.speedKmh} km/h</span></div>
-                    <div className="text-slate-400">Collision State: <span className="text-emerald-400 font-bold">✓ 100% Conflict-Free Corridor</span></div>
+                    <div className="text-slate-300">Priority: <span className="font-mono font-bold text-emerald-400">Tier {tr.priority} (Strict No-Delay)</span></div>
+                    <div className="text-slate-300">Speed: <span className="font-mono font-bold text-white">{tr.speedKmh} km/h</span></div>
+                    <div className="text-slate-400">Status: <span className="text-emerald-400 font-bold">✓ 100% Conflict-Free Track</span></div>
                   </div>
                 </Popup>
               </Marker>
@@ -246,7 +297,7 @@ export default function GisRailwayMap() {
         <div className="p-2.5 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
           <div>
-            <div className="text-slate-400 text-[10px]">Track Health</div>
+            <div className="text-slate-400 text-[10px]">Track Clearance</div>
             <div className="font-bold text-white">{isOptimized ? '0 Speed Restrictions' : '2 Speed Restrictions'}</div>
           </div>
         </div>
