@@ -1,7 +1,15 @@
 import React from 'react';
-import { Train, Zap, ShieldCheck, Activity, RefreshCw, UserCheck } from 'lucide-react';
+import { Train, Zap, ShieldCheck, Activity, RefreshCw, UserCheck, Bot } from 'lucide-react';
+import { railwayAudio } from '../utils/audioAlerts';
 
-export default function Header({ isOptimized, onToggleOptimize, isSolving, activeRole, onRoleChange, isApiConnected }) {
+export default function Header({ isOptimized, onToggleOptimize, isSolving, activeRole, onRoleChange, isApiConnected, onOpenAssistant }) {
+  const handleOptimizeClick = () => {
+    if (!isOptimized) {
+      railwayAudio.playSuccessChime();
+    }
+    onToggleOptimize();
+  };
+
   return (
     <header className="glass-card p-4 rounded-2xl mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800">
       <div className="flex items-center gap-3 w-full md:w-auto">
@@ -27,6 +35,18 @@ export default function Header({ isOptimized, onToggleOptimize, isSolving, activ
       </div>
 
       <div className="flex items-center flex-wrap gap-3 w-full md:w-auto justify-end">
+        {/* AI Command Assistant Button */}
+        <button
+          onClick={onOpenAssistant}
+          className="px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm hover:border-emerald-500/40"
+          title="Open AI Assistant (Ctrl + K)"
+        >
+          <Bot className="w-4 h-4 text-emerald-400" />
+          <span className="hidden sm:inline">Ask AI</span>
+          <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono border border-slate-700">Ctrl+K</kbd>
+        </button>
+
+        {/* Role Selector */}
         <div className="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
           <UserCheck className="w-4 h-4 text-emerald-400" />
           <select 
@@ -41,8 +61,9 @@ export default function Header({ isOptimized, onToggleOptimize, isSolving, activ
           </select>
         </div>
 
+        {/* Optimize CTA Button */}
         <button
-          onClick={onToggleOptimize}
+          onClick={handleOptimizeClick}
           disabled={isSolving}
           className={'px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm shadow-lg transition-all flex items-center gap-2 cursor-pointer ' + (isOptimized ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700' : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-emerald-500/25 active:scale-95')}
         >

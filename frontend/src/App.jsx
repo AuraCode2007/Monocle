@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MetricCards from './components/MetricCards';
 import GanttView from './components/GanttView';
@@ -7,10 +7,13 @@ import CorridorMap from './components/CorridorMap';
 import ConflictResolver from './components/ConflictResolver';
 import SimulationSandbox from './components/SimulationSandbox';
 import RollingCalendar from './components/RollingCalendar';
+import AiAssistantModal from './components/AiAssistantModal';
 import { useRailwayStore } from './store/useRailwayStore';
 import { Calendar, MapPin, ShieldAlert, Compass, Zap, CalendarDays } from 'lucide-react';
 
 export default function App() {
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+
   const {
     isOptimized,
     isSolving,
@@ -46,6 +49,7 @@ export default function App() {
         activeRole={activeRole}
         onRoleChange={setActiveRole}
         isApiConnected={isApiConnected}
+        onOpenAssistant={() => setIsAssistantOpen(true)}
       />
 
       <MetricCards isOptimized={isOptimized} />
@@ -98,9 +102,12 @@ export default function App() {
       {activeTab === 'PTW' && <ConflictResolver />}
       {activeTab === 'CALENDAR' && <RollingCalendar />}
 
+      {/* AI Assistant Command Palette */}
+      <AiAssistantModal isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
+
       <footer className="mt-auto pt-6 border-t border-slate-800/80 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
         <span>RailSync-AI Engine © Smart India Hackathon 2026</span>
-        <span>Ministry of Railways (Government of India)</span>
+        <span>Dedicated to Ministry of Railways (Government of India)</span>
       </footer>
     </div>
   );
