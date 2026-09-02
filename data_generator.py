@@ -1,7 +1,13 @@
+# P.S. please have the postgres people do this instead of adding it to the backend.
+
 import random
 from typing import Dict, Any
 
 def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
+    # Generates mock railway scheduling and maintenance data for a quad-track corridor.
+    # Arguments: seed (int): Random seed for reproducible data generation.        
+    # Returns: Dict: A dictionary containing sections, generated trains with schedules, and generated maintenance tasks.
+    
     random.seed(seed)
     
     sections = [
@@ -14,6 +20,8 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
         {'id': 'SEC_107', 'name': 'Etawah (ETW) - Kanpur (CNB) UP', 'line': 'UP', 'length_km': 139, 'max_speed_kmh': 130},
         {'id': 'SEC_108', 'name': 'Kanpur (CNB) - Etawah (ETW) DN', 'line': 'DN', 'length_km': 139, 'max_speed_kmh': 130}
     ]
+    # Defines the physical railway infrastructure Sections where each section represents a block of track between two stations.
+    # 'UP' denotes trains traveling towards the main junction, and 'DN' denotes trains traveling away.
 
     train_templates = [
         {'number': '22436', 'name': 'Vande Bharat Express', 'priority': 1, 'type': 'VANDE_BHARAT', 'dir': 'UP', 'base_start': 360, 'speed_factor': 1.0},
@@ -29,10 +37,16 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
         {'number': 'BOXN_UP_1', 'name': 'Coal Rake Freight (UP)', 'priority': 4, 'type': 'FREIGHT', 'dir': 'UP', 'base_start': 120, 'speed_factor': 1.8},
         {'number': 'BCN_DN_1', 'name': 'Foodgrain Goods (DN)', 'priority': 4, 'type': 'FREIGHT', 'dir': 'DN', 'base_start': 720, 'speed_factor': 1.8}
     ]
+    # Defines blueprints for different types of trains
+    # priority: (1 = Highest).
+    # base_start: Departure time in minutes from midnight.
+    # speed_factor: Multiplier for transit time ( 1.0 is fastest).
 
-    trains = []
+    trains = [] # make a list of trains with their schedules (windows) for each section based on the templates.
+
     up_sections = ['SEC_101', 'SEC_103', 'SEC_105', 'SEC_107']
     dn_sections = ['SEC_102', 'SEC_104', 'SEC_106', 'SEC_108']
+    # Route mappings for UP and DOWN directions.
 
     for t in train_templates:
         sec_list = up_sections if t['dir'] == 'UP' else dn_sections
@@ -47,7 +61,7 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
                 'exit_time': curr_time + transit_mins
             }
             curr_time += transit_mins + random.randint(3, 8)
-            
+
         trains.append({
             'train_number': t['number'],
             'name': t['name'],
@@ -56,6 +70,7 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
             'direction': t['dir'],
             'windows': section_windows
         })
+    # Generates schedules (window blocks) for each train across its route and stores them in the trains list.
 
     dept_task_types = {
         'ENG': [
@@ -74,6 +89,8 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
             {'desc': 'Signalling cable meggering and testing', 'duration': 120, 'block_type': 'DISCONNECTION', 'severity_range': (1, 3)}
         ]
     }
+    # Defines templates for maintenance tasks by department
+    # ENG: Engineering (Tracks), TRD: Traction Distribution (OHE/Power), S&T: Signal & Telecom
 
     tasks = []
     task_id = 1
@@ -102,6 +119,7 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
                 'deadline_mins': 1440
             })
             task_id += 1
+    # Assigns random maintenance tasks to the tracks
 
     return {
         'corridor': 'New Delhi (NDLS) - Kanpur Central (CNB) Quad-Track Section',
@@ -109,3 +127,4 @@ def generate_railway_data(seed: int = 42) -> Dict[str, Any]:
         'trains': trains,
         'tasks': tasks
     }
+    # returns the generated data structure.
