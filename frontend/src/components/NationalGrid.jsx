@@ -1,23 +1,58 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRailwayStore, CORRIDORS } from '../store/useRailwayStore';
-import { Globe, MapPin, TrendingUp, ShieldCheck, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../i18n';
+import { Globe, ArrowRight, Zap, Calculator, ExternalLink } from 'lucide-react';
+
+const NETWORK_FACTS = {
+  zones: 17,
+  divisions: 68,
+  source: 'Indian Railways / Railway Board network directory',
+  sourceUrl: 'https://indianrailways.gov.in/railwayboard/view_section.jsp?lang=0&id=0,1,304,366,538',
+};
+
+const SCALING_ASSUMPTIONS = {
+  planningCyclesPerWeek: 1,
+  weeksPerYear: 52,
+  rupeesPerPassengerDelayMinute: 0,
+};
 
 export default function NationalGrid() {
-  const { activeCorridorKey, setCorridor, setActiveTab } = useRailwayStore();
+  const { t } = useLanguage();
+  const ui = t.ui;
+  const { activeCorridorKey, setCorridor, setActiveTab, isOptimized, optimizerMetrics } = useRailwayStore();
+  const [showMethodology, setShowMethodology] = useState(false);
+
+  const evidence = useMemo(() => {
+    const cycleDelayMinutes = optimizerMetrics.delayMinutesSaved || 0;
+    const cycleJointBlocks = optimizerMetrics.jointBlocks || 0;
+    const cycleHoursRecovered = cycleJointBlocks * 90 / 60;
+    const annualNetworkDelayMinutes = cycleDelayMinutes * NETWORK_FACTS.divisions * SCALING_ASSUMPTIONS.planningCyclesPerWeek * SCALING_ASSUMPTIONS.weeksPerYear;
+    const annualNetworkHoursRecovered = cycleHoursRecovered * NETWORK_FACTS.divisions * SCALING_ASSUMPTIONS.planningCyclesPerWeek * SCALING_ASSUMPTIONS.weeksPerYear;
+    const observedAvailabilityGain = optimizerMetrics.availabilityBoostPct || 0;
+
+    return {
+      cycleDelayMinutes,
+      cycleJointBlocks,
+      cycleHoursRecovered,
+      annualNetworkDelayMinutes,
+      annualNetworkHoursRecovered,
+      observedAvailabilityGain,
+    };
+  }, [optimizerMetrics]);
 
   const ZONES_DATA = [
-    { code: 'NCR', name: 'North Central Railway', hq: 'Prayagraj', divisions: 3, routeKm: 3222, efficiency: '94%', activeCorridor: 'NDLS_CNB' },
-    { code: 'WR', name: 'Western Railway', hq: 'Mumbai CCG', divisions: 6, routeKm: 6182, efficiency: '96%', activeCorridor: 'MMCT_ADI' },
-    { code: 'ER', name: 'Eastern Railway', hq: 'Kolkata', divisions: 4, routeKm: 2717, efficiency: '91%', activeCorridor: 'HWH_DDU' },
-    { code: 'SR', name: 'Southern Railway', hq: 'Chennai', divisions: 6, routeKm: 5079, efficiency: '95%', activeCorridor: 'MAS_SBC' },
-    { code: 'NR', name: 'Northern Railway', hq: 'New Delhi', divisions: 5, routeKm: 6968, efficiency: '89%' },
-    { code: 'CR', name: 'Central Railway', hq: 'Mumbai CSMT', divisions: 5, routeKm: 4151, efficiency: '92%' },
-    { code: 'ECR', name: 'East Central Railway', hq: 'Hajipur', divisions: 5, routeKm: 4128, efficiency: '88%' },
-    { code: 'SWR', name: 'South Western Railway', hq: 'Hubballi', divisions: 3, routeKm: 3566, efficiency: '95%' },
-    { code: 'SCR', name: 'South Central Railway', hq: 'Secunderabad', divisions: 6, routeKm: 6128, efficiency: '93%' },
-    { code: 'WCR', name: 'West Central Railway', hq: 'Jabalpur', divisions: 3, routeKm: 2997, efficiency: '92%' },
-    { code: 'SECR', name: 'South East Central', hq: 'Bilaspur', divisions: 3, routeKm: 2447, efficiency: '90%' },
-    { code: 'ECoR', name: 'East Coast Railway', hq: 'Bhubaneswar', divisions: 3, routeKm: 2746, efficiency: '91%' },
+    { code: 'NCR', name: 'North Central Railway', hq: 'Prayagraj', activeCorridor: 'NDLS_CNB' },
+    { code: 'WR', name: 'Western Railway', hq: 'Mumbai CCG', activeCorridor: 'MMCT_ADI' },
+    { code: 'ER', name: 'Eastern Railway', hq: 'Kolkata', activeCorridor: 'HWH_DDU' },
+    { code: 'SR', name: 'Southern Railway', hq: 'Chennai', activeCorridor: 'MAS_SBC' },
+    { code: 'NR', name: 'Northern Railway', hq: 'New Delhi' },
+    { code: 'CR', name: 'Central Railway', hq: 'Mumbai CSMT' },
+    { code: 'ECR', name: 'East Central Railway', hq: 'Hajipur' },
+    { code: 'SWR', name: 'South Western Railway', hq: 'Hubballi' },
+    { code: 'SCR', name: 'South Central Railway', hq: 'Secunderabad' },
+    { code: 'WCR', name: 'West Central Railway', hq: 'Jabalpur' },
+    { code: 'SECR', name: 'South East Central Railway', hq: 'Bilaspur' },
+    { code: 'ECoR', name: 'East Coast Railway', hq: 'Bhubaneswar' },
   ];
 
   return (
@@ -26,36 +61,52 @@ export default function NationalGrid() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Globe className="w-4 h-4 text-emerald-400" />
-            Pan-India Zonal Command & 68-Division Macro Scale Architecture
+            {ui.nationalTitle}
           </h2>
           <p className="text-xs text-slate-400">
-            Indian Railways National Scale Deployment: Showing live operational capacity across all 17 Zonal Railways.
+            {ui.nationalSubtitle}
           </p>
         </div>
         <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold">
-          68 Divisions Integrated
+          {NETWORK_FACTS.zones} zones · {NETWORK_FACTS.divisions} divisions
         </span>
       </div>
 
-      {/* National Macro ROI Stats */}
+      {/* Evidence-backed scenario metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="p-4 rounded-xl bg-slate-900/80 border border-emerald-500/20">
-          <div className="text-[11px] text-slate-400 font-medium">Nationwide Annual Delay Cost Saved</div>
-          <div className="text-2xl font-black text-emerald-400 mt-1">₹5,120 Crore / Yr</div>
-          <div className="text-[10px] text-emerald-400/80 mt-1">⚡ Across all 68 divisions via CP-SAT optimization</div>
+          <div className="text-[11px] text-slate-400 font-medium">{ui.measuredDelay}</div>
+          <div className="text-2xl font-black text-emerald-400 mt-1">{isOptimized ? `${evidence.cycleDelayMinutes} min` : ui.runSolver}</div>
+          <div className="text-[10px] text-emerald-400/80 mt-1">Returned by the active backend optimization</div>
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/80 border border-purple-500/20">
-          <div className="text-[11px] text-slate-400 font-medium">Track Maintenance Hours Saved</div>
-          <div className="text-2xl font-black text-purple-400 mt-1">28,400 Hrs / Month</div>
-          <div className="text-[10px] text-purple-400/80 mt-1">🔄 Through synchronized multi-dept joint blocks</div>
+          <div className="text-[11px] text-slate-400 font-medium">{ui.measuredJoint}</div>
+          <div className="text-2xl font-black text-purple-400 mt-1">{isOptimized ? evidence.cycleJointBlocks : ui.runSolver}</div>
+          <div className="text-[10px] text-purple-400/80 mt-1">Each joint block saves 90 minutes in the solver model</div>
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/80 border border-amber-500/20">
-          <div className="text-[11px] text-slate-400 font-medium">Line Capacity Throughput Recovery</div>
-          <div className="text-2xl font-black text-amber-400 mt-1">+24.8% Gained</div>
-          <div className="text-[10px] text-amber-400/80 mt-1">📈 Congested corridors drop from 140% to 88%</div>
+          <div className="text-[11px] text-slate-400 font-medium">{ui.measuredAvailability}</div>
+          <div className="text-2xl font-black text-amber-400 mt-1">{isOptimized ? `+${evidence.observedAvailabilityGain}%` : ui.runSolver}</div>
+          <div className="text-[10px] text-amber-400/80 mt-1">Calculated from baseline and optimized downtime</div>
         </div>
+      </div>
+
+      <div className="mb-6 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-bold text-white"><Calculator className="h-4 w-4 text-cyan-300" /> {ui.networkProjection}</div>
+            <p className="mt-1 text-[11px] text-slate-300">{isOptimized ? `${Math.round(evidence.annualNetworkDelayMinutes).toLocaleString()} delay minutes and ${evidence.annualNetworkHoursRecovered.toFixed(0)} maintenance hours per year if this measured cycle repeats once weekly across ${NETWORK_FACTS.divisions} divisions.` : 'Run the backend solver to calculate a projection from measured scenario outputs.'}</p>
+          </div>
+          <button onClick={() => setShowMethodology((visible) => !visible)} className="flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-slate-950/50 px-3 py-2 text-[11px] font-bold text-cyan-200"><Calculator className="h-3.5 w-3.5" /> {showMethodology ? ui.hideMethod : ui.showMethod}</button>
+        </div>
+        {showMethodology && <div className="mt-3 grid grid-cols-1 gap-2 border-t border-cyan-500/20 pt-3 text-[11px] text-slate-300 md:grid-cols-2"><div><span className="font-mono text-cyan-200">annual delay minutes</span> = measured minutes/cycle × divisions × cycles/week × 52</div><div><span className="font-mono text-cyan-200">annual hours</span> = joint blocks/cycle × 1.5 hours × divisions × cycles/week × 52</div><div>Inputs: {NETWORK_FACTS.divisions} divisions, {SCALING_ASSUMPTIONS.planningCyclesPerWeek} planning cycle/week, {SCALING_ASSUMPTIONS.weeksPerYear} weeks/year.</div><div>These are scenario projections, not audited national savings. ₹ conversion is intentionally omitted until an official delay-cost basis is supplied.</div></div>}
+      </div>
+
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3 text-[10px] text-slate-500">
+        <span>Network fact source: {NETWORK_FACTS.source}</span>
+        <a href={NETWORK_FACTS.sourceUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-bold text-emerald-300 hover:text-emerald-200">{ui.openSource} <ExternalLink className="h-3 w-3" /></a>
       </div>
 
       {/* 4 Flagship High Density Corridors Quick Switcher */}
@@ -100,17 +151,17 @@ export default function NationalGrid() {
         </div>
       </div>
 
-      {/* 17 Zonal Railways Status Grid */}
+      {/* Source-backed directory sample */}
       <div>
         <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
-          17 Zonal Railways Live Telemetry Grid
+          Zonal Railway Directory Sample ({NETWORK_FACTS.zones} zones nationally)
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
           {ZONES_DATA.map((z) => (
             <div key={z.code} className="p-2.5 bg-slate-900/40 rounded-xl border border-slate-800 text-[11px]">
               <div className="flex justify-between items-center font-bold">
                 <span className="text-white">{z.code}</span>
-                <span className="text-[10px] font-mono text-emerald-400">{z.efficiency}</span>
+                <span className="text-[10px] font-mono text-emerald-400">{ui.directory}</span>
               </div>
               <div className="text-[10px] text-slate-400 truncate" title={z.name}>{z.name}</div>
               <div className="text-[9px] text-slate-500 mt-1">HQ: {z.hq}</div>

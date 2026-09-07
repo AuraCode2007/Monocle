@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useRailwayStore } from '../store/useRailwayStore';
+import { useLanguage } from '../i18n';
 import { Activity, ShieldAlert, Cpu, AlertTriangle, CheckCircle2, TrendingUp, Sliders, Wrench, RefreshCw } from 'lucide-react';
 
 export default function TrackHealthScorer() {
+  const { t } = useLanguage();
+  const ui = t.ui;
   // Interactive Telemetry State
   const [tqi, setTqi] = useState(34);
   const [gmt, setGmt] = useState(410);
@@ -59,10 +62,10 @@ export default function TrackHealthScorer() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Cpu className="w-4 h-4 text-emerald-400" />
-            AI Machine Learning Track Defect & Derailment Risk Predictor
+            {ui.healthTitle}
           </h2>
           <p className="text-xs text-slate-400">
-            Trained on Indian Railways RDSO Track Recording Car (TRC) Telemetry & Fracture Mechanics
+            {ui.healthSubtitle}
           </p>
         </div>
         <span className={`text-xs px-2.5 py-1 rounded-lg border font-mono font-bold flex items-center gap-1.5 ${badgeClass}`}>
@@ -203,7 +206,7 @@ export default function TrackHealthScorer() {
             {/* Circular / Large Metric Display */}
             <div className="p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 flex items-center justify-between mb-4">
               <div>
-                <div className="text-[11px] text-slate-400">Predicted Derailment Risk</div>
+                <div className="text-[11px] text-slate-400">Predicted derailment risk</div>
                 <div className="text-4xl font-black font-mono mt-0.5" style={{ color: gaugeColor }}>
                   {riskPct.toFixed(1)}%
                 </div>

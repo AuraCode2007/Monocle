@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useRailwayStore } from '../store/useRailwayStore';
+import { useLanguage } from '../i18n';
 import { Compass } from 'lucide-react';
 
 export default function StringChart() {
+  const { t } = useLanguage();
+  const ui = t.ui;
   const { isOptimized, getCorridor, getTrains, getTasks } = useRailwayStore();
   const [hoveredTrain, setHoveredTrain] = useState(null);
 
@@ -11,6 +14,10 @@ export default function StringChart() {
   const tasks = getTasks();
   const stations = corridor.stations;
   const maxKm = corridor.distance_km;
+  const trafficMarkers = trains.flatMap((train) => [
+    { id: train.number + '-start', time: train.startMin, km: train.startKm, label: train.number + ' departs' },
+    { id: train.number + '-end', time: train.endMin, km: train.endKm, label: train.number + ' arrives' },
+  ]);
 
   const SVG_WIDTH = 900;
   const SVG_HEIGHT = 460;
@@ -28,15 +35,15 @@ export default function StringChart() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Compass className="w-4 h-4 text-cyan-400" />
-            Time-Distance String Chart — {corridor.name}
+            {ui.stringTitle} — {corridor.name}
           </h2>
           <p className="text-xs text-slate-400">
-            MARECHAL Train Trajectories (Diagonal Lines) vs Track Maintenance Closures (Shaded Boxes)
+            {ui.stringSubtitle}
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs">
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[11px]">
-            {isOptimized ? '✓ 0 Train-Block Intersections' : '⚠️ Clashes on Manual Paths'}
+          <span className={isOptimized ? 'railway-badge-resolved font-mono text-[11px]' : 'railway-badge-conflict font-mono text-[11px]'}>
+            {isOptimized ? '0 Train-Block Intersections' : 'Clashes on Manual Paths'}
           </span>
         </div>
       </div>
@@ -85,6 +92,14 @@ export default function StringChart() {
               >
                 {st.code}
               </text>
+            </g>
+          ))}
+
+          {trafficMarkers.map((marker) => (
+            <g key={marker.id}>
+              <line x1={timeToX(marker.time)} y1={PADDING.top} x2={timeToX(marker.time)} y2={SVG_HEIGHT - PADDING.bottom} stroke="#22d3ee" strokeDasharray="2 5" opacity="0.22" />
+              <circle cx={timeToX(marker.time)} cy={kmToY(marker.km)} r="4" fill="#22d3ee" stroke="#082f49" strokeWidth="2" />
+              <title>{marker.label}</title>
             </g>
           ))}
 

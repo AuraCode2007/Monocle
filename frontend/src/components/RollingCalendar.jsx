@@ -1,7 +1,10 @@
 import React from 'react';
 import { Calendar as CalIcon, Layers, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../i18n';
 
 export default function RollingCalendar() {
+  const { t } = useLanguage();
+  const ui = t.ui;
   const weeks = Array.from({ length: 26 }, (_, i) => ({
     weekNum: i + 1,
     dateRange: `Week ${i + 1}`,
@@ -16,10 +19,10 @@ export default function RollingCalendar() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <CalIcon className="w-4 h-4 text-purple-400" />
-            26-Week Rolling Block Programme (RBP) Horizon
+            {ui.rollingTitle} (RBP)
           </h2>
           <p className="text-xs text-slate-400">
-            Indian Railways Strategic Horizon: Multi-department predictive block forecasting across Prayagraj Division.
+            {ui.rollingSubtitle}
           </p>
         </div>
         <span className="text-xs px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 font-mono">
@@ -42,10 +45,10 @@ export default function RollingCalendar() {
                     {w.status.slice(0, 4)}
                   </span>
                 </div>
-                <div className="text-slate-400 text-[10px]">Blocks: <span className="font-bold text-slate-200">{w.blocksPlanned}</span></div>
+                <div className="text-slate-400 text-[10px]">{ui.blocksLabel}: <span className="font-bold text-slate-200">{w.blocksPlanned}</span></div>
               </div>
               <div className="mt-2 pt-1.5 border-t border-slate-800/60 flex justify-between items-center text-[10px]">
-                <span className="text-slate-500">Utilization</span>
+                <span className="text-slate-500">{ui.utilization}</span>
                 <span className="font-mono font-bold text-emerald-400">{w.utilization}%</span>
               </div>
             </div>

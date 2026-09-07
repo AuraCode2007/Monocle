@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { useRailwayStore } from '../store/useRailwayStore';
+import { useLanguage } from '../i18n';
 import { Calendar, Clock, Info, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export default function GanttView() {
+  const { t } = useLanguage();
+  const ui = t.ui;
   const { isOptimized, getSections, getTasks, getCorridor } = useRailwayStore();
   const [selectedTask, setSelectedTask] = useState(null);
 
   const sections = getSections();
   const tasks = getTasks();
   const corridor = getCorridor();
+  const trafficWindows = corridor.trains.flatMap((train) => [
+    { id: train.number + '-up', start: train.startMin, end: Math.min(train.startMin + 90, train.endMin), label: train.number },
+    { id: train.number + '-down', start: Math.max(train.endMin - 90, train.startMin), end: train.endMin, label: train.number },
+  ]);
 
   return (
     <div className="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col mb-6">
@@ -16,17 +23,17 @@ export default function GanttView() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Calendar className="w-4 h-4 text-emerald-400" />
-            24-Hour Master Gantt Timeline — {corridor.name}
+            {ui.ganttTitle} — {corridor.name}
           </h2>
           <p className="text-xs text-slate-400">
-            {corridor.zone} | {corridor.division} ({corridor.distance_km} KM)
+            {ui.ganttSubtitle} · {corridor.zone} | {corridor.division} ({corridor.distance_km} KM)
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs">
-          <span className="px-2 py-1 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[11px] font-medium">Track (ENG)</span>
-          <span className="px-2 py-1 rounded bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[11px] font-medium">Traction (TRD)</span>
-          <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[11px] font-medium">Signal (S&T)</span>
-          <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[11px] font-medium">Joint Synced</span>
+          <span className="railway-dept-eng rounded px-2 py-1 text-[11px] font-medium">{ui.track}</span>
+          <span className="railway-dept-trd rounded px-2 py-1 text-[11px] font-medium">{ui.traction}</span>
+          <span className="railway-dept-snt rounded px-2 py-1 text-[11px] font-medium">{ui.signal}</span>
+          <span className="railway-dept-joint rounded px-2 py-1 text-[11px] font-medium">{ui.jointSynced}</span>
         </div>
       </div>
 
@@ -55,17 +62,26 @@ export default function GanttView() {
                 <div className="absolute left-0 w-[20.8%] h-full bg-emerald-500/5 border-r border-emerald-500/10" title="Night Lull Window (00:00 - 05:00)"></div>
                 <div className="absolute right-0 w-[8.3%] h-full bg-emerald-500/5 border-l border-emerald-500/10" title="Late Night Lull (22:00 - 24:00)"></div>
 
+                {trafficWindows.map((window) => (
+                  <div
+                    key={sec.id + '-' + window.id}
+                    className="absolute top-0.5 bottom-0.5 rounded border border-cyan-400/20 bg-cyan-400/10"
+                    style={{ left: (window.start / 1440) * 100 + '%', width: Math.max(2, ((window.end - window.start) / 1440) * 100) + '%' }}
+                    title={'Scheduled movement ' + window.label}
+                  />
+                ))}
+
                 {secTasks.map(t => {
                   const startMin = isOptimized ? (t.optimized_start_mins || 60) : (t.requested_start || 360);
                   const dur = t.duration_mins || 120;
                   const leftPct = (startMin / 1440) * 100;
                   const widthPct = Math.max(6, (dur / 1440) * 100);
 
-                  let bgClass = 'bg-orange-500 border-orange-400 text-orange-950';
-                  if (t.department === 'TRD') bgClass = 'bg-yellow-500 border-yellow-400 text-yellow-950';
-                  if (t.department === 'S&T') bgClass = 'bg-blue-500 border-blue-400 text-blue-950';
+                  let bgClass = 'railway-dept-eng';
+                  if (t.department === 'TRD') bgClass = 'railway-dept-trd';
+                  if (t.department === 'S&T') bgClass = 'railway-dept-snt';
                   if (t.is_joint || (isOptimized && secTasks.length > 1)) {
-                    bgClass = 'bg-purple-500 border-purple-400 text-purple-950';
+                    bgClass = 'railway-dept-joint';
                   }
 
                   const isClashing = !isOptimized && (t.severity >= 3);
@@ -105,7 +121,7 @@ export default function GanttView() {
           </div>
           <div className="flex items-center gap-2">
             <div className="text-right">
-              <div className="text-slate-400 text-[10px]">Scheduled Window</div>
+                <div className="text-slate-400 text-[10px]">{ui.scheduledWindow}</div>
               <div className="font-mono font-bold text-white">
                 {isOptimized ? (selectedTask.optimized_start_hhmm || '01:00') + ' - ' + (selectedTask.optimized_end_hhmm || '04:00') : '06:00 - 09:00'}
               </div>
@@ -114,7 +130,7 @@ export default function GanttView() {
               onClick={() => setSelectedTask(null)}
               className="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 cursor-pointer"
             >
-              Dismiss
+              {ui.dismiss}
             </button>
           </div>
         </div>

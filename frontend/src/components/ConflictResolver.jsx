@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRailwayStore } from '../store/useRailwayStore';
 import { ShieldCheck, Key, FileText, Download, CheckCircle2 } from 'lucide-react';
+import { canApprovePTW, canIssuePTW, ROLE_LABELS } from '../auth';
+import { useLanguage } from '../i18n';
 import jsPDF from 'jspdf';
 
 export default function ConflictResolver() {
-  const { isOptimized, tasks, issuedPTW, issuePTW, activeRole } = useRailwayStore();
+  const { t } = useLanguage();
+  const ui = t.ui;
+  const { isOptimized, issuedPTW, issuePTW, approvePTW, authorizedRole } = useRailwayStore();
 
   const conflicts = [
     {
-      id: 'CONF_01',
+      id: 'CONF-01',
       task: 'TASK_001 (Deep screening of ballast by BCM)',
       dept: 'ENG',
       sec: 'SEC_101 (GZB-ALJN UP)',
@@ -17,7 +21,7 @@ export default function ConflictResolver() {
       status: 'RESOLVED_BY_AI'
     },
     {
-      id: 'CONF_02',
+      id: 'CONF-02',
       task: 'TASK_002 (OHE wire replacement 25kV)',
       dept: 'TRD',
       sec: 'SEC_101 (GZB-ALJN UP)',
@@ -26,7 +30,7 @@ export default function ConflictResolver() {
       status: 'RESOLVED_BY_AI'
     },
     {
-      id: 'CONF_03',
+      id: 'CONF-03',
       task: 'TASK_003 (Point machine overhaul)',
       dept: 'S&T',
       sec: 'SEC_103 (ALJN-TDL UP)',
@@ -38,7 +42,7 @@ export default function ConflictResolver() {
 
   const handleDownloadMemo = (c) => {
     const doc = new jsPDF();
-    const ptw = issuedPTW[c.id] || { privateNo: 4821, timestamp: '01:00 AM', authorizedBy: activeRole };
+    const ptw = issuedPTW[c.id] || { privateNo: 4821, timestamp: '01:00 AM', approvedBy: authorizedRole };
 
     doc.setFont('courier', 'bold');
     doc.setFontSize(14);
@@ -57,7 +61,7 @@ export default function ConflictResolver() {
 
     doc.setFont('courier', 'bold');
     doc.text(`PRIVATE NUMBER (SAFETY HANDSHAKE): ${ptw.privateNo}`, 20, 92);
-    doc.text(`ISSUED AT: ${ptw.timestamp} | AUTHORIZING OFFICER: ${ptw.authorizedBy}`, 20, 100);
+    doc.text(`ISSUED AT: ${ptw.timestamp} | APPROVING OFFICER: ${ROLE_LABELS[ptw.approvedBy] || ptw.approvedBy}`, 20, 100);
     doc.text(`STATUS: OFFICIALLY SANCTIONED - SAFE TO WORK`, 20, 108);
 
     doc.save(`IR_Form_T348M_${c.id}.pdf`);
@@ -69,10 +73,10 @@ export default function ConflictResolver() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            Inter-Department Conflict Resolution & Digital Permit-to-Work (Form T/348M)
+            {ui.ptwTitle} (Form T/348M)
           </h2>
           <p className="text-xs text-slate-400">
-            Automated Conflict Rectification, Cryptographic Private Number Grant & Official IR Form Export
+            {ui.ptwSubtitle}
           </p>
         </div>
       </div>
@@ -80,25 +84,28 @@ export default function ConflictResolver() {
       <div className="space-y-3">
         {conflicts.map(c => {
           const isPermitIssued = issuedPTW[c.id];
+          const isPermitApproved = isPermitIssued?.status === 'APPROVED';
+          const mayIssue = canIssuePTW(authorizedRole);
+          const mayApprove = canApprovePTW(authorizedRole);
 
           return (
             <div key={c.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-all text-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div className="space-y-1 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-rose-400">{c.id}</span>
+                  <span className="font-mono font-bold railway-text-conflict">{c.id}</span>
                   <span className="font-bold text-white">{c.task}</span>
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">{c.sec}</span>
                 </div>
                 <div className="text-rose-400/90 text-[11px]">
-                  ⚠️ Clashing: {c.clash}
+                  Clashing: {c.clash}
                 </div>
                 <div className="text-emerald-400 text-[11px] font-medium">
-                  ✓ AI Fix: {isOptimized ? c.res : 'Pending Optimization Engine Run'}
+                  AI Fix: {isOptimized ? c.res : 'Pending Optimization Engine Run'}
                 </div>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
-                {isPermitIssued ? (
+                {isPermitApproved ? (
                   <div className="flex items-center gap-2">
                     <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono font-bold text-xs flex items-center gap-1.5">
                       <Key className="w-3.5 h-3.5" /> PTW #{isPermitIssued.privateNo}
@@ -106,18 +113,33 @@ export default function ConflictResolver() {
                     <button
                       onClick={() => handleDownloadMemo(c)}
                       className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-                      title="Download Official IR Form T/348M"
+                      title={ui.exportPtw}
                     >
-                      <Download className="w-3.5 h-3.5 text-emerald-400" /> Export PDF
+                      <Download className="w-3.5 h-3.5 text-emerald-400" /> {ui.exportPdf}
+                    </button>
+                  </div>
+                ) : isPermitIssued ? (
+                  <div className="flex items-center gap-2">
+                    <div className="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs">
+                      PTW awaiting approval
+                    </div>
+                    <button
+                      onClick={() => approvePTW(c.id)}
+                      disabled={!mayApprove}
+                      className={'px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 ' + (mayApprove ? 'bg-amber-600 hover:bg-amber-500 text-white cursor-pointer' : 'bg-slate-800 text-slate-500 cursor-not-allowed')}
+                      title={mayApprove ? ui.approvePtw : ui.approvalRestricted}
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" /> {mayApprove ? ui.approvePtw : ui.approvalRestricted}
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={() => issuePTW(c.id)}
-                    disabled={!isOptimized}
-                    className={'px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all ' + (isOptimized ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer' : 'bg-slate-800 text-slate-500 cursor-not-allowed')}
+                    disabled={!isOptimized || !mayIssue}
+                    className={'px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all ' + (isOptimized && mayIssue ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer' : 'bg-slate-800 text-slate-500 cursor-not-allowed')}
+                    title={!mayIssue ? ui.approvalRestricted : ui.issuePtw}
                   >
-                    <FileText className="w-3.5 h-3.5" /> Issue Digital PTW
+                    <FileText className="w-3.5 h-3.5" /> {mayIssue ? ui.issuePtw : ui.approvalRestricted}
                   </button>
                 )}
               </div>

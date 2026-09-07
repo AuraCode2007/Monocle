@@ -45,6 +45,20 @@ def run_optimization(time_limit: int = Query(default=10, ge=2, le=60)):
     return result
 # Runs the optimization engine to generate an AI-optimized maintenance block schedule within the specified time limit (in seconds).
 
+@app.post('/api/v1/emergency/solve')
+def solve_emergency_response(incident: dict, time_limit: int = Query(default=10, ge=2, le=60)):
+    data = generate_railway_data()
+    result = solve_block_optimization(data, time_limit_sec=time_limit, incident=incident)
+    if result.get('status') != 'OPTIMAL_SCHEDULE_GENERATED':
+        return result
+    return {
+        'status': 'EMERGENCY_RESPONSE_GENERATED',
+        'solver_time_sec': result['solver_time_sec'],
+        'incident_response': result['optimized_results'].get('emergency_response'),
+        'optimized_schedule': result['optimized_results'].get('scheduled_tasks', []),
+        'decision_explanations': result['optimized_results'].get('decision_explanations', []),
+    }
+
 @app.get('/api/v1/simulation/compare')
 def get_simulation_comparison():
     data = generate_railway_data() # Generates mock railway data for the corridor and stores it.

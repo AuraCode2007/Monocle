@@ -12,17 +12,66 @@
 }
 
 .glass-card {
-  background: rgba(17, 26, 44, 0.78);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 .glass-card-hover:hover {
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 6px 12px -10px rgba(15, 23, 42, 0.9);
+}
+
+.glass-card,
+.railway-btn-primary,
+.railway-btn-secondary,
+.railway-badge-resolved,
+.railway-badge-warning,
+.railway-badge-conflict {
+  box-shadow: none;
+}
+
+.railway-select option {
+  background: #000;
+  color: #fff;
+}
+
+@layer components {
+  .railway-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors cursor-pointer;
+  }
+
+  .railway-btn-primary {
+    @apply railway-btn bg-emerald-600 text-white hover:bg-emerald-500;
+  }
+
+  .railway-btn-secondary {
+    @apply railway-btn border border-slate-700 bg-slate-900 text-slate-200 hover:border-emerald-500/40 hover:bg-slate-800;
+  }
+
+  .railway-badge-resolved {
+    @apply rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-400;
+  }
+
+  .railway-badge-warning {
+    @apply rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-400;
+  }
+
+  .railway-badge-conflict {
+    @apply rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-rose-400;
+  }
+
+  .railway-text-conflict { @apply text-rose-400; }
+  .railway-text-resolved { @apply text-emerald-400; }
+  .railway-text-warning { @apply text-amber-400; }
+
+  .railway-dept-eng { @apply bg-orange-500 border-orange-400 text-orange-950; }
+  .railway-dept-trd { @apply bg-yellow-500 border-yellow-400 text-yellow-950; }
+  .railway-dept-snt { @apply bg-blue-500 border-blue-400 text-blue-950; }
+  .railway-dept-joint { @apply bg-purple-500 border-purple-400 text-purple-950; }
 }
 
 /* Custom Scrollbar */
@@ -58,4 +107,26 @@
 
 .leaflet-popup-tip {
   background: rgba(15, 23, 42, 0.95) !important;
+}
+
+.demo-live-frame {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.2);
+}
+
+.demo-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: #fbbf24;
+}
+
+@keyframes demo-frame-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes demo-dot-pulse {
+  70% { box-shadow: 0 0 0 8px rgba(251, 113, 133, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0); }
 }

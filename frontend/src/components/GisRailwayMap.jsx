@@ -2,20 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useRailwayStore } from '../store/useRailwayStore';
-import { MapPin, Zap, ShieldAlert, Train, Radio, Layers, Activity, Filter, Eye } from 'lucide-react';
+import { useLanguage } from '../i18n';
+import { MapPin, Zap, ShieldAlert, Train, Radio } from 'lucide-react';
 
 // Custom Map View Changer on Corridor Switch
-function ChangeMapView({ center, zoom }) {
+function FitCorridorBounds({ corridorId, stations }) {
   const map = useMap();
   useEffect(() => {
-    if (center && zoom) {
-      map.setView(center, zoom, { animate: true });
-    }
-  }, [center, zoom, map]);
+    if (stations.length < 2) return undefined;
+    console.log('STATION COORDS:', stations.map(s => [s.code, s.lat, s.lng]));
+    const bounds = L.latLngBounds(stations.map(station => [station.lat, station.lng]));
+    const fitMap = () => {
+      map.invalidateSize({ animate: false });
+      map.fitBounds(bounds, { padding: [20, 20], maxZoom: 12, animate: false });
+    };
+
+    map.whenReady(fitMap);
+    const frameId = requestAnimationFrame(fitMap);
+    const timeoutId = window.setTimeout(fitMap, 150);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [corridorId, stations, map]);
   return null;
 }
 
 export default function GisRailwayMap() {
+  const { t } = useLanguage();
+  const ui = t.ui;
   const [mapStyle, setMapStyle] = useState('DARK'); // 'DARK' | 'SATELLITE' | 'STREET'
 
   const {
@@ -29,6 +45,8 @@ export default function GisRailwayMap() {
     showBlocks,
     showSubstations,
     toggleLayer,
+    currentIncident,
+    emergencyResponse,
   } = useRailwayStore();
 
   const corridor = getCorridor();
@@ -67,20 +85,21 @@ export default function GisRailwayMap() {
 
   const createTrainIcon = (tr) => L.divIcon({
     className: 'custom-train-icon',
-    html: `<div style="background: ${tr.color || '#10b981'}; color: #022c22; font-size: 11px; font-weight: 900; padding: 3px 6px; border-radius: 9999px; border: 2px solid #ffffff; box-shadow: 0 0 16px ${tr.color || '#10b981'}; display: flex; align-items: center; gap: 3px; font-family: monospace;">🚆 ${tr.number}</div>`,
+    html: `<div style="background: ${tr.color || '#10b981'}; color: #022c22; font-size: 11px; font-weight: 900; padding: 3px 6px; border-radius: 9999px; border: 2px solid #ffffff; box-shadow: 0 0 16px ${tr.color || '#10b981'}; display: flex; align-items: center; gap: 3px; font-family: monospace;">${tr.number}</div>`,
     iconSize: [80, 24],
     iconAnchor: [40, 12],
   });
 
   const createSubstationIcon = (sub) => L.divIcon({
     className: 'custom-tss-icon',
-    html: `<div style="background: #eab308; color: #422006; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 4px; border: 1px solid #fef08a; box-shadow: 0 0 10px rgba(234, 179, 8, 0.4); font-family: monospace;">⚡ ${sub.id}</div>`,
+    html: `<div style="background: #eab308; color: #422006; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 4px; border: 1px solid #fef08a; box-shadow: 0 0 10px rgba(234, 179, 8, 0.4); font-family: monospace;">${sub.id}</div>`,
     iconSize: [60, 18],
     iconAnchor: [30, 9],
   });
 
   const trackLineCoords = stations.map(s => [s.lat, s.lng]);
   const activeTile = TILE_LAYERS[mapStyle];
+  const isolatedSection = currentIncident ? sections.find((section) => section.id === currentIncident.section_id) : null;
 
   return (
     <div className="glass-card p-5 rounded-2xl border border-slate-800 mb-6 flex flex-col">
@@ -88,10 +107,10 @@ export default function GisRailwayMap() {
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
-            Geospatial GIS Railway Corridor Map — {corridor.name}
+            {ui.gisTitle} — {corridor.name}
           </h2>
           <p className="text-xs text-slate-400">
-            Real-Time GPS Track Topography, 25kV Traction Feeders, Active Possession Blocks & Moving Trains
+            {ui.gisSubtitle}
           </p>
         </div>
 
@@ -105,7 +124,7 @@ export default function GisRailwayMap() {
                 mapStyle === 'DARK' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
-              🌌 Dark GIS (Esri)
+              {ui.darkGis}
             </button>
             <button
               onClick={() => setMapStyle('SATELLITE')}
@@ -113,7 +132,7 @@ export default function GisRailwayMap() {
                 mapStyle === 'SATELLITE' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
-              🛰️ Satellite
+              {ui.satellite}
             </button>
             <button
               onClick={() => setMapStyle('STREET')}
@@ -121,7 +140,7 @@ export default function GisRailwayMap() {
                 mapStyle === 'STREET' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
-              🗺️ OpenStreet
+              {ui.street}
             </button>
           </div>
 
@@ -132,7 +151,7 @@ export default function GisRailwayMap() {
               showTrains ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-slate-900 text-slate-500 border-slate-800'
             }`}
           >
-            🚆 Trains {showTrains ? 'ON' : 'OFF'}
+            {ui.trains} {showTrains ? ui.on : ui.off}
           </button>
           <button
             onClick={() => toggleLayer('showBlocks')}
@@ -140,7 +159,7 @@ export default function GisRailwayMap() {
               showBlocks ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' : 'bg-slate-900 text-slate-500 border-slate-800'
             }`}
           >
-            🚧 Blocks {showBlocks ? 'ON' : 'OFF'}
+            {ui.blocks} {showBlocks ? ui.on : ui.off}
           </button>
           <button
             onClick={() => toggleLayer('showSubstations')}
@@ -148,13 +167,13 @@ export default function GisRailwayMap() {
               showSubstations ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-slate-900 text-slate-500 border-slate-800'
             }`}
           >
-            ⚡ 25kV TSS {showSubstations ? 'ON' : 'OFF'}
+            {ui.substations} {showSubstations ? ui.on : ui.off}
           </button>
         </div>
       </div>
 
       {/* Leaflet Map Container */}
-      <div className="w-full h-[480px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl relative z-10">
+      <div className="w-full h-[600px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl relative z-10">
         <MapContainer
           key={mapStyle}
           center={corridor.mapCenter || [27.5, 78.8]}
@@ -162,7 +181,7 @@ export default function GisRailwayMap() {
           scrollWheelZoom={true}
           className="w-full h-full"
         >
-          <ChangeMapView center={corridor.mapCenter} zoom={corridor.mapZoom} />
+          <FitCorridorBounds corridorId={corridor.id} stations={stations} />
 
           {/* 100% Watermark-Free Official Tile Layer */}
           <TileLayer
@@ -185,6 +204,32 @@ export default function GisRailwayMap() {
             dashArray="6 6"
             opacity={0.8}
           />
+
+          {currentIncident && isolatedSection && (
+            <>
+              <Polyline
+                positions={[[isolatedSection.startLat, isolatedSection.startLng], [isolatedSection.endLat, isolatedSection.endLng]]}
+                color="#f43f5e"
+                weight={12}
+                opacity={0.75}
+                dashArray="8 6"
+              />
+              <CircleMarker
+                center={[currentIncident.lat, currentIncident.lng]}
+                radius={18}
+                pathOptions={{ fillColor: '#f43f5e', fillOpacity: 0.9, color: '#fecdd3', weight: 3 }}
+              >
+                <Popup>
+                  <div className="text-xs space-y-1 p-1">
+                    <div className="font-bold text-rose-300">{currentIncident.title}</div>
+                    <div className="text-slate-300">Affected location: <span className="font-mono font-bold text-white">Km {currentIncident.affected_km}</span></div>
+                    <div className="text-slate-300">Isolated section: <span className="font-mono font-bold text-white">{currentIncident.section_id}</span></div>
+                    <div className="text-slate-400">Status: <span className="font-bold text-rose-300">{emergencyResponse?.incident?.status || 'Awaiting CP-SAT response'}</span></div>
+                  </div>
+                </Popup>
+              </CircleMarker>
+            </>
+          )}
 
           {/* Station Markers */}
           {stations.map(st => (
@@ -283,7 +328,7 @@ export default function GisRailwayMap() {
                     </div>
                     <div className="text-slate-300">Priority: <span className="font-mono font-bold text-emerald-400">Tier {tr.priority} (Strict No-Delay)</span></div>
                     <div className="text-slate-300">Speed: <span className="font-mono font-bold text-white">{tr.speedKmh} km/h</span></div>
-                    <div className="text-slate-400">Status: <span className="text-emerald-400 font-bold">✓ 100% Conflict-Free Track</span></div>
+                    <div className="text-slate-400">Status: <span className="text-emerald-400 font-bold">100% Conflict-Free Track</span></div>
                   </div>
                 </Popup>
               </Marker>
@@ -297,7 +342,7 @@ export default function GisRailwayMap() {
         <div className="p-2.5 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
           <div>
-            <div className="text-slate-400 text-[10px]">Track Clearance</div>
+            <div className="text-slate-400 text-[10px]">{ui.trackClearance}</div>
             <div className="font-bold text-white">{isOptimized ? '0 Speed Restrictions' : '2 Speed Restrictions'}</div>
           </div>
         </div>
@@ -305,7 +350,7 @@ export default function GisRailwayMap() {
         <div className="p-2.5 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <div className="w-3 h-3 rounded-full bg-orange-400"></div>
           <div>
-            <div className="text-slate-400 text-[10px]">Active Track Work</div>
+            <div className="text-slate-400 text-[10px]">{ui.activeTrackWork}</div>
             <div className="font-bold text-white">BCM Screening (Km 105)</div>
           </div>
         </div>
@@ -321,7 +366,7 @@ export default function GisRailwayMap() {
         <div className="p-2.5 bg-slate-900/60 rounded-xl flex items-center gap-2 border border-slate-800">
           <div className="w-3 h-3 rounded-full bg-purple-400"></div>
           <div>
-            <div className="text-slate-400 text-[10px]">Joint Possession Blocks</div>
+            <div className="text-slate-400 text-[10px]">{ui.jointPossession}</div>
             <div className="font-bold text-white">{isOptimized ? 'Synchronized (01:00 AM)' : 'Uncoordinated Demands'}</div>
           </div>
         </div>
