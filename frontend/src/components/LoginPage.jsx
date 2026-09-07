@@ -57,7 +57,7 @@ export default function LoginPage({ onLoginSuccess }) {
     <div className="flex min-h-screen items-center justify-center bg-[#050b15] px-4 py-10">
       <div className="grid w-full max-w-6xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/90 shadow-2xl shadow-emerald-900/10 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="relative hidden overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950/40 p-10 lg:block">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.15),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.14),_transparent_35%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(196,107,86,0.16),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(195,154,82,0.14),_transparent_35%)]" />
           <div className="relative z-10 flex h-full flex-col justify-between">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 p-3 text-slate-950 shadow-lg shadow-amber-500/20">
