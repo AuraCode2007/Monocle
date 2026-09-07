@@ -189,7 +189,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen px-3 py-3 md:px-5 md:py-4 max-w-[1600px] mx-auto flex flex-col font-sans">
-      <header className={`mb-3 rounded-2xl border bg-slate-950/70 p-3 ${currentRoleLayout.border}`}>
+      <header className={`monocle-shell-header mb-3 rounded-2xl border bg-slate-950/70 p-3 ${currentRoleLayout.border}`}>
         <Header
           isOptimized={isOptimized}
           onToggleOptimize={toggleOptimize}
@@ -265,15 +265,17 @@ export default function App() {
       )}
 
       {/* Dynamic Tab Views */}
-      {activeTab === 'COMMAND_CENTER' && <OperationsCommandCenter />}
-      {activeTab === 'GIS_MAP' && <GisRailwayMap />}
-      {activeTab === 'ML_SCORER' && <TrackHealthScorer />}
-      {activeTab === 'GANTT' && <GanttView />}
-      {activeTab === 'STRING_CHART' && <StringChart />}
-      {activeTab === 'NATIONAL' && <NationalGrid />}
-      {activeTab === 'SIMULATION' && <SimulationSandbox />}
-      {activeTab === 'PTW' && <ConflictResolver />}
-      {activeTab === 'CALENDAR' && <RollingCalendar />}
+      <div className="monocle-content">
+        {activeTab === 'COMMAND_CENTER' && <OperationsCommandCenter />}
+        {activeTab === 'GIS_MAP' && <GisRailwayMap />}
+        {activeTab === 'ML_SCORER' && <TrackHealthScorer />}
+        {activeTab === 'GANTT' && <GanttView />}
+        {activeTab === 'STRING_CHART' && <StringChart />}
+        {activeTab === 'NATIONAL' && <NationalGrid />}
+        {activeTab === 'SIMULATION' && <SimulationSandbox />}
+        {activeTab === 'PTW' && <ConflictResolver />}
+        {activeTab === 'CALENDAR' && <RollingCalendar />}
+      </div>
 
       <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
         <div className="mb-3 flex items-center gap-2 text-sm font-bold text-white">

@@ -7,7 +7,8 @@
 @layer base {
   body {
     @apply text-slate-100 antialiased selection:bg-emerald-500 selection:text-white;
-    background: #4F4F53;
+    background: #F0F0F0;
+    color: #4F4F53;
     font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif;
   }
 }
@@ -19,8 +20,8 @@
   --rail-tertiary: #D1A751;
   --rail-surface: #4F4F53;
   --rail-charcoal: #4F4F53;
-  --rail-panel: #4F4F53;
-  --rail-panel-raised: #4F4F53;
+  --rail-panel: #FFFFFF;
+  --rail-panel-raised: #F0F0F0;
   --rail-line: rgba(240, 240, 240, 0.24);
   --rail-ink: #F0F0F0;
   --rail-muted: rgba(240, 240, 240, 0.68);
@@ -35,12 +36,12 @@
 [class*="bg-slate-950"] { background-color: var(--rail-charcoal) !important; }
 [class*="bg-slate-900"] { background-color: var(--rail-panel) !important; }
 [class*="bg-slate-800"] { background-color: var(--rail-panel-raised) !important; }
-[class*="bg-slate-700"] { background-color: var(--rail-surface) !important; }
-[class*="border-slate-800"] { border-color: var(--rail-line) !important; }
-[class*="border-slate-700"] { border-color: #626057 !important; }
-[class*="text-slate-100"], [class*="text-white"] { color: var(--rail-ink) !important; }
-[class*="text-slate-200"], [class*="text-slate-300"] { color: #d1cdc2 !important; }
-[class*="text-slate-400"], [class*="text-slate-500"] { color: var(--rail-muted) !important; }
+[class*="bg-slate-700"] { background-color: #D8D8D6 !important; }
+[class*="border-slate-800"] { border-color: #D3D3D0 !important; }
+[class*="border-slate-700"] { border-color: #B8B8B5 !important; }
+[class*="text-slate-100"], [class*="text-slate-200"], [class*="text-white"] { color: #2E2E33 !important; }
+[class*="text-slate-300"] { color: #4F4F53 !important; }
+[class*="text-slate-400"], [class*="text-slate-500"] { color: #6C6C72 !important; }
 
 [class*="bg-emerald-"] { background-color: color-mix(in srgb, var(--rail-sage) 18%, transparent) !important; }
 [class*="text-emerald-"] { color: var(--rail-sage) !important; }
@@ -64,14 +65,66 @@
 [class~="bg-purple-500"], [class~="bg-purple-600"] { background-color: #8B88C6 !important; }
 
 .glass-card {
-  background: rgba(79, 79, 83, 0.92);
-  border-color: rgba(240, 240, 240, 0.16);
-  box-shadow: 0 12px 30px rgba(20, 20, 22, 0.24);
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(79, 79, 83, 0.16);
+  box-shadow: 0 8px 22px rgba(79, 79, 83, 0.10);
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(209, 167, 81, 0.72);
-  box-shadow: 0 12px 26px rgba(20, 20, 22, 0.32);
+  border-color: rgba(139, 136, 198, 0.72);
+  box-shadow: 0 12px 26px rgba(79, 79, 83, 0.16);
+}
+
+.monocle-shell-header,
+.monocle-shell-header [class*="bg-slate-950"] {
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="bg-slate-900"],
+.monocle-shell-header [class*="bg-slate-800"],
+.monocle-shell-header [class*="bg-slate-950"] {
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="text-white"],
+.monocle-shell-header [class*="text-slate-100"],
+.monocle-shell-header [class*="text-slate-200"],
+.monocle-shell-header [class*="text-slate-300"] {
+  color: #F0F0F0 !important;
+}
+
+.monocle-shell-header [class*="text-slate-400"],
+.monocle-shell-header [class*="text-slate-500"] {
+  color: rgba(240, 240, 240, 0.72) !important;
+}
+
+.monocle-shell-header select,
+.monocle-shell-header option {
+  color: #F0F0F0 !important;
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="border-slate-"] {
+  border-color: rgba(240, 240, 240, 0.22) !important;
+}
+
+.monocle-content [class*="bg-slate-950"],
+.monocle-content [class*="bg-slate-900"] {
+  background-color: #FFFFFF !important;
+}
+
+.monocle-content [class*="text-white"],
+.monocle-content [class*="text-slate-100"],
+.monocle-content [class*="text-slate-200"] {
+  color: #2E2E33 !important;
+}
+
+button[class*="bg-emerald-"],
+button[class*="bg-cyan-"],
+button[class*="bg-amber-"],
+button[class*="bg-rose-"],
+button[class*="bg-purple-"] {
+  color: #F0F0F0 !important;
 }
 
 .glass-card {
@@ -155,7 +208,7 @@
 
 /* Leaflet Map Dark Theme Overrides */
 .leaflet-container {
-  background: #4F4F53 !important;
+  background: #D8D8D6 !important;
   font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif !important;
 }
 
