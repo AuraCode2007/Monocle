@@ -7,8 +7,8 @@
 @layer base {
   body {
     @apply text-slate-100 antialiased selection:bg-emerald-500 selection:text-white;
-    background: #F0F0F0;
-    color: #4F4F53;
+    background: #4F4F53;
+    color: #F0F0F0;
     font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif;
   }
 }
@@ -20,9 +20,9 @@
   --rail-tertiary: #D1A751;
   --rail-surface: #4F4F53;
   --rail-charcoal: #4F4F53;
-  --rail-panel: #FFFFFF;
-  --rail-panel-raised: #F0F0F0;
-  --rail-line: rgba(240, 240, 240, 0.24);
+  --rail-panel: #4F4F53;
+  --rail-panel-raised: rgba(240, 240, 240, 0.08);
+  --rail-line: rgba(240, 240, 240, 0.22);
   --rail-ink: #F0F0F0;
   --rail-muted: rgba(240, 240, 240, 0.68);
   --rail-sage: #8B88C6;
@@ -32,16 +32,16 @@
   --rail-mauve: #8B88C6;
 }
 
-/* Re-map the existing Tailwind tokens in one place so every module shares the same visual language. */
+/* One controlled mapping keeps every module in the same industrial palette. */
 [class*="bg-slate-950"] { background-color: var(--rail-charcoal) !important; }
-[class*="bg-slate-900"] { background-color: var(--rail-panel) !important; }
-[class*="bg-slate-800"] { background-color: var(--rail-panel-raised) !important; }
-[class*="bg-slate-700"] { background-color: #D8D8D6 !important; }
-[class*="border-slate-800"] { border-color: #D3D3D0 !important; }
-[class*="border-slate-700"] { border-color: #B8B8B5 !important; }
-[class*="text-slate-100"], [class*="text-slate-200"], [class*="text-white"] { color: #2E2E33 !important; }
-[class*="text-slate-300"] { color: #4F4F53 !important; }
-[class*="text-slate-400"], [class*="text-slate-500"] { color: #6C6C72 !important; }
+[class*="bg-slate-900"] { background-color: rgba(240, 240, 240, 0.06) !important; }
+[class*="bg-slate-800"] { background-color: rgba(240, 240, 240, 0.10) !important; }
+[class*="bg-slate-700"] { background-color: rgba(240, 240, 240, 0.16) !important; }
+[class*="border-slate-800"] { border-color: rgba(240, 240, 240, 0.18) !important; }
+[class*="border-slate-700"] { border-color: rgba(240, 240, 240, 0.30) !important; }
+[class*="text-slate-100"], [class*="text-slate-200"], [class*="text-white"] { color: var(--rail-primary) !important; }
+[class*="text-slate-300"] { color: rgba(240, 240, 240, 0.86) !important; }
+[class*="text-slate-400"], [class*="text-slate-500"] { color: var(--rail-muted) !important; }
 
 [class*="bg-emerald-"] { background-color: color-mix(in srgb, var(--rail-sage) 18%, transparent) !important; }
 [class*="text-emerald-"] { color: var(--rail-sage) !important; }
@@ -65,9 +65,9 @@
 [class~="bg-purple-500"], [class~="bg-purple-600"] { background-color: #8B88C6 !important; }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(79, 79, 83, 0.16);
-  box-shadow: 0 8px 22px rgba(79, 79, 83, 0.10);
+  background: rgba(240, 240, 240, 0.075);
+  border: 1px solid rgba(240, 240, 240, 0.18);
+  box-shadow: 0 8px 22px rgba(20, 20, 22, 0.18);
 }
 
 .glass-card-hover:hover {
@@ -76,12 +76,6 @@
 }
 
 .monocle-shell-header,
-.monocle-shell-header [class*="bg-slate-950"] {
-  background: #4F4F53 !important;
-}
-
-.monocle-shell-header [class*="bg-slate-900"],
-.monocle-shell-header [class*="bg-slate-800"],
 .monocle-shell-header [class*="bg-slate-950"] {
   background: #4F4F53 !important;
 }
@@ -108,17 +102,6 @@
   border-color: rgba(240, 240, 240, 0.22) !important;
 }
 
-.monocle-content [class*="bg-slate-950"],
-.monocle-content [class*="bg-slate-900"] {
-  background-color: #FFFFFF !important;
-}
-
-.monocle-content [class*="text-white"],
-.monocle-content [class*="text-slate-100"],
-.monocle-content [class*="text-slate-200"] {
-  color: #2E2E33 !important;
-}
-
 button[class*="bg-emerald-"],
 button[class*="bg-cyan-"],
 button[class*="bg-amber-"],
@@ -127,18 +110,12 @@ button[class*="bg-purple-"] {
   color: #F0F0F0 !important;
 }
 
-.glass-card {
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-}
-
 .glass-card-hover {
   transition: all 0.2s ease;
 }
 .glass-card-hover:hover {
-  border-color: rgba(148, 163, 184, 0.2);
-  box-shadow: 0 6px 12px -10px rgba(15, 23, 42, 0.9);
+  border-color: rgba(139, 136, 198, 0.72);
+  box-shadow: 0 10px 24px rgba(20, 20, 22, 0.25);
 }
 
 .glass-card,
