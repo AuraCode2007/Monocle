@@ -35,7 +35,7 @@ In Indian Railways, fixed infrastructure maintenance across **Engineering (Track
 ## 🚀 Quick Start Guide
 
 ### 1. Backend Server (FastAPI + OR-Tools)
-`ash
+`Bash
 # Install Python requirements
 pip install -r requirements.txt
 
@@ -48,7 +48,7 @@ python main.py
 ---
 
 ### 2. Frontend Command Center (React + Tailwind)
-`ash
+`bash
 cd frontend
 
 # Install Node packages
@@ -56,7 +56,7 @@ npm install
 
 # Start the development server
 npm run dev
-`
+
 > Open http://localhost:5173 in your browser.
 
 ---
