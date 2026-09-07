@@ -7,31 +7,35 @@
 @layer base {
   body {
     @apply text-slate-100 antialiased selection:bg-emerald-500 selection:text-white;
-    background: #191a18;
+    background: #4F4F53;
     font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif;
   }
 }
 
 /* A warmer signal-box palette keeps state colors legible without the neon dashboard look. */
 :root {
-  --rail-charcoal: #191a18;
-  --rail-panel: #242522;
-  --rail-panel-raised: #2d2e2a;
-  --rail-line: #4b4a43;
-  --rail-ink: #eee9df;
-  --rail-muted: #aaa69a;
-  --rail-sage: #78917b;
-  --rail-steel: #7693a3;
-  --rail-ochre: #c39a52;
-  --rail-signal: #c46b56;
-  --rail-mauve: #95818a;
+  --rail-primary: #F0F0F0;
+  --rail-secondary: #8B88C6;
+  --rail-tertiary: #D1A751;
+  --rail-surface: #4F4F53;
+  --rail-charcoal: #4F4F53;
+  --rail-panel: #4F4F53;
+  --rail-panel-raised: #4F4F53;
+  --rail-line: rgba(240, 240, 240, 0.24);
+  --rail-ink: #F0F0F0;
+  --rail-muted: rgba(240, 240, 240, 0.68);
+  --rail-sage: #8B88C6;
+  --rail-steel: #8B88C6;
+  --rail-ochre: #D1A751;
+  --rail-signal: #D1A751;
+  --rail-mauve: #8B88C6;
 }
 
 /* Re-map the existing Tailwind tokens in one place so every module shares the same visual language. */
 [class*="bg-slate-950"] { background-color: var(--rail-charcoal) !important; }
 [class*="bg-slate-900"] { background-color: var(--rail-panel) !important; }
 [class*="bg-slate-800"] { background-color: var(--rail-panel-raised) !important; }
-[class*="bg-slate-700"] { background-color: #3b3c37 !important; }
+[class*="bg-slate-700"] { background-color: var(--rail-surface) !important; }
 [class*="border-slate-800"] { border-color: var(--rail-line) !important; }
 [class*="border-slate-700"] { border-color: #626057 !important; }
 [class*="text-slate-100"], [class*="text-white"] { color: var(--rail-ink) !important; }
@@ -53,21 +57,21 @@
 [class*="bg-purple-"] { background-color: color-mix(in srgb, var(--rail-mauve) 20%, transparent) !important; }
 [class*="text-purple-"] { color: var(--rail-mauve) !important; }
 [class*="border-purple-"] { border-color: color-mix(in srgb, var(--rail-mauve) 62%, transparent) !important; }
-[class~="bg-emerald-500"], [class~="bg-emerald-600"] { background-color: #6f8972 !important; }
-[class~="bg-cyan-500"], [class~="bg-cyan-600"] { background-color: #607f91 !important; }
-[class~="bg-amber-500"], [class~="bg-amber-600"] { background-color: #b2863f !important; }
-[class~="bg-rose-500"], [class~="bg-rose-600"] { background-color: #b55f4d !important; }
-[class~="bg-purple-500"], [class~="bg-purple-600"] { background-color: #806c75 !important; }
+[class~="bg-emerald-500"], [class~="bg-emerald-600"] { background-color: #8B88C6 !important; }
+[class~="bg-cyan-500"], [class~="bg-cyan-600"] { background-color: #8B88C6 !important; }
+[class~="bg-amber-500"], [class~="bg-amber-600"] { background-color: #D1A751 !important; }
+[class~="bg-rose-500"], [class~="bg-rose-600"] { background-color: #D1A751 !important; }
+[class~="bg-purple-500"], [class~="bg-purple-600"] { background-color: #8B88C6 !important; }
 
 .glass-card {
-  background: rgba(36, 37, 34, 0.92);
-  border-color: rgba(193, 188, 175, 0.16);
-  box-shadow: 0 12px 30px rgba(8, 9, 8, 0.18);
+  background: rgba(79, 79, 83, 0.92);
+  border-color: rgba(240, 240, 240, 0.16);
+  box-shadow: 0 12px 30px rgba(20, 20, 22, 0.24);
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(195, 154, 82, 0.52);
-  box-shadow: 0 12px 26px rgba(8, 9, 8, 0.28);
+  border-color: rgba(209, 167, 81, 0.72);
+  box-shadow: 0 12px 26px rgba(20, 20, 22, 0.32);
 }
 
 .glass-card {
@@ -151,21 +155,21 @@
 
 /* Leaflet Map Dark Theme Overrides */
 .leaflet-container {
-  background: #191a18 !important;
+  background: #4F4F53 !important;
   font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: rgba(36, 37, 34, 0.97) !important;
+  background: rgba(79, 79, 83, 0.97) !important;
   backdrop-filter: blur(12px) !important;
   color: #f8fafc !important;
-  border: 1px solid rgba(195, 154, 82, 0.45) !important;
+  border: 1px solid rgba(209, 167, 81, 0.55) !important;
   border-radius: 12px !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 
 .leaflet-popup-tip {
-  background: rgba(36, 37, 34, 0.97) !important;
+  background: rgba(79, 79, 83, 0.97) !important;
 }
 
 .demo-live-frame {
