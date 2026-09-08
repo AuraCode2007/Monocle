@@ -203,7 +203,6 @@ INSERT INTO tdms_power_assets (power_job_id, line_section, line_direction, sourc
 ('JOB-OHE-024', 'SC-BZA', 'DN', '315/20', '315/48', true, 'Neutral Section Span Wire Fix', true, true, 175, 'Ch. Krishna', '0x77889900aabbccdd77889900aabbccddeeff0011223344556677889900aabb'),
 ('JOB-OHE-025', 'HWH-DEL', 'DN', '140/02', '140/22', true, 'OHE Cross-Over Sag Correction', true, false, 125, 'R. N. Prasad', '0x889900aabbccdd77889900aabbccddeeff0011223344556677889900aabbcc');
 
-
 -- Mock 25 set data for smms
 INSERT INTO smms_signal_assets (signal_job_id, station_code, point_machine_no, interlocking_panel, work_category, tdms_collab_req, tms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) VALUES
 ('JOB-SIG-001', 'HWH', 'PM-202A', 'EI-WEST-01', 'Point Machine Lubrication', false, true, 40, 'Debasish Roy', '0xaa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff112233'),

@@ -1,66 +1,76 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle2, Clock, GitMerge, TrendingUp } from 'lucide-react';
+import { useLanguage } from '../i18n';
 
 export default function MetricCards({ isOptimized, metrics }) {
+  const { t } = useLanguage();
+  const labels = t.dashboard.metrics;
+  const baselineTone = 'railway-text-warning';
+  const baselineSoftTone = 'text-amber-400/80';
+  const conflicts = metrics?.conflicts ?? 10;
+  const delayMinutesSaved = metrics?.delayMinutesSaved ?? 0;
+  const jointBlocks = metrics?.jointBlocks ?? 0;
+  const availabilityBoostPct = metrics?.availabilityBoostPct ?? 0;
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div className="glass-card glass-card-hover p-4 rounded-2xl border-slate-800/80">
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
-          <span>Active Train Conflicts</span>
+    <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="glass-card glass-card-hover rounded-2xl border border-slate-800/80 p-4">
+        <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
+          <span>{labels.activeConflicts}</span>
           {isOptimized ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
           ) : (
-            <AlertTriangle className="w-4 h-4 text-rose-400 animate-pulse" />
+            <AlertTriangle className="h-4 w-4 railway-text-conflict" />
           )}
         </div>
-        <div className={'text-2xl lg:text-3xl font-black mt-1 ' + (isOptimized ? 'text-emerald-400' : 'text-rose-400')}>
-          {isOptimized ? '0 Conflicts' : '10 Clashing'}
+        <div className={'mt-2 text-2xl font-black ' + (isOptimized ? 'railway-text-resolved' : 'railway-text-conflict')}>
+          {isOptimized ? labels.zeroConflicts : `${conflicts} ${labels.clashing}`}
         </div>
-        <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+        <div className="mt-1 text-[11px] text-slate-400">
           {isOptimized ? (
-            <span className="text-emerald-400 font-medium">100% Collision-Free Schedule</span>
+            <span className="railway-text-resolved font-medium">{labels.collisionFree}</span>
           ) : (
-            <span className="text-rose-400 font-medium">Clashes with Rajdhani/Vande Bharat</span>
+            <span className="railway-text-conflict font-medium">{labels.trainClashes}</span>
           )}
         </div>
       </div>
 
-      <div className="glass-card glass-card-hover p-4 rounded-2xl border-slate-800/80">
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
-          <span>Train Delays Avoided</span>
-          <Clock className="w-4 h-4 text-emerald-400" />
+      <div className="glass-card glass-card-hover rounded-2xl border border-slate-800/80 p-4">
+        <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
+          <span>{labels.delaysAvoided}</span>
+          <Clock className={'h-4 w-4 ' + (isOptimized ? 'text-emerald-400' : baselineTone)} />
         </div>
-        <div className="text-2xl lg:text-3xl font-black text-emerald-400 mt-1">
-          {isOptimized ? '+450 Mins' : '0 Mins (Baseline)'}
+        <div className={'mt-2 text-2xl font-black ' + (isOptimized ? 'text-emerald-400' : baselineTone)}>
+          {isOptimized ? `+${delayMinutesSaved} ${labels.mins}` : `0 ${labels.baseline}`}
         </div>
-        <div className="text-[11px] text-emerald-400/80 mt-1 font-medium">
-          {isOptimized ? '7.5 Hours passenger network time saved' : 'Heavy daylight passenger throttling'}
-        </div>
-      </div>
-
-      <div className="glass-card glass-card-hover p-4 rounded-2xl border-slate-800/80">
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
-          <span>Joint Synced Blocks</span>
-          <GitMerge className="w-4 h-4 text-purple-400" />
-        </div>
-        <div className="text-2xl lg:text-3xl font-black text-purple-400 mt-1">
-          {isOptimized ? '4 Co-Located' : '0 (Siloed Requests)'}
-        </div>
-        <div className="text-[11px] text-purple-400/80 mt-1 font-medium">
-          {isOptimized ? 'Track + OHE + Signal bundled closures' : 'Multiple uncoordinated closures requested'}
+        <div className={'mt-1 text-[11px] font-medium ' + (isOptimized ? 'text-emerald-400/80' : baselineSoftTone)}>
+          {isOptimized ? labels.passengerSaved : labels.daylightThrottling}
         </div>
       </div>
 
-      <div className="glass-card glass-card-hover p-4 rounded-2xl border-slate-800/80">
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
-          <span>Asset Availability Boost</span>
-          <TrendingUp className="w-4 h-4 text-amber-400" />
+      <div className="glass-card glass-card-hover rounded-2xl border border-slate-800/80 p-4">
+        <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
+          <span>{labels.jointBlocks}</span>
+          <GitMerge className={'h-4 w-4 ' + (isOptimized ? 'text-emerald-400' : baselineTone)} />
         </div>
-        <div className="text-2xl lg:text-3xl font-black text-amber-400 mt-1">
-          {isOptimized ? '+46.4%' : 'Baseline (58%)'}
+        <div className={'mt-2 text-2xl font-black ' + (isOptimized ? 'text-emerald-400' : baselineTone)}>
+          {isOptimized ? `${jointBlocks} ${labels.coLocated}` : `0 (${labels.siloed})`}
         </div>
-        <div className="text-[11px] text-amber-400/80 mt-1 font-medium">
-          {isOptimized ? 'Net corridor throughput surge' : 'Suboptimal track maintenance utilization'}
+        <div className={'mt-1 text-[11px] font-medium ' + (isOptimized ? 'text-emerald-400/80' : baselineSoftTone)}>
+          {isOptimized ? labels.bundled : labels.uncoordinated}
+        </div>
+      </div>
+
+      <div className="glass-card glass-card-hover rounded-2xl border border-slate-800/80 p-4">
+        <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
+          <span>{labels.availability}</span>
+          <TrendingUp className={'h-4 w-4 ' + (isOptimized ? 'text-emerald-400' : baselineTone)} />
+        </div>
+        <div className={'mt-2 text-2xl font-black ' + (isOptimized ? 'text-emerald-400' : baselineTone)}>
+          {isOptimized ? `+${availabilityBoostPct}%` : `${labels.baselineLabel} (${metrics?.baselineAvailabilityPct ?? 58}%)`}
+        </div>
+        <div className={'mt-1 text-[11px] font-medium ' + (isOptimized ? 'text-emerald-400/80' : baselineSoftTone)}>
+          {isOptimized ? labels.throughput : labels.utilization}
         </div>
       </div>
     </div>

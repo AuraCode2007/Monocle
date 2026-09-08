@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import confetti from 'canvas-confetti';
+import { canApprovePTW, canIssuePTW } from '../auth';
 
 export const CORRIDORS = {
   NDLS_CNB: {
@@ -165,14 +166,70 @@ export const CORRIDORS = {
   }
 };
 
+const readStoredValue = (key, fallback) => {
+  try {
+    return window.localStorage.getItem(key) || fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const storeValue = (key, value) => {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Local storage can be unavailable in private or restricted browser contexts.
+  }
+};
+
+const createIncidentScenario = (corridor, type) => {
+  const sectionIndex = type === 'OHE_FAILURE' ? 0 : Math.min(2, Math.floor(corridor.sections.length / 2));
+  const section = corridor.sections[sectionIndex];
+  const sectionStartKm = corridor.sections.slice(0, sectionIndex).reduce((total, item) => total + item.length_km, 0);
+  const affectedKm = Math.round(sectionStartKm + section.length_km / 2);
+  return {
+    incident_id: `INC-${Date.now()}`,
+    type,
+    title: type === 'OHE_FAILURE' ? '25kV OHE feeder failure' : 'Ultrasonic rail fracture',
+    section_id: section.id,
+    solver_section_id: `SEC_${100 + sectionIndex + 1}`,
+    section_name: section.name,
+    affected_km: affectedKm,
+    lat: (section.startLat + section.endLat) / 2,
+    lng: (section.startLng + section.endLng) / 2,
+    start_min: type === 'OHE_FAILURE' ? 840 : 780,
+    duration_mins: type === 'OHE_FAILURE' ? 120 : 90,
+    severity: 5,
+  };
+};
+
 export const useRailwayStore = create((set, get) => ({
-  activeCorridorKey: 'NDLS_CNB',
+  activeCorridorKey: readStoredValue('railsync-corridor', 'NDLS_CNB'),
   isOptimized: false,
   isSolving: false,
   activeRole: 'SECTION_CONTROLLER',
-  activeTab: 'GIS_MAP',
+  authorizedRole: 'SECTION_CONTROLLER',
+  activeTab: readStoredValue('railsync-active-tab', 'COMMAND_CENTER'),
   filterDept: 'ALL',
   isApiConnected: false,
+  optimizerMetrics: {
+    conflicts: 10,
+    delayMinutesSaved: 0,
+    jointBlocks: 0,
+    availabilityBoostPct: 0,
+    baselineAvailabilityPct: 58,
+    source: 'simulation',
+    affectedTrains: [],
+    passengerTrainsProtected: 0,
+    estimatedPassengerDelayAvoidedMinutes: 0,
+    decisionExplanations: [],
+    solverTimeSec: 0,
+  },
+  optimizationResult: null,
+  currentIncident: null,
+  emergencyResponse: null,
+  emergencySolving: false,
+  emergencyApproval: null,
   issuedPTW: {},
   emergencyActive: false,
 
@@ -196,14 +253,40 @@ export const useRailwayStore = create((set, get) => ({
         activeCorridorKey: key,
         isOptimized: false,
         emergencyActive: false,
+        currentIncident: null,
+        emergencyResponse: null,
+        emergencyApproval: null,
       });
+      storeValue('railsync-corridor', key);
     }
   },
 
   setActiveRole: (role) => set({ activeRole: role }),
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  setAuthorizedRole: (role) => set({ authorizedRole: role, activeRole: role }),
+  setActiveTab: (tab) => {
+    set({ activeTab: tab });
+    storeValue('railsync-active-tab', tab);
+  },
   setFilterDept: (dept) => set({ filterDept: dept }),
   setIsApiConnected: (status) => set({ isApiConnected: status }),
+
+  loadBaseline: async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/v1/baseline');
+      if (!response.ok) throw new Error('Baseline request failed');
+      const baseline = await response.json();
+      set((state) => ({
+        isApiConnected: true,
+        optimizerMetrics: {
+          ...state.optimizerMetrics,
+          conflicts: baseline.total_conflicts,
+          source: 'backend',
+        },
+      }));
+    } catch {
+      set({ isApiConnected: false });
+    }
+  },
 
   toggleOptimize: async () => {
     const { isOptimized } = get();
@@ -214,38 +297,139 @@ export const useRailwayStore = create((set, get) => ({
     }
 
     set({ isSolving: true });
-    await new Promise((r) => setTimeout(r, 600));
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/v1/optimize', { method: 'POST' });
+      if (!response.ok) throw new Error('Optimizer request failed');
+      const result = await response.json();
+      const optimized = result.optimized_results;
+      const baseline = result.manual_baseline;
 
-    set({
-      isOptimized: true,
-      isSolving: false,
-    });
+      set({
+        isOptimized: true,
+        isSolving: false,
+        isApiConnected: true,
+        optimizationResult: result,
+        optimizerMetrics: {
+          conflicts: baseline?.total_conflicts ?? 10,
+          delayMinutesSaved: optimized?.train_delay_minutes_saved ?? 0,
+          jointBlocks: optimized?.joint_blocks_synchronized ?? 0,
+          availabilityBoostPct: optimized?.asset_availability_boost_pct ?? 0,
+          baselineAvailabilityPct: 58,
+          source: 'backend',
+          affectedTrains: optimized?.affected_trains ?? [],
+          passengerTrainsProtected: optimized?.passenger_trains_protected ?? 0,
+          estimatedPassengerDelayAvoidedMinutes: optimized?.estimated_passenger_delay_avoided_minutes ?? 0,
+          decisionExplanations: optimized?.decision_explanations ?? [],
+          solverTimeSec: result.solver_time_sec ?? 0,
+        },
+      });
+    } catch {
+      await new Promise((r) => setTimeout(r, 600));
+      set({
+        isOptimized: false,
+        isSolving: false,
+        isApiConnected: false,
+        optimizationResult: null,
+        optimizerMetrics: {
+          ...get().optimizerMetrics,
+          delayMinutesSaved: 0,
+          jointBlocks: 0,
+          availabilityBoostPct: 0,
+          source: 'unavailable',
+          affectedTrains: [],
+          passengerTrainsProtected: 0,
+          estimatedPassengerDelayAvoidedMinutes: 0,
+          decisionExplanations: [],
+          solverTimeSec: 0,
+        },
+      });
+      return;
+    }
 
     confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 } });
   },
 
-  injectEmergencyDefect: () => {
+  injectEmergencyDefect: (type = 'RAIL_FRACTURE') => {
+    const incident = createIncidentScenario(CORRIDORS[get().activeCorridorKey], type);
     set({
       emergencyActive: true,
       isOptimized: false,
+      currentIncident: incident,
+      emergencyResponse: null,
+      emergencyApproval: null,
     });
+  },
+
+  runEmergencyResponse: async () => {
+    const incident = get().currentIncident;
+    if (!incident) return;
+    set({ emergencySolving: true });
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/v1/emergency/solve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(incident),
+      });
+      if (!response.ok) throw new Error('Emergency solver request failed');
+      const result = await response.json();
+      set({ emergencyResponse: result.incident_response, emergencySolving: false, isApiConnected: true });
+    } catch {
+      set({ emergencySolving: false, isApiConnected: false, emergencyResponse: null });
+    }
+  },
+
+  approveEmergencyResponse: () => {
+    const { authorizedRole, emergencyResponse } = get();
+    if (!emergencyResponse || !canApprovePTW(authorizedRole)) return false;
+    set({
+      emergencyApproval: {
+        approvedBy: authorizedRole,
+        approvedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        status: 'APPROVED',
+      },
+    });
+    return true;
   },
 
   resetEmergency: () => {
     set({
       emergencyActive: false,
       isOptimized: false,
+      currentIncident: null,
+      emergencyResponse: null,
+      emergencySolving: false,
+      emergencyApproval: null,
     });
   },
 
   issuePTW: (taskId) => {
+    const { authorizedRole, emergencyApproval } = get();
+    if (!canIssuePTW(authorizedRole)) return false;
+    if (String(taskId).startsWith('INC-') && !emergencyApproval) return false;
     const randomPrivateNo = Math.floor(1000 + Math.random() * 9000);
     const timestamp = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
     set((state) => ({
       issuedPTW: {
         ...state.issuedPTW,
-        [taskId]: { privateNo: randomPrivateNo, timestamp, authorizedBy: state.activeRole },
+        [taskId]: { privateNo: randomPrivateNo, timestamp, issuedBy: state.authorizedRole, status: 'ISSUED' },
       },
     }));
+    return true;
+  },
+
+  approvePTW: (taskId) => {
+    const { authorizedRole } = get();
+    if (!canApprovePTW(authorizedRole)) return false;
+    set((state) => {
+      const permit = state.issuedPTW[taskId];
+      if (!permit || permit.status !== 'ISSUED') return state;
+      return {
+        issuedPTW: {
+          ...state.issuedPTW,
+          [taskId]: { ...permit, approvedBy: authorizedRole, approvedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }), status: 'APPROVED' },
+        },
+      };
+    });
+    return true;
   },
 }));

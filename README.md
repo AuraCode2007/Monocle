@@ -11,11 +11,12 @@ In Indian Railways, fixed infrastructure maintenance across **Engineering (Track
 
 **Monocle (RailSync-AI)** unifies multi-department maintenance block demands, train schedules (from Control Office Application - COA), and safety rules into a high-performance **Google OR-Tools (CP-SAT)** constraint optimization engine.
 
-### 📊 Key Performance Metrics
-- **Active Conflicts Eliminated:** 100% (10 clashes -> 0 collision-free schedule)
-- **Passenger Train Delay Avoided:** +450 Minutes per operational cycle (~7.5 hours saved)
-- **Joint Co-located Blocks Synchronized:** 4 multi-department unified possessions
-- **Asset Availability Index:** +46.4% net track commercial throughput surge
+### 📊 Evidence and Measurement Policy
+- **Scenario measurements:** Conflict count, delay minutes avoided, joint possessions, and availability change are returned by the CP-SAT solver for the active generated corridor scenario.
+- **Network projections:** The National view scales those measured results only as an illustrative scenario using `68 divisions × 1 planning cycle/week × 52 weeks/year`.
+- **Network structure:** The 17-zone / 68-division figure is treated as a Railway Board network fact and linked from the National view.
+- **No unsupported rupee claim:** The application does not convert delay minutes into money until an official, citable cost-per-delay-minute methodology is provided.
+- **Reproducibility:** Every displayed projection exposes its equation and assumptions in the National view's methodology panel.
 
 ---
 
@@ -35,7 +36,7 @@ In Indian Railways, fixed infrastructure maintenance across **Engineering (Track
 ## 🚀 Quick Start Guide
 
 ### 1. Backend Server (FastAPI + OR-Tools)
-`ash
+`Bash
 # Install Python requirements
 pip install -r requirements.txt
 
@@ -48,7 +49,7 @@ python main.py
 ---
 
 ### 2. Frontend Command Center (React + Tailwind)
-`ash
+`bash
 cd frontend
 
 # Install Node packages
@@ -56,7 +57,7 @@ npm install
 
 # Start the development server
 npm run dev
-`
+
 > Open http://localhost:5173 in your browser.
 
 ---

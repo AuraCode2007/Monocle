@@ -56,7 +56,7 @@ def get_corridor_data():
 
 @app.get('/api/v1/baseline')
 def get_manual_baseline():
-    data = generate_railway_data()
+    data = generate_railway_data() # shouldn't the data here be manually inputted baseline data instead of random?
     return evaluate_manual_schedule(data)
 
 

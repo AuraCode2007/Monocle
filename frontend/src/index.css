@@ -6,23 +6,185 @@
 
 @layer base {
   body {
-    @apply bg-[#080e1a] text-slate-100 antialiased selection:bg-emerald-500 selection:text-white;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply text-slate-100 antialiased selection:bg-emerald-500 selection:text-white;
+    background: #F0F0F0;
+    color: #4F4F53;
+    font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif;
   }
 }
 
+/* A warmer signal-box palette keeps state colors legible without the neon dashboard look. */
+:root {
+  --rail-primary: #F0F0F0;
+  --rail-secondary: #8B88C6;
+  --rail-tertiary: #D1A751;
+  --rail-surface: #4F4F53;
+  --rail-charcoal: #4F4F53;
+  --rail-panel: #FFFFFF;
+  --rail-panel-raised: #F0F0F0;
+  --rail-line: rgba(79, 79, 83, 0.18);
+  --rail-ink: #F0F0F0;
+  --rail-muted: rgba(240, 240, 240, 0.68);
+  --rail-sage: #8B88C6;
+  --rail-steel: #8B88C6;
+  --rail-ochre: #D1A751;
+  --rail-signal: #D1A751;
+  --rail-mauve: #8B88C6;
+}
+
+/* One controlled mapping keeps every module in the same industrial palette. */
+[class*="bg-slate-950"] { background-color: var(--rail-charcoal) !important; }
+[class*="bg-slate-900"] { background-color: #FFFFFF !important; }
+[class*="bg-slate-800"] { background-color: #F0F0F0 !important; }
+[class*="bg-slate-700"] { background-color: #D8D8D6 !important; }
+[class*="border-slate-800"] { border-color: rgba(79, 79, 83, 0.18) !important; }
+[class*="border-slate-700"] { border-color: rgba(79, 79, 83, 0.32) !important; }
+[class*="text-slate-100"], [class*="text-slate-200"], [class*="text-white"] { color: #2E2E33 !important; }
+[class*="text-slate-300"] { color: #4F4F53 !important; }
+[class*="text-slate-400"], [class*="text-slate-500"] { color: #6C6C72 !important; }
+
+[class*="bg-emerald-"] { background-color: color-mix(in srgb, var(--rail-sage) 18%, transparent) !important; }
+[class*="text-emerald-"] { color: var(--rail-sage) !important; }
+[class*="border-emerald-"] { border-color: color-mix(in srgb, var(--rail-sage) 58%, transparent) !important; }
+[class*="bg-cyan-"] { background-color: color-mix(in srgb, var(--rail-steel) 18%, transparent) !important; }
+[class*="text-cyan-"] { color: var(--rail-steel) !important; }
+[class*="border-cyan-"] { border-color: color-mix(in srgb, var(--rail-steel) 58%, transparent) !important; }
+[class*="bg-amber-"] { background-color: color-mix(in srgb, var(--rail-ochre) 20%, transparent) !important; }
+[class*="text-amber-"] { color: var(--rail-ochre) !important; }
+[class*="border-amber-"] { border-color: color-mix(in srgb, var(--rail-ochre) 62%, transparent) !important; }
+[class*="bg-rose-"] { background-color: color-mix(in srgb, var(--rail-signal) 20%, transparent) !important; }
+[class*="text-rose-"] { color: var(--rail-signal) !important; }
+[class*="border-rose-"] { border-color: color-mix(in srgb, var(--rail-signal) 62%, transparent) !important; }
+[class*="bg-purple-"] { background-color: color-mix(in srgb, var(--rail-mauve) 20%, transparent) !important; }
+[class*="text-purple-"] { color: var(--rail-mauve) !important; }
+[class*="border-purple-"] { border-color: color-mix(in srgb, var(--rail-mauve) 62%, transparent) !important; }
+[class~="bg-emerald-500"], [class~="bg-emerald-600"] { background-color: #8B88C6 !important; }
+[class~="bg-cyan-500"], [class~="bg-cyan-600"] { background-color: #8B88C6 !important; }
+[class~="bg-amber-500"], [class~="bg-amber-600"] { background-color: #D1A751 !important; }
+[class~="bg-rose-500"], [class~="bg-rose-600"] { background-color: #D1A751 !important; }
+[class~="bg-purple-500"], [class~="bg-purple-600"] { background-color: #8B88C6 !important; }
+
 .glass-card {
-  background: rgba(17, 26, 44, 0.78);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(79, 79, 83, 0.16);
+  box-shadow: 0 8px 22px rgba(79, 79, 83, 0.10);
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(139, 136, 198, 0.72);
+  box-shadow: 0 12px 26px rgba(79, 79, 83, 0.16);
+}
+
+.monocle-shell-header,
+.monocle-shell-header [class*="bg-slate-950"] {
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="bg-slate-900"],
+.monocle-shell-header [class*="bg-slate-800"],
+.monocle-shell-header [class*="bg-slate-950"] {
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="text-white"],
+.monocle-shell-header [class*="text-slate-100"],
+.monocle-shell-header [class*="text-slate-200"],
+.monocle-shell-header [class*="text-slate-300"] {
+  color: #F0F0F0 !important;
+}
+
+.monocle-shell-header [class*="text-slate-400"],
+.monocle-shell-header [class*="text-slate-500"] {
+  color: rgba(240, 240, 240, 0.72) !important;
+}
+
+.monocle-shell-header select,
+.monocle-shell-header option {
+  color: #F0F0F0 !important;
+  background: #4F4F53 !important;
+}
+
+.monocle-shell-header [class*="border-slate-"] {
+  border-color: rgba(240, 240, 240, 0.22) !important;
+}
+
+.monocle-content [class*="bg-slate-950"] {
+  background: #F0F0F0 !important;
+}
+
+.monocle-content [class*="text-white"],
+.monocle-content [class*="text-slate-100"],
+.monocle-content [class*="text-slate-200"] {
+  color: #2E2E33 !important;
+}
+
+.monocle-content .glass-card:first-of-type {
+  border-top: 3px solid #8B88C6;
+}
+
+button[class*="bg-emerald-"],
+button[class*="bg-cyan-"],
+button[class*="bg-amber-"],
+button[class*="bg-rose-"],
+button[class*="bg-purple-"] {
+  color: #F0F0F0 !important;
 }
 
 .glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 .glass-card-hover:hover {
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+  border-color: rgba(139, 136, 198, 0.72);
+  box-shadow: 0 10px 24px rgba(79, 79, 83, 0.18);
+}
+
+.glass-card,
+.railway-btn-primary,
+.railway-btn-secondary,
+.railway-badge-resolved,
+.railway-badge-warning,
+.railway-badge-conflict {
+  box-shadow: none;
+}
+
+.railway-select option {
+  background: #000;
+  color: #fff;
+}
+
+@layer components {
+  .railway-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors cursor-pointer;
+  }
+
+  .railway-btn-primary {
+    @apply railway-btn bg-emerald-600 text-white hover:bg-emerald-500;
+  }
+
+  .railway-btn-secondary {
+    @apply railway-btn border border-slate-700 bg-slate-900 text-slate-200 hover:border-emerald-500/40 hover:bg-slate-800;
+  }
+
+  .railway-badge-resolved {
+    @apply rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-400;
+  }
+
+  .railway-badge-warning {
+    @apply rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-400;
+  }
+
+  .railway-badge-conflict {
+    @apply rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-rose-400;
+  }
+
+  .railway-text-conflict { @apply text-rose-400; }
+  .railway-text-resolved { @apply text-emerald-400; }
+  .railway-text-warning { @apply text-amber-400; }
+
+  .railway-dept-eng { @apply bg-orange-500 border-orange-400 text-orange-950; }
+  .railway-dept-trd { @apply bg-yellow-500 border-yellow-400 text-yellow-950; }
+  .railway-dept-snt { @apply bg-blue-500 border-blue-400 text-blue-950; }
+  .railway-dept-joint { @apply bg-purple-500 border-purple-400 text-purple-950; }
 }
 
 /* Custom Scrollbar */
@@ -43,19 +205,116 @@
 
 /* Leaflet Map Dark Theme Overrides */
 .leaflet-container {
-  background: #080e1a !important;
-  font-family: 'Inter', sans-serif !important;
+  background: #D8D8D6 !important;
+  font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: rgba(79, 79, 83, 0.97) !important;
   backdrop-filter: blur(12px) !important;
   color: #f8fafc !important;
-  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  border: 1px solid rgba(209, 167, 81, 0.55) !important;
   border-radius: 12px !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 
 .leaflet-popup-tip {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: rgba(79, 79, 83, 0.97) !important;
+}
+
+.demo-live-frame {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.2);
+}
+
+.demo-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: #fbbf24;
+}
+
+@keyframes demo-frame-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes demo-dot-pulse {
+  70% { box-shadow: 0 0 0 8px rgba(251, 113, 133, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0); }
+}
+
+/* Final industrial surface pass: graphite is the canvas, not white. */
+body,
+#root {
+  background: #4F4F53 !important;
+  color: #F0F0F0 !important;
+}
+
+.monocle-content,
+.monocle-content main {
+  background: transparent !important;
+}
+
+.monocle-content .glass-card,
+.monocle-content section,
+.monocle-content article,
+.monocle-content [class*="bg-slate-950"],
+.monocle-content [class*="bg-slate-900"] {
+  background: rgba(240, 240, 240, 0.075) !important;
+  color: #F0F0F0 !important;
+  border-color: rgba(240, 240, 240, 0.18) !important;
+}
+
+.monocle-content [class*="text-white"],
+.monocle-content [class*="text-slate-100"],
+.monocle-content [class*="text-slate-200"],
+.monocle-content [class*="text-slate-300"] {
+  color: #F0F0F0 !important;
+}
+
+.monocle-content [class*="text-slate-400"],
+.monocle-content [class*="text-slate-500"] {
+  color: rgba(240, 240, 240, 0.68) !important;
+}
+
+.monocle-content [class*="border-slate-"] {
+  border-color: rgba(240, 240, 240, 0.18) !important;
+}
+
+.monocle-content .glass-card:hover,
+.monocle-content button:hover {
+  border-color: rgba(139, 136, 198, 0.72) !important;
+}
+
+.monocle-content .bg-rose-500\/5,
+.monocle-content .bg-emerald-500\/5,
+.monocle-content .bg-cyan-500\/5,
+.monocle-content .bg-amber-500\/5,
+.monocle-content .bg-purple-500\/5 {
+  background: rgba(240, 240, 240, 0.055) !important;
+}
+
+/* Graphite-on-graphite layering creates the depth of an industrial console. */
+.monocle-content main > section {
+  background: rgba(0, 0, 0, 0.10) !important;
+  border-color: rgba(240, 240, 240, 0.20) !important;
+}
+
+.monocle-content main > section .glass-card,
+.monocle-content main > section > div.glass-card {
+  background: rgba(240, 240, 240, 0.11) !important;
+  border-color: rgba(240, 240, 240, 0.22) !important;
+}
+
+.monocle-content main > section:first-child {
+  background: linear-gradient(110deg, rgba(0, 0, 0, 0.18), rgba(139, 136, 198, 0.12)) !important;
+}
+
+.monocle-content main > section:nth-of-type(2) {
+  background: rgba(0, 0, 0, 0.16) !important;
+}
+
+.monocle-content main > section:nth-of-type(2) > div {
+  background: rgba(240, 240, 240, 0.06) !important;
 }
