@@ -51,7 +51,7 @@ def create_tdms_job(job: TDMSCreate, db: Session = Depends(get_db)):
 
         created_job = result.mappings().first()
 
-        priority = calculate_priority(job.model_dump())
+        priority = calculate_priority("TDMS", job.model_dump())
 
         db.execute(
             text("""

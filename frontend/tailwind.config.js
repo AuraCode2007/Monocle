@@ -8,16 +8,16 @@ export default {
     extend: {
       colors: {
         railway: {
-          dark: '#0b1120',
-          panel: '#151f32',
-          border: 'rgba(255, 255, 255, 0.08)',
-          accent: '#10b981',
-          eng: '#f97316',
-          trd: '#eab308',
-          st: '#3b82f6',
-          joint: '#a855f7',
-        }
-      }
+          dark: '#4F4F53',
+          panel: '#FFFFFF',
+          border: 'rgba(79, 79, 83, 0.18)',
+          accent: '#8B88C6',
+          eng: '#8B88C6',
+          trd: '#D1A751',
+          st: '#4F4F53',
+          joint: '#8B88C6',
+        },
+      },
     },
   },
   plugins: [],

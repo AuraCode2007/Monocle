@@ -54,7 +54,7 @@ def create_tms_job(job: TMSCreate, db: Session = Depends(get_db)):
         created_job = result.mappings().first()
 
         # DB trigger creates the control room entry.
-        priority = calculate_priority(job.model_dump())
+        priority = calculate_priority("TMS",job.model_dump())
 
         db.execute(
             text("""

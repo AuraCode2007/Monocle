@@ -47,7 +47,7 @@ def create_smms_job(job: SMMSCreate, db: Session = Depends(get_db)):
 
         created_job = result.mappings().first()
 
-        priority = calculate_priority(job.model_dump())
+        priority = calculate_priority( "SMMS", job.model_dump())
 
         db.execute(
             text("""

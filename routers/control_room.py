@@ -55,28 +55,12 @@ def get_control_room_dashboard(db: Session = Depends(get_db)):
 
     total = db.execute(
         text("""
-            SELECT COUNT(*) AS count
-            FROM control_room_master
-        """)
-    ).scalar()
-
-    high = db.execute(
-        text("""
             SELECT COUNT(*)
             FROM control_room_master
-            WHERE priority = 3
         """)
     ).scalar()
 
-    medium = db.execute(
-        text("""
-            SELECT COUNT(*)
-            FROM control_room_master
-            WHERE priority = 2
-        """)
-    ).scalar()
-
-    low = db.execute(
+    highest = db.execute(
         text("""
             SELECT COUNT(*)
             FROM control_room_master
@@ -84,8 +68,33 @@ def get_control_room_dashboard(db: Session = Depends(get_db)):
         """)
     ).scalar()
 
+    high = db.execute(
+        text("""
+            SELECT COUNT(*)
+            FROM control_room_master
+            WHERE priority = 2
+        """)
+    ).scalar()
+
+    medium = db.execute(
+        text("""
+            SELECT COUNT(*)
+            FROM control_room_master
+            WHERE priority = 3
+        """)
+    ).scalar()
+
+    low = db.execute(
+        text("""
+            SELECT COUNT(*)
+            FROM control_room_master
+            WHERE priority IN (4, 5)
+        """)
+    ).scalar()
+
     return {
         "total_jobs": total,
+        "highest_priority": highest,
         "high_priority": high,
         "medium_priority": medium,
         "low_priority": low

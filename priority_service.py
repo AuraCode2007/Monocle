@@ -1,11 +1,12 @@
-def calculate_priority(job_data: dict) -> int:
-    """
-    Temporary priority wrapper.
+from priority import find_priority
 
-    Replace the inside of this function with Shayaan's
-    find_priority() function once his latest priority.py
-    is available.
-    """
 
-    # Temporary default
-    return 3
+def calculate_priority(
+    department: str,
+    job_data: dict
+) -> int:
+
+    return find_priority(
+        department,
+        job_data
+    )
