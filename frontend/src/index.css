@@ -173,7 +173,7 @@ button[class*="bg-rose-"] {
    FROSTED GLASS CARD PRIMITIVES
 ───────────────────────────────────────────────────────────────────────────── */
 .glass-card {
-  background: rgba(245, 248, 255, 0.85);
+  background: rgba(245, 248, 255, 0.50);
   backdrop-filter: blur(20px);
   border: 1px solid var(--ff-border-light);
   box-shadow: var(--ff-shadow-glass);
@@ -195,7 +195,7 @@ button[class*="bg-rose-"] {
    SHELL HEADER
 ───────────────────────────────────────────────────────────────────────────── */
 .monocle-shell-header {
-  background: rgba(245, 248, 255, 0.80);
+  background: rgba(245, 248, 255, 0.50);
   backdrop-filter: blur(20px);
   border: 1px solid var(--ff-border-light);
   box-shadow: var(--ff-shadow-glass);
@@ -259,7 +259,7 @@ button[class*="bg-rose-"] {
 .monocle-content .glass-card,
 .monocle-content section,
 .monocle-content article {
-  background: rgba(245, 248, 255, 0.85) !important;
+  background: rgba(245, 248, 255, 0.40) !important;
   backdrop-filter: blur(20px);
   color: var(--ff-ink) !important;
   border-color: var(--ff-border-light) !important;
@@ -269,18 +269,18 @@ button[class*="bg-rose-"] {
 
 .monocle-content [class*="bg-slate-950"],
 .monocle-content [class*="bg-slate-900"] {
-  background: rgba(245, 248, 255, 0.85) !important;
+  background: rgba(245, 248, 255, 0.40) !important;
   backdrop-filter: blur(20px);
 }
 
 .monocle-content [class*="bg-slate-800"],
 .monocle-content [class*="bg-slate-700"] {
-  background: rgba(230, 236, 255, 0.70) !important;
+  background: rgba(230, 236, 255, 0.35) !important;
   backdrop-filter: blur(15px);
 }
 
 .monocle-content main > section {
-  background: rgba(245, 248, 255, 0.85) !important;
+  background: rgba(245, 248, 255, 0.40) !important;
   backdrop-filter: blur(20px);
   border-color: var(--ff-border-light) !important;
   border-radius: 1.25rem;
@@ -288,14 +288,14 @@ button[class*="bg-rose-"] {
 }
 
 .monocle-content main > section:first-child {
-  background: linear-gradient(135deg, rgba(245, 248, 255, 0.90) 0%, rgba(212, 220, 255, 0.70) 100%) !important;
+  background: linear-gradient(135deg, rgba(245, 248, 255, 0.45) 0%, rgba(212, 220, 255, 0.35) 100%) !important;
   backdrop-filter: blur(20px);
   border-top: 3px solid var(--ff-accent) !important;
 }
 
 .monocle-content main > section .glass-card,
 .monocle-content main > section > div.glass-card {
-  background: rgba(245, 248, 255, 0.85) !important;
+  background: rgba(245, 248, 255, 0.35) !important;
   backdrop-filter: blur(15px);
   border-color: var(--ff-border-light) !important;
   box-shadow: var(--ff-shadow-glass);
