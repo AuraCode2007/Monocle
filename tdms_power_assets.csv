@@ -1,0 +1,26 @@
+power_job_id,line_section,line_direction,source_mast_no,target_mast_no,power_isolation_needed,work_category,tms_collab_req,smms_collab_req,required_duration_mins,reported_by,blockchain_tx_hash
+JOB-OHE-001,HWH-DEL,UP,102/14,102/22,true,Contact Wire Replacement,true,false,180,K. Srinivasan,0x11223344556677889900aabbccddeeff0011223344556677889900aabbccdd
+JOB-OHE-002,BCT-NDLS,DN,44/02,44/10,true,OHE Bracket Adjustment,false,false,60,Nitin Deshmukh,0x223344556677889900aabbccddeeff0011223344556677889900aabbccdd11
+JOB-OHE-003,MAS-HWH,UP,811/45,812/05,true,Isolator Testing,false,true,45,P. Venkatesh,0x3344556677889900aabbccddeeff0011223344556677889900aabbccdd2233
+JOB-OHE-004,SDAH-LGL,DN,12/15,12/25,true,Catenary Dropper Tuning,true,false,120,Gopal Das,0x44556677889900aabbccddeeff0011223344556677889900aabbccdd334455
+JOB-OHE-005,CSTM-MAO,UP,204/30,205/02,false,Mast Foundation Inspection,false,false,90,Anil Shinde,0x556677889900aabbccddeeff0011223344556677889900aabbccdd44556677
+JOB-OHE-006,NDLS-JAT,UP,309/88,310/12,true,Steady Arm Replacement,true,false,150,Jaspal Singh,0x6677889900aabbccddeeff0011223344556677889900aabbccdd5566778899
+JOB-OHE-007,HWH-GAYA,DN,198/14,198/32,true,AT Transformer Check,false,true,75,B. N. Rao,0x77889900aabbccddeeff0011223344556677889900aabbccdd6677889900aa
+JOB-OHE-008,SBC-MAS,DN,141/50,142/10,true,Neutral Section Overhaul,true,true,200,Ravi Chandran,0x889900aabbccddeeff0011223344556677889900aabbccdd77889900aabbcc
+JOB-OHE-009,ADI-BCT,UP,22/10A,22/18A,true,Catenary Splice Install,true,false,110,V. P. Solanki,0x9900aabbccddeeff0011223344556677889900aabbccdd77889900aabbccdd
+JOB-OHE-010,LKO-NDLS,DN,415/33,415/45,true,Jumper Wire Renewal,false,false,85,S. C. Tiwari,0x00aabbccddeeff0011223344556677889900aabbccdd77889900aabbccddee
+JOB-OHE-011,GHY-NJP,UP,88/12,88/24,false,Mast Alignment Check,false,false,50,A. K. Das,0xaabbccddeeff0011223344556677889900aabbccdd77889900aabbccddeeff
+JOB-OHE-012,VSKP-MAS,DN,512/04,512/16,true,Overhead Tension Balance,true,false,140,K. S. Rao,0xbbccddeeff0011223344556677889900aabbccdd77889900aabbccddeeff00
+JOB-OHE-013,NZM-KOTA,UP,180/15,180/35,true,Section Insulator Repair,false,true,95,K. C. Meena,0xccddeeff0011223344556677889900aabbccdd77889900aabbccddeeff0011
+JOB-OHE-014,NGP-CSMT,DN,619/80,620/05,true,OHE Tree Trimming Clearance,true,false,105,S. G. Kale,0xddeeff0011223344556677889900aabbccdd77889900aabbccddeeff001122
+JOB-OHE-015,PUNE-SUR,UP,94/10,94/20,true,Contact Tension Weight Bolt,false,false,70,M. M. Kulkarni,0xeeff0011223344556677889900aabbccdd77889900aabbccddeeff00112233
+JOB-OHE-016,CNB-ALD,DN,110/12,110/40,true,Cross Catenary Overhaul,true,true,160,P. K. Mishra,0xff0011223344556677889900aabbccdd77889900aabbccddeeff0011223344
+JOB-OHE-017,GKP-CPR,UP,35/20,35/36,true,OHE Structure Painting,false,false,130,V. K. Pandey,0x0011223344556677889900aabbccdd77889900aabbccddeeff001122334455
+JOB-OHE-018,MDU-TPJ,DN,145/42,145/60,true,Feeder Line Insulator replacement,false,false,80,S. Murugan,0x11223344556677889900aabbccdd77889900aabbccddeeff00112233445566
+JOB-OHE-019,RE-JP,UP,72/08,72/24,true,OHE Cantilever Fitting Check,false,false,65,Satyawan Singh,0x223344556677889900aabbccdd77889900aabbccddeeff0011223344556677
+JOB-OHE-020,BJU-GHY,DN,280/10,280/50,true,Traction Substation Interlock Check,false,true,115,S. Bhattacharya,0x3344556677889900aabbccdd77889900aabbccddeeff001122334455667788
+JOB-OHE-021,TATA-HWH,UP,154/22,154/44,true,Return Conductor Connection,true,false,90,D. K. Mahato,0x44556677889900aabbccdd77889900aabbccddeeff00112233445566778899
+JOB-OHE-022,ASN-GAYA,DN,89/10,89/22,true,Earth Discharge Rod Testing,false,false,40,N. C. Das,0x556677889900aabbccdd77889900aabbccddeeff0011223344556677889900
+JOB-OHE-023,R-NGP,UP,241/15,241/30,true,Traction Mast Upgrade Fit,true,false,150,A. K. Verma,0x6677889900aabbccdd77889900aabbccddeeff0011223344556677889900aa
+JOB-OHE-024,SC-BZA,DN,315/20,315/48,true,Neutral Section Span Wire Fix,true,true,175,Ch. Krishna,0x77889900aabbccdd77889900aabbccddeeff0011223344556677889900aabb
+JOB-OHE-025,HWH-DEL,DN,140/02,140/22,true,OHE Cross-Over Sag Correction,true,false,125,R. N. Prasad,0x889900aabbccdd77889900aabbccddeeff0011223344556677889900aabbcc
