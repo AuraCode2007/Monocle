@@ -38,7 +38,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from models import ControlRoomMaster, SmmsSignalAsset, TdmsPowerAsset, TmsTrackAsset
-from priority_client import PRIORITY_HIGH, PRIORITY_LABELS, get_priority
+from priority_service import (PRIORITY_HIGH,PRIORITY_LABELS, calculate_priority,)
 from schemas import (
     SmmsRequestCreate,
     SmmsRequestUpdate,
@@ -145,11 +145,13 @@ def create_tms_request(db: Session, payload: TmsRequestCreate) -> Dict[str, Any]
         db.rollback()
         raise HTTPException(status_code=409, detail=f"Job ID {job_id} already exists - please retry")
 
-    priority = get_priority(
-        department="TMS",
-        work_category=payload.work_category,
-        required_duration_mins=payload.required_duration_mins,
-        department_specific_details=_tms_details(payload),
+    priority = calculate_priority(
+    department="TMS",
+    job_data={
+        "work_category": payload.work_category,
+        "required_duration_mins": payload.required_duration_mins,
+        **_tms_details(payload),
+    },
     )
 
     crm = _get_control_room_row(db, job_id)
@@ -287,11 +289,13 @@ def create_tdms_request(db: Session, payload: TdmsRequestCreate) -> Dict[str, An
         db.rollback()
         raise HTTPException(status_code=409, detail=f"Job ID {job_id} already exists - please retry")
 
-    priority = get_priority(
-        department="TDMS",
-        work_category=payload.work_category,
-        required_duration_mins=payload.required_duration_mins,
-        department_specific_details=_tdms_details(payload),
+    priority = calculate_priority(
+    department="TDMS",
+    job_data={
+        "work_category": payload.work_category,
+        "required_duration_mins": payload.required_duration_mins,
+        **_tdms_details(payload),
+    },
     )
 
     crm = _get_control_room_row(db, job_id)
@@ -419,11 +423,13 @@ def create_smms_request(db: Session, payload: SmmsRequestCreate) -> Dict[str, An
         db.rollback()
         raise HTTPException(status_code=409, detail=f"Job ID {job_id} already exists - please retry")
 
-    priority = get_priority(
-        department="SMMS",
-        work_category=payload.work_category,
-        required_duration_mins=payload.required_duration_mins,
-        department_specific_details=_smms_details(payload),
+    priority = calculate_priority(
+    department="SMMS",
+    job_data={
+        "work_category": payload.work_category,
+        "required_duration_mins": payload.required_duration_mins,
+        **_smms_details(payload),
+    },
     )
 
     crm = _get_control_room_row(db, job_id)
