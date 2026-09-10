@@ -3,75 +3,232 @@ import { Train, Zap, ShieldCheck, RefreshCw, UserCheck, Bot, MapPin } from 'luci
 import { LANGUAGES } from '../i18n';
 import { useRailwayStore } from '../store/useRailwayStore';
 
-export default function Header({ isOptimized, onToggleOptimize, isSolving, activeRole, onRoleChange, isApiConnected, onOpenAssistant, language, labels, onChangeLanguage }) {
+export default function Header({
+  isOptimized, onToggleOptimize, isSolving,
+  activeRole, onRoleChange,
+  isApiConnected, onOpenAssistant,
+  language, labels, onChangeLanguage,
+}) {
   const { activeCorridorKey, setCorridor } = useRailwayStore();
 
-  const handleOptimizeClick = () => {
-    onToggleOptimize();
+  /* ── shared control pill style (frosted glass) ── */
+  const pillBase = {
+    display:        'inline-flex',
+    alignItems:     'center',
+    gap:            '0.375rem',
+    padding:        '0.375rem 0.875rem',
+    borderRadius:   '0.625rem',
+    border:         '1px solid #D1DEFF',
+    background:     'rgba(245, 248, 255, 0.70)',
+    backdropFilter: 'blur(15px)',
+    color:          '#3D4561',
+    fontSize:       '0.75rem',
+    fontWeight:     '600',
+    whiteSpace:     'nowrap',
+    cursor:         'default',
+  };
+
+  const selectStyle = {
+    background:  'transparent',
+    color:       '#1A1F3A',
+    outline:     'none',
+    cursor:      'pointer',
+    fontWeight:  '600',
+    fontSize:    '0.75rem',
+    border:      'none',
   };
 
   return (
     <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+
+      {/* ── Brand ── */}
       <div className="flex items-center gap-3 w-full xl:w-auto">
-        <div className="p-3 rounded-xl border border-amber-400/40 bg-slate-900/90 text-slate-100 shadow-sm">
-          <Train className="w-6 h-6 text-amber-400" />
+        {/* Logo icon — bright blue with glow */}
+        <div
+          className="p-2.5 rounded-xl flex-shrink-0"
+          style={{
+            background:   'rgba(91, 127, 255, 0.20)',
+            border:       '1px solid #7A96FF',
+            boxShadow:    '0 4px 16px rgba(91, 127, 255, 0.25)',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          <Train className="w-5 h-5" style={{ color: '#5B7FFF' }} />
         </div>
+
+        {/* Name + badges */}
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-white">
-              Monocle <span className="text-slate-300 text-sm font-bold bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">RailSync</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-xl md:text-2xl font-black tracking-tight" style={{ color: '#1A1F3A' }}>
+              Monocle{' '}
+              <span
+                className="text-sm font-bold px-2 py-0.5 rounded-full"
+                style={{
+                  background: 'rgba(91, 127, 255, 0.15)',
+                  color:      '#5B7FFF',
+                  border:     '1px solid #7A96FF',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                RailSync
+              </span>
             </h1>
-            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 hidden sm:flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3" /> {labels.compliant}
+            <span
+              className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full hidden sm:flex items-center gap-1"
+              style={{
+                background: 'rgba(16, 185, 129, 0.15)',
+                color:      '#10B981',
+                border:     '1px solid rgba(16, 185, 129, 0.30)',
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <ShieldCheck className="w-3 h-3" />
+              {labels.compliant}
             </span>
           </div>
-          <p className="text-xs text-slate-400">{labels.brandSubtitle}</p>
+          <p className="text-xs mt-0.5" style={{ color: '#6B7480' }}>{labels.brandSubtitle}</p>
         </div>
       </div>
 
+      {/* ── Controls ── */}
       <div className="flex items-center flex-wrap gap-2 w-full xl:w-auto justify-start xl:justify-end">
 
-        <label className="flex items-center gap-1.5 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 text-xs font-bold text-slate-200">
+        {/* Language selector */}
+        <label style={pillBase} aria-label={labels.language}>
           <span className="sr-only">{labels.language}</span>
-          <select value={language} onChange={(event) => onChangeLanguage(event.target.value)} aria-label={labels.language} className="railway-select bg-transparent text-slate-200 outline-none cursor-pointer font-bold text-xs [color-scheme:dark]">
-            {LANGUAGES.map((option) => <option key={option.code} value={option.code} className="bg-slate-900 text-slate-200">{option.nativeLabel} · {option.label}</option>)}
+          <select
+            value={language}
+            onChange={(e) => onChangeLanguage(e.target.value)}
+            aria-label={labels.language}
+            style={selectStyle}
+          >
+            {LANGUAGES.map((opt) => (
+              <option key={opt.code} value={opt.code}
+                style={{ background: '#F5F8FF', color: '#1A1F3A' }}>
+                {opt.nativeLabel} · {opt.label}
+              </option>
+            ))}
           </select>
         </label>
 
-        <div className="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
-          <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-          <select value={activeCorridorKey} onChange={(e) => setCorridor(e.target.value)}
-            className="railway-select bg-transparent text-slate-200 outline-none cursor-pointer font-bold text-xs [color-scheme:dark]">
-            <option className="bg-slate-900 text-slate-200" value="NDLS_CNB">NDLS-CNB (NCR - 440 KM)</option>
-            <option className="bg-slate-900 text-slate-200" value="MMCT_ADI">MMCT-ADI (WR - 492 KM)</option>
-            <option className="bg-slate-900 text-slate-200" value="HWH_DDU">HWH-DDU (ER - 675 KM)</option>
-            <option className="bg-slate-900 text-slate-200" value="MAS_SBC">MAS-SBC (SR - 360 KM)</option>
+        {/* Corridor selector */}
+        <div style={pillBase}>
+          <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5B7FFF' }} />
+          <select
+            value={activeCorridorKey}
+            onChange={(e) => setCorridor(e.target.value)}
+            style={selectStyle}
+          >
+            <option value="NDLS_CNB" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>NDLS-CNB (NCR - 440 KM)</option>
+            <option value="MMCT_ADI" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>MMCT-ADI (WR - 492 KM)</option>
+            <option value="HWH_DDU" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>HWH-DDU (ER - 675 KM)</option>
+            <option value="MAS_SBC" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>MAS-SBC (SR - 360 KM)</option>
           </select>
         </div>
 
-        <button onClick={onOpenAssistant}
-          className="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer hover:border-slate-500">
-          <Bot className="w-3.5 h-3.5 text-emerald-400" />
+        {/* AI Assistant */}
+        <button
+          onClick={onOpenAssistant}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer"
+          style={{
+            background:  'rgba(245, 248, 255, 0.70)',
+            backdropFilter: 'blur(15px)',
+            border:      '1px solid #D1DEFF',
+            color:       '#3D4561',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background    = 'rgba(91, 127, 255, 0.15)';
+            e.currentTarget.style.borderColor   = '#7A96FF';
+            e.currentTarget.style.color         = '#5B7FFF';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background    = 'rgba(245, 248, 255, 0.70)';
+            e.currentTarget.style.borderColor   = '#D1DEFF';
+            e.currentTarget.style.color         = '#3D4561';
+          }}
+        >
+          <Bot className="w-3.5 h-3.5" style={{ color: '#5B7FFF' }} />
           <span className="hidden sm:inline">{labels.askAi}</span>
         </button>
 
-        <label className="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-amber-500/30 text-xs text-slate-300" title="Changes the demo view only; permissions remain tied to the signed-in account.">
-          <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="text-[9px] font-black uppercase tracking-wider text-amber-300">Demo role</span>
-          <select value={activeRole} onChange={(e) => onRoleChange(e.target.value)}
-            className="railway-select bg-transparent text-slate-200 outline-none cursor-pointer font-medium text-xs [color-scheme:dark]">
-            <option className="bg-slate-900 text-slate-200" value="SECTION_CONTROLLER">Section Controller</option>
-            <option className="bg-slate-900 text-slate-200" value="TRACK_ENGINEER">Sr. DEN (Track)</option>
-            <option className="bg-slate-900 text-slate-200" value="TRACTION_CONTROLLER">TPC (Traction)</option>
-            <option className="bg-slate-900 text-slate-200" value="SIGNAL_INCHARGE">DSTE (Signal)</option>
+        {/* Demo role selector */}
+        <label
+          style={{ ...pillBase, borderColor: '#7A96FF', background: 'rgba(91, 127, 255, 0.15)' }}
+          title="Changes the demo view only; permissions remain tied to the signed-in account."
+        >
+          <UserCheck className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5B7FFF' }} />
+          <span
+            className="text-[9px] font-black uppercase tracking-wider"
+            style={{ color: '#5B7FFF' }}
+          >
+            Demo role
+          </span>
+          <select
+            value={activeRole}
+            onChange={(e) => onRoleChange(e.target.value)}
+            style={{ ...selectStyle, color: '#4A6FFF' }}
+          >
+            <option value="SECTION_CONTROLLER" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>Section Controller</option>
+            <option value="TRACK_ENGINEER"     style={{ background: '#F5F8FF', color: '#1A1F3A' }}>Sr. DEN (Track)</option>
+            <option value="TRACTION_CONTROLLER"style={{ background: '#F5F8FF', color: '#1A1F3A' }}>TPC (Traction)</option>
+            <option value="SIGNAL_INCHARGE"    style={{ background: '#F5F8FF', color: '#1A1F3A' }}>DSTE (Signal)</option>
           </select>
         </label>
 
-        <button onClick={handleOptimizeClick} disabled={isSolving}
-          className={'px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition-all flex items-center gap-1.5 cursor-pointer ' + (isOptimized ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700' : 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/40 active:scale-95')}>
-            {isSolving ? (<><RefreshCw className="w-3.5 h-3.5 animate-spin" /><span>{labels.solving}</span></>) :
-              isOptimized ? (<><RefreshCw className="w-3.5 h-3.5 text-slate-400" /><span>{labels.reset}</span></>) :
-           (<><Zap className="w-3.5 h-3.5 fill-current" /><span>{labels.optimizer}</span></>)}
+        {/* Optimize / Reset button */}
+        <button
+          onClick={onToggleOptimize}
+          disabled={isSolving}
+          className="px-4 py-2 rounded-lg font-bold text-xs md:text-sm transition-all flex items-center gap-1.5 cursor-pointer"
+          style={isOptimized
+            ? {
+                background:  'rgba(245, 248, 255, 0.70)',
+                backdropFilter: 'blur(15px)',
+                border:      '1px solid #D1DEFF',
+                color:       '#3D4561',
+              }
+            : {
+                background:  '#5B7FFF',
+                border:      '1px solid #4A6FFF',
+                color:       '#FFFFFF',
+                boxShadow:   '0 4px 16px rgba(91,127,255,0.25)',
+              }
+          }
+          onMouseEnter={(e) => {
+            if (!isSolving) {
+              e.currentTarget.style.background = isOptimized
+                ? 'rgba(245, 248, 255, 0.90)'
+                : '#4A6FFF';
+              e.currentTarget.style.boxShadow = isOptimized
+                ? 'none'
+                : '0 6px 24px rgba(91,127,255,0.35)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = isOptimized
+              ? 'rgba(245, 248, 255, 0.70)'
+              : '#5B7FFF';
+            e.currentTarget.style.boxShadow = isOptimized
+              ? 'none'
+              : '0 4px 16px rgba(91,127,255,0.25)';
+          }}
+        >
+          {isSolving ? (
+            <>
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              <span>{labels.solving}</span>
+            </>
+          ) : isOptimized ? (
+            <>
+              <RefreshCw className="w-3.5 h-3.5" style={{ color: '#6B7480' }} />
+              <span>{labels.reset}</span>
+            </>
+          ) : (
+            <>
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>{labels.optimizer}</span>
+            </>
+          )}
         </button>
 
       </div>
