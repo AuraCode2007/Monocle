@@ -1,0 +1,31 @@
+train_number,train_name,priority,line_section,line_direction,enter_time_mins,exit_time_mins,train_type
+12301,Howrah Rajdhani Express,1,HWH-DEL,UP,258,310,Premium Superfast
+12302,New Delhi Howrah Rajdhani Express,1,HWH-DEL,DN,793,824,Premium Superfast
+12951,Mumbai Central Rajdhani Express,2,BCT-NDLS,UP,973,1081,Premium Superfast
+12952,New Delhi Mumbai Central Rajdhani Express,3,BCT-NDLS,DN,1008,1173,Premium Superfast
+12839,Howrah Chennai Mail,4,MAS-HWH,UP,766,917,Superfast Mail
+12840,Chennai Howrah Mail,4,MAS-HWH,DN,948,1103,Superfast Mail
+13103,Sealdah Lalgola Bhagirathi Express,5,SDAH-LGL,DN,839,1023,Express
+10111,Mumbai CSMT Madgaon Mandovi Express,3,CSTM-MAO,UP,387,418,Express
+12425,New Delhi Jammu Tawi Rajdhani Express,5,NDLS-JAT,UP,932,1028,Premium Superfast
+12381,Poorva Express,5,HWH-GAYA,DN,445,477,Superfast Mail
+12393,Sampoorna Kranti Express,4,PNBE-HWH,UP,170,232,Superfast
+12658,Bengaluru Chennai KSR Express,2,SBC-MAS,DN,306,393,Superfast
+12901,Ahmedabad Mumbai Central Gujarat Mail,5,ADI-BCT,UP,824,855,Superfast Mail
+12420,Gomti Express,1,LKO-NDLS,DN,153,281,Express
+15657,Kamakhya Delhi Brahmaputra Mail,2,GHY-NJP,UP,59,215,Express Mail
+12842,Coromandel Express,3,VSKP-MAS,DN,19,187,Superfast Mail
+12904,Golden Temple Mail,4,NZM-KOTA,UP,77,232,Superfast Mail
+12105,Vidarbha Express,1,NGP-CSMT,DN,582,693,Superfast Mail
+22139,Pune Solapur Humsafar Express,1,PUNE-SUR,UP,499,633,Premium Express
+14164,Sangam Express,3,CNB-ALD,DN,938,1021,Express
+15048,Gorakhpur Kolkata Purvanchal Express,2,GKP-CPR,UP,106,296,Express
+12636,Madurai Chennai Egmore Vaigai Express,2,MDU-TPJ,DN,1017,1104,Superfast
+14816,Rewari Hisar Passenger,3,RE-JP,UP,435,541,Express
+15631,Barmer Guwahati Express,5,BJU-GHY,DN,1150,1228,Express
+12809,Mumbai CSMT Howrah Mail,4,TATA-HWH,UP,922,1075,Superfast Mail
+12319,Kolkata Agra Cantt Express,4,ASN-GAYA,DN,956,1052,Express
+12834,Howrah Ahmedabad Superfast Express,1,R-NGP,UP,314,474,Superfast
+12760,Charminar Express,3,SC-BZA,DN,138,241,Superfast Mail
+37811,Howrah Barddhaman Local,3,HWH-DEL,UP,305,373,Suburban Local
+BOXN-4021,Coal Freight Rake,3,HWH-DEL,DN,1093,1246,Freight
