@@ -10,7 +10,7 @@ import uvicorn
 
 
 app = FastAPI(
-    title='RailSync-AI - Intelligent Block Planning Engine',
+    title='Monocle - Intelligent Block Planning Engine',
     description='Backend API for Automatic Railway Maintenance Block Scheduling',
     version='1.0.0'
 )
