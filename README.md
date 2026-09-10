@@ -40,6 +40,11 @@ In Indian Railways, fixed infrastructure maintenance across **Engineering (Track
 # Install Python requirements
 pip install -r requirements.txt
 
+# set up your own .env file and inside it write:
+DATABASE_URL=postgesql://..... (Put in the actual database url here)
+
+# (Optional): make your terminal able to display emojis by executing: $env:PYTHONIOENCODING="utf-8"
+
 # Run the backend API server
 python main.py
 `

@@ -1,0 +1,26 @@
+signal_job_id,station_code,point_machine_no,interlocking_panel,work_category,tdms_collab_req,tms_collab_req,required_duration_mins,reported_by,blockchain_tx_hash
+JOB-SIG-001,HWH,PM-202A,EI-WEST-01,Point Machine Lubrication,false,true,40,Debasish Roy,0xaa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff112233
+JOB-SIG-002,NDLS,PM-045B,RRI-CENTRAL,Axle Counter Testing,true,false,90,S. K. Mishra,0xbb22cc33dd44ee55ff660011223344556677889900aabbccddeeff112233aa11
+JOB-SIG-003,MAS,PM-112C,EI-SOUTH,Signal Lamp Replacement,false,false,30,T. Elangovan,0xcc33dd44ee55ff660011223344556677889900aabbccddeeff112233aa11bb22
+JOB-SIG-004,SDAH,PM-012A,RRI-EAST-02,Track Circuit Tuning,true,true,110,N. K. Banerjee,0xdd44ee55ff660011223344556677889900aabbccddeeff112233aa11bb22cc33
+JOB-SIG-005,CSTM,PM-089D,PI-PLAT-05,Interlocking Logic Patch,false,false,60,Milind Tambe,0xee55ff660011223344556677889900aabbccddeeff112233aa11bb22cc33dd44
+JOB-SIG-006,JAT,PM-004E,EI-NORTH,AFTC Parameter Tuning,false,true,80,Baldev Raj,0xff660011223344556677889900aabbccddeeff112233aa11bb22cc33dd44ee55
+JOB-SIG-007,GAYA,PM-156A,RRI-YARD,UFSBI Device Card Change,true,false,50,S. N. Prasad,0x0011223344556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff66
+JOB-SIG-008,SBC,PM-073B,EI-MAIN,Calling-On Signal Repair,false,false,45,K. Raghavan,0x11223344556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff6600
+JOB-SIG-009,ADI,PM-101F,EI-WEST,Point Rod Adjustment,false,true,75,H. J. Patel,0x223344556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff660011
+JOB-SIG-010,LKO,PM-034A,RRI-CABIN-A,LED Signal Aspect Clean,false,false,35,V. P. Srivastava,0x3344556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff66001122
+JOB-SIG-011,GHY,PM-055C,PI-STN,Signal Cable Insulation,true,false,120,B. Baruah,0x44556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff6600112233
+JOB-SIG-012,VSKP,PM-211A,EI-EAST,Relay Box Contact Clean,false,false,55,M. V. Naidu,0x556677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff660011223344
+JOB-SIG-013,NZM,PM-118B,RRI-SOUTH,Shunt Signal Card Fix,false,false,40,Deepak Kumar,0x6677889900aabbccddeeff112233aa11bb22cc33dd44ee55ff66001122334455
+JOB-SIG-014,NGP,PM-092E,EI-YARD-A,Point Ground Connections Check,true,true,100,A. G. Joshi,0x77889900aabbccddeeff112233aa11bb22cc33dd44ee55ff6600112233445566
+JOB-SIG-015,PUNE,PM-067A,PI-CENTRAL,Fuse Auto-Changeover Test,false,false,30,R. S. Kadam,0x889900aabbccddeeff112233aa11bb22cc33dd44ee55ff660011223344556677
+JOB-SIG-016,CNB,PM-301C,RRI-NORTH,Data Logger Loop Module Fix,true,false,85,A. K. Tiwari,0x9900aabbccddeeff112233aa11bb22cc33dd44ee55ff66001122334455667788
+JOB-SIG-017,GKP,PM-022D,EI-STN-02,Integrated Power System Test,true,false,95,O. P. Mishra,0x00aabbccddeeff112233aa11bb22cc33dd44ee55ff6600112233445566778899
+JOB-SIG-018,MDU,PM-081B,PI-YARD,Choke Coil Replacement,false,true,50,S. Kumar,0xaabbccddeeff112233aa11bb22cc33dd44ee55ff660011223344556677889900
+JOB-SIG-019,RE,PM-015F,EI-CABIN,Block Instrument Calibration,false,false,70,Satish Yadav,0xbbccddeeff112233aa11bb22cc33dd44ee55ff660011223344556677889900aa
+JOB-SIG-020,BJU,PM-142A,RRI-MAIN,Axle Counter Evaluator Swap,true,false,105,P. K. Das,0xccddeeff112233aa11bb22cc33dd44ee55ff660011223344556677889900aabb
+JOB-SIG-021,TATA,PM-077B,EI-WEST,Signal Aspect Voltage Tuning,false,false,45,A. K. Mahapatra,0xddeeff112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbcc
+JOB-SIG-022,ASN,PM-103C,RRI-EAST,Point Machine Detection Check,false,true,60,S. S. Chatterjee,0xeeff112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccdd
+JOB-SIG-023,R,PM-088A,EI-MAIN,Track Circuit Feed Resistance,false,true,40,R. K. Sahu,0xff112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddee
+JOB-SIG-024,SC,PM-250E,RRI-YARD,UFSBI Link Media Converter,true,false,65,B. Venkateswarlu,0x112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff
+JOB-SIG-025,HWH,PM-204B,EI-WEST-02,Route Indicator Lamp Fix,false,false,35,S. Mukherjee,0x2233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff11
