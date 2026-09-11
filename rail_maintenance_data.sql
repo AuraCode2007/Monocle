@@ -152,8 +152,16 @@ CREATE TRIGGER smms_sync_trigger AFTER INSERT OR UPDATE ON smms_signal_assets FO
 \copy tdms_power_assets(power_job_id, line_section, line_direction, source_mast_no, target_mast_no, power_isolation_needed, work_category, tms_collab_req, smms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) FROM 'tdms_power_assets.csv' DELIMITER ',' CSV HEADER;
 \copy smms_signal_assets(signal_job_id, station_code, point_machine_no, interlocking_panel, work_category, tdms_collab_req, tms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) FROM 'smms_signal_assets.csv' DELIMITER ',' CSV HEADER;
 
+-- 8 A table of corridors and line direction
+CREATE TABLE corridor_list (
+    sl_no SERIAL PRIMARY KEY,
+    line_section VARCHAR(20) NOT NULL,
+    line_direction VARCHAR(10) NOT NULL,
+    -- Allows these columns to be referenced as a foreign key target
+    CONSTRAINT unique_corridor_combination UNIQUE (line_section, line_direction)
+);
 
--- 8. Create Train Section Windows Table (For Traffic & Maintenance Block Scheduling)
+-- 9. Create Train Section Windows Table (For Traffic & Maintenance Block Scheduling)
 CREATE TABLE train_section_windows (
     id BIGSERIAL PRIMARY KEY, 
     train_number VARCHAR(20) NOT NULL,
@@ -166,8 +174,21 @@ CREATE TABLE train_section_windows (
     enter_time_mins INT NOT NULL CHECK (enter_time_mins BETWEEN 0 AND 1439), 
     exit_time_mins INT NOT NULL CHECK (exit_time_mins BETWEEN 0 AND 1439), 
     train_type VARCHAR(30), 
-    CONSTRAINT valid_train_window CHECK (exit_time_mins > enter_time_mins)
+    CONSTRAINT valid_train_window CHECK (exit_time_mins > enter_time_mins),
+
+    -- Composite Foreign Key linking to the master corridor list
+    CONSTRAINT fk_train_corridor FOREIGN KEY (line_section, line_direction) 
+        REFERENCES corridor_list (line_section, line_direction)
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT
 );
+
+-- 1. Truncate target table to avoid duplicate entry errors if re-running
+TRUNCATE TABLE corridor_list RESTART IDENTITY CASCADE;
+
+-- 2. CSV Integration via PostgreSQL COPY command
+-- Note: Ensure the file path explicitly points to your environment's layout.
+\copy corridor_list(line_section, line_direction) FROM 'corridor_list.csv' DELIMITER ',' CSV HEADER;
 
 -- CSV Integration via PostgreSQL COPY command
 \copy train_section_windows(train_number, train_name, priority, line_section, line_direction, enter_time_mins, exit_time_mins, train_type) FROM 'train_section_windows.csv' DELIMITER ',' CSV HEADER;
