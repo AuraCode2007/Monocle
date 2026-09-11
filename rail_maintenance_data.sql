@@ -1,3 +1,8 @@
+-- Clean up existing tables and types for idempotent re-execution
+DROP TABLE IF EXISTS smms_signal_assets, tdms_power_assets, tms_track_assets, control_room_master, users CASCADE;
+DROP TYPE IF EXISTS dept_enum, role_enum CASCADE;
+-- Monocle Auto-Sync Active: Verified Live Stream
+
 -- Creating Enum types
 CREATE TYPE dept_enum AS ENUM ('TMS', 'TDMS', 'SMMS');
 CREATE TYPE role_enum AS ENUM ('TMS', 'TDMS', 'SMMS', 'CONTROL_ROOM');
@@ -230,3 +235,11 @@ INSERT INTO smms_signal_assets (signal_job_id, station_code, point_machine_no, i
 ('JOB-SIG-023', 'R', 'PM-088A', 'EI-MAIN', 'Track Circuit Feed Resistance', false, true, 40, 'R. K. Sahu', '0xff112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddee'),
 ('JOB-SIG-024', 'SC', 'PM-250E', 'RRI-YARD', 'UFSBI Link Media Converter', true, false, 65, 'B. Venkateswarlu', '0x112233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff'),
 ('JOB-SIG-025', 'HWH', 'PM-204B', 'EI-WEST-02', 'Route Indicator Lamp Fix', false, false, 35, 'S. Mukherjee', '0x2233aa11bb22cc33dd44ee55ff660011223344556677889900aabbccddeeff11');
+
+-- Seed Users for Department-Specific Authentication (SIH26027)
+INSERT INTO users (user_id, username, password_hash, role, email) VALUES
+('TMS-01', 'tms_officer', 'RailSync@123', 'TMS', 'tms.track@railsync.ai'),
+('TDMS-01', 'tdms_officer', 'RailSync@123', 'TDMS', 'tdms.power@railsync.ai'),
+('SMMS-01', 'smms_officer', 'RailSync@123', 'SMMS', 'smms.signal@railsync.ai'),
+('COA-01', 'coa_controller', 'RailSync@123', 'CONTROL_ROOM', 'controller@railsync.ai');
+

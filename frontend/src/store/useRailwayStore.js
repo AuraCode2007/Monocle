@@ -233,6 +233,13 @@ export const useRailwayStore = create((set, get) => ({
   issuedPTW: {},
   emergencyActive: false,
 
+  // Database Integration State
+  dbTasks: [],
+  isDbConnected: false,
+  dbStatus: null,
+  isDbSyncing: false,
+  lastDbSyncTime: null,
+
   // GIS Map Layer Toggles
   showTrains: true,
   showBlocks: true,
@@ -244,7 +251,16 @@ export const useRailwayStore = create((set, get) => ({
   getCorridor: () => CORRIDORS[get().activeCorridorKey],
   getSections: () => CORRIDORS[get().activeCorridorKey].sections,
   getTrains: () => CORRIDORS[get().activeCorridorKey].trains,
-  getTasks: () => CORRIDORS[get().activeCorridorKey].tasks,
+  getTasks: () => {
+    const dbTasks = get().dbTasks;
+    if (dbTasks && dbTasks.length > 0) {
+      const activeKey = get().activeCorridorKey;
+      const corridorTasks = dbTasks.filter((t) => t.corridor_id === activeKey);
+      if (corridorTasks.length > 0) return corridorTasks;
+      return dbTasks;
+    }
+    return CORRIDORS[get().activeCorridorKey]?.tasks || [];
+  },
   getSubstations: () => CORRIDORS[get().activeCorridorKey].substations || [],
 
   setCorridor: (key) => {
@@ -270,8 +286,51 @@ export const useRailwayStore = create((set, get) => ({
   setFilterDept: (dept) => set({ filterDept: dept }),
   setIsApiConnected: (status) => set({ isApiConnected: status }),
 
+  fetchDatabaseTasks: async () => {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/v1/tasks');
+      if (!res.ok) throw new Error('Tasks request failed');
+      const data = await res.json();
+      
+      let statusData = null;
+      try {
+        const sRes = await fetch('http://127.0.0.1:8000/api/v1/database/status');
+        if (sRes.ok) statusData = await sRes.json();
+      } catch {
+        // ignore status error
+      }
+
+      set({
+        dbTasks: data.tasks || [],
+        isDbConnected: statusData?.connected ?? true,
+        dbStatus: statusData,
+        isApiConnected: true,
+        lastDbSyncTime: statusData?.last_synced_at ? new Date(statusData.last_synced_at).toLocaleTimeString() : new Date().toLocaleTimeString(),
+      });
+    } catch {
+      set({ isDbConnected: false });
+    }
+  },
+
+  syncDatabase: async () => {
+    set({ isDbSyncing: true });
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/v1/database/sync', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        await get().fetchDatabaseTasks();
+        await get().loadBaseline();
+      }
+    } catch (e) {
+      console.error('Database sync error:', e);
+    } finally {
+      set({ isDbSyncing: false });
+    }
+  },
+
   loadBaseline: async () => {
     try {
+      await get().fetchDatabaseTasks();
       const response = await fetch('http://127.0.0.1:8000/api/v1/baseline');
       if (!response.ok) throw new Error('Baseline request failed');
       const baseline = await response.json();

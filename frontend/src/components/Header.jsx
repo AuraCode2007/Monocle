@@ -1,5 +1,5 @@
 import React from 'react';
-import { Train, Zap, ShieldCheck, RefreshCw, UserCheck, Bot, MapPin } from 'lucide-react';
+import { Train, Zap, ShieldCheck, RefreshCw, UserCheck, Bot, MapPin, Database } from 'lucide-react';
 import { LANGUAGES } from '../i18n';
 import { useRailwayStore } from '../store/useRailwayStore';
 
@@ -9,7 +9,10 @@ export default function Header({
   isApiConnected, onOpenAssistant,
   language, labels, onChangeLanguage,
 }) {
-  const { activeCorridorKey, setCorridor } = useRailwayStore();
+  const {
+    activeCorridorKey, setCorridor,
+    isDbConnected, dbStatus, isDbSyncing, syncDatabase, dbTasks,
+  } = useRailwayStore();
 
   /* ── shared control pill style (frosted glass) ── */
   const pillBase = {
@@ -126,6 +129,30 @@ export default function Header({
           </select>
         </div>
 
+        {/* PostgreSQL Database Status & Auto-Sync */}
+        <div
+          style={{
+            ...pillBase,
+            borderColor: isDbConnected ? 'rgba(16, 185, 129, 0.40)' : 'rgba(239, 68, 68, 0.40)',
+            background: isDbConnected ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+          }}
+          title={isDbConnected ? `PostgreSQL Database: ${dbStatus?.database || 'railsync'} (Auto-synced with rail_maintenance_data.sql)` : "PostgreSQL Disconnected"}
+        >
+          <Database className="w-3.5 h-3.5 flex-shrink-0" style={{ color: isDbConnected ? '#10B981' : '#EF4444' }} />
+          <span className="flex items-center gap-1.5 font-bold" style={{ color: isDbConnected ? '#059669' : '#DC2626' }}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isDbConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+            {isDbConnected ? `PostgreSQL (${dbTasks.length || 75})` : 'DB Offline'}
+          </span>
+          <button
+            onClick={syncDatabase}
+            disabled={isDbSyncing}
+            className="ml-1 p-0.5 hover:bg-emerald-500/20 rounded transition-all cursor-pointer flex items-center justify-center"
+            title="Re-sync rail_maintenance_data.sql into PostgreSQL"
+          >
+            <RefreshCw className={`w-3 h-3 ${isDbSyncing ? 'animate-spin text-emerald-600' : 'text-slate-500 hover:text-emerald-600'}`} />
+          </button>
+        </div>
+
         {/* AI Assistant */}
         <button
           onClick={onOpenAssistant}
@@ -150,30 +177,6 @@ export default function Header({
           <Bot className="w-3.5 h-3.5" style={{ color: '#5B7FFF' }} />
           <span className="hidden sm:inline">{labels.askAi}</span>
         </button>
-
-        {/* Demo role selector */}
-        <label
-          style={{ ...pillBase, borderColor: '#7A96FF', background: 'rgba(91, 127, 255, 0.15)' }}
-          title="Changes the demo view only; permissions remain tied to the signed-in account."
-        >
-          <UserCheck className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5B7FFF' }} />
-          <span
-            className="text-[9px] font-black uppercase tracking-wider"
-            style={{ color: '#5B7FFF' }}
-          >
-            Demo role
-          </span>
-          <select
-            value={activeRole}
-            onChange={(e) => onRoleChange(e.target.value)}
-            style={{ ...selectStyle, color: '#4A6FFF' }}
-          >
-            <option value="SECTION_CONTROLLER" style={{ background: '#F5F8FF', color: '#1A1F3A' }}>Section Controller</option>
-            <option value="TRACK_ENGINEER"     style={{ background: '#F5F8FF', color: '#1A1F3A' }}>Sr. DEN (Track)</option>
-            <option value="TRACTION_CONTROLLER"style={{ background: '#F5F8FF', color: '#1A1F3A' }}>TPC (Traction)</option>
-            <option value="SIGNAL_INCHARGE"    style={{ background: '#F5F8FF', color: '#1A1F3A' }}>DSTE (Signal)</option>
-          </select>
-        </label>
 
         {/* Optimize / Reset button */}
         <button

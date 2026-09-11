@@ -1,13 +1,28 @@
+from typing import Optional
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from data_generator import generate_railway_data
 from optimizer import solve_block_optimization, evaluate_manual_schedule
+import database
 import uvicorn
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[RailSync-AI] Initializing PostgreSQL connection & rail_maintenance_data.sql watcher...")
+    database.start_sql_watcher()
+    status = database.get_database_status()
+    if status.get("connected"):
+        print(f"[RailSync-AI] Connected to PostgreSQL '{status['database']}'! Total tasks loaded: {status['total_tasks']}")
+    else:
+        print(f"[RailSync-AI] Database notice: {status.get('error')}")
+    yield
 
 app = FastAPI(
     title='RailSync-AI - Intelligent Block Planning Engine',
-    description='Backend API for Automatic Railway Maintenance Block Scheduling',
-    version='1.0.0'
+    description='Backend API for Automatic Railway Maintenance Block Scheduling with PostgreSQL Integration',
+    version='1.1.0',
+    lifespan=lifespan
 )
 
 app.add_middleware(
@@ -20,34 +35,116 @@ app.add_middleware(
 
 @app.get('/')
 def root():
+    db_status = database.get_database_status()
     return {
         'system': 'RailSync-AI',
         'ministry': 'Ministry of Railways (Government of India)',
         'status': 'ONLINE',
-        'engine': 'Google OR-Tools CP-SAT'
+        'engine': 'Google OR-Tools CP-SAT',
+        'database': {
+            'connected': db_status.get('connected', False),
+            'database': db_status.get('database'),
+            'total_tasks': db_status.get('total_tasks', 0),
+            'last_synced_at': db_status.get('last_synced_at')
+        }
     }
 
-@app.get('/api/v1/corridor') # Isn't this redundant?
+# --- Authentication & Department Scoping Endpoints ---
+
+@app.post('/api/v1/auth/login')
+def login_user(payload: dict):
+    """Authenticates an official for their chosen department using the PostgreSQL users table."""
+    department = payload.get("department", "").upper()
+    username = payload.get("username", "")
+    password = payload.get("password", "")
+    
+    user = database.authenticate_user(department, username, password)
+    if not user:
+        return {"success": False, "error": "Invalid credentials or unauthorized for this department"}, 401
+    
+    return {
+        "success": True,
+        "user": user,
+        "token": f"mock-jwt-token-{user['role']}-{user['id']}"
+    }
+
+@app.get('/api/v1/departments/{dept}/jobs')
+def get_dept_jobs(dept: str):
+    """Returns maintenance jobs strictly isolated to the specified department."""
+    jobs = database.get_department_jobs(dept)
+    return {
+        "department": dept.upper(),
+        "count": len(jobs),
+        "jobs": jobs
+    }
+
+@app.post('/api/v1/departments/{dept}/jobs')
+def create_dept_job(dept: str, payload: dict):
+    """Creates a new maintenance demand for the specified department. Automatically syncs to control room master via database triggers."""
+    result = database.create_department_job(dept, payload)
+    return result
+
+# --- Database & SQL Sync Endpoints ---
+
+@app.get('/api/v1/database/status')
+def get_db_status():
+    """Returns the live PostgreSQL connection health, table counts, and last sync timestamp."""
+    return database.get_database_status()
+
+@app.post('/api/v1/database/sync')
+def trigger_db_sync():
+    """Forces an immediate re-read and execution of rail_maintenance_data.sql into PostgreSQL."""
+    return database.sync_sql_file_to_postgres()
+
+@app.get('/api/v1/tasks')
+@app.get('/api/v1/maintenance-jobs')
+def get_all_tasks(corridor: Optional[str] = None):
+    """Returns all live maintenance block demands loaded from PostgreSQL control_room_master."""
+    tasks = database.get_live_tasks(corridor)
+    return {
+        'count': len(tasks),
+        'source': 'postgresql:control_room_master',
+        'tasks': tasks,
+        'jobs': tasks
+    }
+
+# --- Operational & Optimization Endpoints ---
+
+@app.get('/api/v1/corridor')
 def get_corridor_data():
-    return generate_railway_data()
-# Fetches the randomly generated railway corridor data.
+    """Fetches corridor infrastructure enriched with live tasks from PostgreSQL."""
+    data = generate_railway_data()
+    live_tasks = database.get_live_tasks('NDLS_CNB')
+    if live_tasks:
+        data['tasks'] = live_tasks
+    return data
 
 @app.get('/api/v1/baseline')
 def get_manual_baseline():
-    data = generate_railway_data() # shouldn't the data here be manually inputted baseline data instead of random?
+    """Evaluates the manual baseline schedule using real PostgreSQL maintenance tasks."""
+    data = generate_railway_data()
+    live_tasks = database.get_live_tasks('NDLS_CNB')
+    if live_tasks:
+        data['tasks'] = live_tasks[:16]
     return evaluate_manual_schedule(data)
-# Evaluates the baseline schedule for conflicts and downtime metrics.
 
 @app.post('/api/v1/optimize')
 def run_optimization(time_limit: int = Query(default=10, ge=2, le=60)):
+    """Runs the CP-SAT optimization engine against real tasks from PostgreSQL."""
     data = generate_railway_data()
+    live_tasks = database.get_live_tasks('NDLS_CNB')
+    if live_tasks:
+        data['tasks'] = live_tasks[:16]
     result = solve_block_optimization(data, time_limit_sec=time_limit)
     return result
-# Runs the optimization engine to generate an AI-optimized maintenance block schedule within the specified time limit (in seconds).
 
 @app.post('/api/v1/emergency/solve')
 def solve_emergency_response(incident: dict, time_limit: int = Query(default=10, ge=2, le=60)):
+    """Dynamically solves an emergency incident on the corridor with live database tasks."""
     data = generate_railway_data()
+    live_tasks = database.get_live_tasks('NDLS_CNB')
+    if live_tasks:
+        data['tasks'] = live_tasks[:16]
     result = solve_block_optimization(data, time_limit_sec=time_limit, incident=incident)
     if result.get('status') != 'OPTIMAL_SCHEDULE_GENERATED':
         return result
@@ -61,7 +158,11 @@ def solve_emergency_response(incident: dict, time_limit: int = Query(default=10,
 
 @app.get('/api/v1/simulation/compare')
 def get_simulation_comparison():
-    data = generate_railway_data() # Generates mock railway data for the corridor and stores it.
+    """Provides a comparison between the baseline and AI-optimized schedules with live tasks."""
+    data = generate_railway_data()
+    live_tasks = database.get_live_tasks('NDLS_CNB')
+    if live_tasks:
+        data['tasks'] = live_tasks[:16]
     opt_result = solve_block_optimization(data, time_limit_sec=10)
     return {
         'corridor': data['corridor'],
@@ -76,8 +177,8 @@ def get_simulation_comparison():
             'tasks': opt_result.get('optimized_results', {}).get('scheduled_tasks', [])
         }
     }
-# Provides a comparison between the manually inputted schedule and the AI-optimized schedule, including metrics and task details.
 
 if __name__ == '__main__':
     print('Starting RailSync-AI API Server at http://127.0.0.1:8000 ...')
     uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=False)
+

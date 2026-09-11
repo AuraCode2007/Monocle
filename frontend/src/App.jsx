@@ -12,28 +12,53 @@ import NationalGrid from './components/NationalGrid';
 import AiAssistantModal from './components/AiAssistantModal';
 import OperationsCommandCenter from './components/OperationsCommandCenter';
 import LoginPage from './components/LoginPage';
+import TmsDashboard from './components/TmsDashboard';
+import TdmsDashboard from './components/TdmsDashboard';
+import SmmsDashboard from './components/SmmsDashboard';
 import { useLanguage } from './i18n';
 import { useRailwayStore } from './store/useRailwayStore';
-import { Activity, Calendar, ShieldAlert, Compass, Zap, CalendarDays, Globe, Radio, Cpu, Play, X, Map, Sparkles, CheckCircle2, LogOut, Shield } from 'lucide-react';
+import { Activity, Calendar, ShieldAlert, Compass, Zap, CalendarDays, Globe, Radio, Cpu, Play, X, Map, Sparkles, CheckCircle2, LogOut, Shield, Hammer } from 'lucide-react';
 import { canAccessTab, getStoredSession, getVisibleLogs, parseJwt, ROLE_LABELS, clearSession } from './auth';
 
 const NAV_ITEMS = [
-  { id: 'COMMAND_CENTER', icon: Radio,       color: 'emerald' },
-  { id: 'GIS_MAP',        icon: Map,         color: 'emerald' },
-  { id: 'ML_SCORER',      icon: Cpu,         color: 'cyan'    },
-  { id: 'GANTT',          icon: Calendar,    color: 'emerald' },
-  { id: 'STRING_CHART',   icon: Compass,     color: 'cyan'    },
-  { id: 'NATIONAL',       icon: Globe,       color: 'emerald' },
-  { id: 'SIMULATION',     icon: Zap,         color: 'amber'   },
-  { id: 'PTW',            icon: ShieldAlert, color: 'purple'  },
-  { id: 'CALENDAR',       icon: CalendarDays,color: 'purple'  },
+  { id: 'COMMAND_CENTER',  icon: Radio,       color: 'emerald' },
+  { id: 'GIS_MAP',         icon: Map,         color: 'emerald' },
+  { id: 'ML_SCORER',       icon: Cpu,         color: 'cyan'    },
+  { id: 'GANTT',           icon: Calendar,    color: 'emerald' },
+  { id: 'STRING_CHART',    icon: Compass,     color: 'cyan'    },
+  { id: 'NATIONAL',        icon: Globe,       color: 'emerald' },
+  { id: 'SIMULATION',      icon: Zap,         color: 'amber'   },
+  { id: 'PTW',             icon: ShieldAlert, color: 'purple'  },
+  { id: 'CALENDAR',        icon: CalendarDays,color: 'purple'  },
+  // Department-specific tabs
+  { id: 'TMS_DASHBOARD',   icon: Hammer,      color: 'amber'   },
+  { id: 'TDMS_DASHBOARD',  icon: Zap,         color: 'amber'   },
+  { id: 'SMMS_DASHBOARD',  icon: Radio,       color: 'cyan'    },
 ];
 
 const NAV_GROUPS = [
   { id: 'OPERATIONS',  key: 'operations',  items: ['COMMAND_CENTER', 'GANTT', 'STRING_CHART', 'GIS_MAP'] },
   { id: 'INTELLIGENCE',key: 'intelligence',items: ['ML_SCORER', 'SIMULATION'] },
   { id: 'COMPLIANCE',  key: 'compliance',  items: ['PTW', 'CALENDAR'] },
+  // Dept-specific groups (only one will be visible per logged-in role)
+  { id: 'TMS_OPS',     key: 'operations',  items: ['TMS_DASHBOARD'] },
+  { id: 'TDMS_OPS',    key: 'operations',  items: ['TDMS_DASHBOARD'] },
+  { id: 'SMMS_OPS',    key: 'operations',  items: ['SMMS_DASHBOARD'] },
 ];
+
+/* Map each role to the first tab they should see after login */
+const ROLE_DEFAULT_TAB = {
+  TMS:          'TMS_DASHBOARD',
+  TDMS:         'TDMS_DASHBOARD',
+  SMMS:         'SMMS_DASHBOARD',
+  CONTROL_ROOM: 'COMMAND_CENTER',
+  ADMIN:        'COMMAND_CENTER',
+  // Backward compat
+  SECTION_CONTROLLER:  'COMMAND_CENTER',
+  TRACK_ENGINEER:      'TMS_DASHBOARD',
+  TRACTION_CONTROLLER: 'TDMS_DASHBOARD',
+  SIGNAL_INCHARGE:     'SMMS_DASHBOARD',
+};
 
 // All active tab styles now use the purple accent from index.css variable remaps
 const NAV_ACTIVE_CLASSES = {
@@ -51,6 +76,36 @@ const ROLE_LAYOUTS = {
     border: 'border-emerald-500/25',
     badge:  'bg-emerald-500/10 text-emerald-300 border border-emerald-500/25',
   },
+  // New department role IDs
+  TMS: {
+    accent: 'amber',
+    banner: 'Track Maintenance View (TMS)',
+    summary: 'Track geometry, ballast bed screening, USFD testing & maintenance sequencing',
+    border: 'border-amber-500/25',
+    badge:  'bg-amber-500/10 text-amber-300 border border-amber-500/25',
+  },
+  TDMS: {
+    accent: 'purple',
+    banner: 'Traction Distribution View (TDMS)',
+    summary: '25 kV OHE, traction substations, mast ranges, power isolation & feeder management',
+    border: 'border-purple-500/25',
+    badge:  'bg-purple-500/10 text-purple-300 border border-purple-500/25',
+  },
+  SMMS: {
+    accent: 'cyan',
+    banner: 'Signal & Telecom View (SMMS)',
+    summary: 'Electronic Interlocking, point machines, DAC, and signal aspect validation',
+    border: 'border-cyan-500/25',
+    badge:  'bg-cyan-500/10 text-cyan-300 border border-cyan-500/25',
+  },
+  CONTROL_ROOM: {
+    accent: 'emerald',
+    banner: 'Control Office View (COA)',
+    summary: 'Master corridor timetable, train paths, PTW issuance & CP-SAT possession solver',
+    border: 'border-emerald-500/25',
+    badge:  'bg-emerald-500/10 text-emerald-300 border border-emerald-500/25',
+  },
+  // Backward compatibility
   SECTION_CONTROLLER: {
     accent: 'cyan',
     banner: 'Operations Control View',
@@ -99,7 +154,7 @@ export default function App() {
 
   const {
     isOptimized, isSolving, activeRole, activeTab, isApiConnected,
-    toggleOptimize, setActiveRole, setAuthorizedRole, setActiveTab, loadBaseline,
+    toggleOptimize, setActiveRole, setAuthorizedRole, setActiveTab, loadBaseline, fetchDatabaseTasks,
   } = useRailwayStore();
 
   const currentUser        = session?.user || null;
@@ -131,7 +186,11 @@ export default function App() {
   useEffect(() => {
     if (!session) return;
     loadBaseline();
-  }, [loadBaseline, session]);
+    const interval = setInterval(() => {
+      fetchDatabaseTasks();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [loadBaseline, fetchDatabaseTasks, session]);
 
   useEffect(() => {
     if (!demoActive) return undefined;
@@ -164,7 +223,16 @@ export default function App() {
     setSession(nextSession);
     const role = nextSession?.user?.role || 'SECTION_CONTROLLER';
     setAuthorizedRole(role);
-    setActiveTab('COMMAND_CENTER');
+    // Route each department to their own default tab and group
+    const defaultTab = ROLE_DEFAULT_TAB[role] || 'COMMAND_CENTER';
+    setActiveTab(defaultTab);
+    // Set the correct nav group for dept users
+    const deptGroupMap = {
+      TMS:  'TMS_OPS',
+      TDMS: 'TDMS_OPS',
+      SMMS: 'SMMS_OPS',
+    };
+    setActiveGroup(deptGroupMap[role] || 'OPERATIONS');
   };
 
   const handleLogout = () => {
@@ -406,15 +474,20 @@ export default function App() {
 
       {/* ── Dynamic Tab Views ── */}
       <div className="monocle-content">
-        {activeTab === 'COMMAND_CENTER' && <OperationsCommandCenter />}
-        {activeTab === 'GIS_MAP'        && <GisRailwayMap />}
-        {activeTab === 'ML_SCORER'      && <TrackHealthScorer />}
-        {activeTab === 'GANTT'          && <GanttView />}
-        {activeTab === 'STRING_CHART'   && <StringChart />}
-        {activeTab === 'NATIONAL'       && <NationalGrid />}
-        {activeTab === 'SIMULATION'     && <SimulationSandbox />}
-        {activeTab === 'PTW'            && <ConflictResolver />}
-        {activeTab === 'CALENDAR'       && <RollingCalendar />}
+        {/* COA / ADMIN tabs */}
+        {activeTab === 'COMMAND_CENTER'  && <OperationsCommandCenter />}
+        {activeTab === 'GIS_MAP'         && <GisRailwayMap />}
+        {activeTab === 'ML_SCORER'       && <TrackHealthScorer />}
+        {activeTab === 'GANTT'           && <GanttView />}
+        {activeTab === 'STRING_CHART'    && <StringChart />}
+        {activeTab === 'NATIONAL'        && <NationalGrid />}
+        {activeTab === 'SIMULATION'      && <SimulationSandbox />}
+        {activeTab === 'PTW'             && <ConflictResolver />}
+        {activeTab === 'CALENDAR'        && <RollingCalendar />}
+        {/* Department-specific dashboards */}
+        {activeTab === 'TMS_DASHBOARD'   && <TmsDashboard  user={currentUser} />}
+        {activeTab === 'TDMS_DASHBOARD'  && <TdmsDashboard user={currentUser} />}
+        {activeTab === 'SMMS_DASHBOARD'  && <SmmsDashboard user={currentUser} />}
       </div>
 
       {/* ── Role-based Access Logs ── */}
