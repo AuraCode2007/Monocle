@@ -125,3 +125,15 @@ class ControlRoomMaster(Base):
     status = Column(request_status_enum, nullable=False, server_default=text("'PENDING'"))
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+class Employee(Base):
+    """
+    Maps to employees - the table containing data of all employees.
+    """
+    __tablename__ = "employees"
+
+    employee_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, nullable=False)
+    department = Column(String, index=True, nullable=False)
+    email_address = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=False)
