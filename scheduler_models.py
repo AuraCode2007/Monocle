@@ -50,3 +50,18 @@ class MaintenanceJob:
             return f"STATION:{self.station_code}"
 
         return f"{self.department}:{self.section}:{self.direction}"
+
+
+    @dataclass
+class TrainSectionWindow:
+    train_number: str
+    train_name: str
+    priority: int
+
+    section: str
+    direction: str
+
+    enter_time_mins: int
+    exit_time_mins: int
+
+    train_type: str

@@ -1,9 +1,9 @@
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 from collections import defaultdict
 
 from ortools.sat.python import cp_model
 
-from scheduler_models import MaintenanceJob
+from scheduler_models import MaintenanceJob, TrainSectionWindow
 
 
 # ============================================================
@@ -12,7 +12,12 @@ from scheduler_models import MaintenanceJob
 
 # Planning horizon = one full day
 HORIZON_MINS = 24 * 60
-
+# Safety gap kept between a train movement and maintenance.
+# Example:
+# train exits at 310
+# buffer = 10
+# maintenance can start only at 320 or later.
+TRAIN_SAFETY_BUFFER_MINS = 10
 
 def minutes_to_hhmm(minutes: int) -> str:
     """Convert minutes from midnight into HH:MM."""
@@ -57,15 +62,32 @@ def can_form_joint_block(job1: MaintenanceJob,
 # ============================================================
 # SCHEDULE VALIDATION
 # ============================================================
+def same_train_resource(
+    job: MaintenanceJob,
+    train: TrainSectionWindow
+) -> bool:
+    """
+    A train can conflict with a maintenance job only when
+    both refer to the same physical section and direction.
+    """
 
-def validate_schedule(scheduled_jobs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    return (
+        job.section == train.section
+        and
+        job.direction == train.direction
+    )
+
+
+
+def validate_schedule(scheduled_jobs: List[Dict[str, Any]], train_windows: List[TrainSectionWindow] = None) -> Dict[str, Any]:
     """
     Independently validate the solver's output.
 
     This is NOT part of the optimization.
     It is a safety check after the solver finishes.
     """
-
+    if train_windows is None:
+        train_windows = []
     errors = []
 
     # --------------------------------------------------------
@@ -131,10 +153,53 @@ def validate_schedule(scheduled_jobs: List[Dict[str, Any]]) -> Dict[str, Any]:
                             f"{job2['job_id']} on {resource}"
                         )
 
+    
+    # --------------------------------------------------------
+    # HARD CHECK 3:
+    #
+    # Maintenance must not overlap a train movement on the
+    # same section and direction.
+    #
+    # Safety buffer is checked independently here too.
+    # --------------------------------------------------------
+
+    for job in scheduled_jobs:
+
+        for train in train_windows:
+
+            same_resource = (
+                job["section"] == train.section
+                and
+                job["direction"] == train.direction
+            )
+
+            if not same_resource:
+                continue
+
+            safe_before = (
+                job["end_mins"]
+                <= train.enter_time_mins
+                - TRAIN_SAFETY_BUFFER_MINS
+            )
+
+            safe_after = (
+                job["start_mins"]
+                >= train.exit_time_mins
+                + TRAIN_SAFETY_BUFFER_MINS
+            )
+
+            if not (safe_before or safe_after):
+
+                errors.append(
+                    f"Train conflict: "
+                    f"{job['job_id']} overlaps train "
+                    f"{train.train_number} "
+                    f"on {train.section}/{train.direction}"
+                )
     return {
-        "valid": len(errors) == 0,
-        "errors": errors
-    }
+            "valid": len(errors) == 0,
+            "errors": errors
+        }
 
 
 # ============================================================
@@ -202,9 +267,12 @@ def build_blocks(scheduled_jobs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 # ============================================================
 
 def optimize_jobs(
-    jobs: List[MaintenanceJob],
-    time_limit_sec: int = 15
-) -> Dict[str, Any]:
+     jobs: List[MaintenanceJob],
+    train_windows: List[TrainSectionWindow] = None,
+    time_limit_sec: int = 15) -> Dict[str, Any]:
+
+    if train_windows is None:
+        train_windows = [] 
     """
     Schedule maintenance jobs using OR-Tools CP-SAT.
 
@@ -215,9 +283,20 @@ def optimize_jobs(
         - joint blocks
         - priority-based objective
 
-    Train movement constraints will be added later.
     """
+    """
+    Schedule maintenance jobs using OR-Tools CP-SAT.
 
+    Current version:
+        - DB maintenance jobs
+        - 24-hour planning horizon
+        - train movement constraints
+        - resource conflict constraints
+        - joint blocks
+        - priority-based objective
+
+    Train timings are treated as hard availability constraints.
+    """
     if not jobs:
         return {
             "status": "NO_JOBS",
@@ -279,6 +358,61 @@ def optimize_jobs(
             "interval": interval,
             "job": job,
         }
+
+    # ========================================================
+    # TRAIN MOVEMENT CONSTRAINTS
+    # ========================================================
+
+    for job in jobs:
+
+        job_data = job_vars[job.job_id]
+
+        for train in train_windows:
+
+            # Train only matters if it occupies the same
+            # section and direction as the maintenance job.
+            if not same_train_resource(job, train):
+                continue
+
+            # ------------------------------------------------
+            # HARD CONSTRAINT:
+            #
+            # Maintenance must happen completely BEFORE
+            # the train arrives
+            #
+            # OR
+            #
+            # completely AFTER the train has cleared.
+            #
+            # Safety buffer is applied on both sides.
+            # ------------------------------------------------
+
+            before_train = model.NewBoolVar(
+                f"before_train_{job.job_id}_{train.train_number}"
+            )
+
+            after_train = model.NewBoolVar(
+                f"after_train_{job.job_id}_{train.train_number}"
+            )
+
+            # Exactly one side of the train window.
+            model.Add(
+                before_train + after_train == 1
+            )
+
+            # Maintenance ends before train arrival,
+            # including safety buffer.
+            model.Add(
+                job_data["end"]
+                <= train.enter_time_mins - TRAIN_SAFETY_BUFFER_MINS
+            ).OnlyEnforceIf(before_train)
+
+            # Maintenance starts after train departure,
+            # including safety buffer.
+            model.Add(
+                job_data["start"]
+                >= train.exit_time_mins + TRAIN_SAFETY_BUFFER_MINS
+            ).OnlyEnforceIf(after_train)
 
     # ========================================================
     # RESOURCE CONSTRAINTS
@@ -600,7 +734,7 @@ def optimize_jobs(
     # ========================================================
 
     validation = validate_schedule(
-        scheduled_jobs
+        scheduled_jobs, train_windows
     )
 
     blocks = build_blocks(
@@ -625,9 +759,20 @@ def optimize_jobs(
 
     makespan_value = solver.Value(makespan)
 
-    total_block_time = sum(
+    sum_of_block_durations = sum(
         block["duration_mins"]
         for block in blocks
+    )
+    resource_conflicts = sum(
+        1
+        for error in validation["errors"]
+        if error.startswith("Resource conflict:")
+    )
+    
+    train_conflicts = sum(
+        1
+        for error in validation["errors"]
+        if error.startswith("Train conflict:")
     )
 
     return {
@@ -658,14 +803,14 @@ def optimize_jobs(
 
             "total_blocks": len(blocks),
 
-            "total_block_time_mins": total_block_time,
+            "sum_of_block_durations_mins": sum_of_block_durations,
 
             "makespan_mins": makespan_value,
             "makespan": minutes_to_hhmm(makespan_value),
 
-            "resource_conflicts": len(
-                validation["errors"]
-            ),
+            
+            "resource_conflicts": resource_conflicts,
+            "train_conflicts": train_conflicts,
         }
     }
 
@@ -678,16 +823,18 @@ def schedule_jobs_from_db(
     db,
     time_limit_sec: int = 15
 ) -> Dict[str, Any]:
-    """
-    Load real maintenance jobs from PostgreSQL
-    and send them to the optimizer.
-    """
 
-    from db_adapter import load_maintenance_jobs
+    from db_adapter import (
+        load_maintenance_jobs,
+        load_train_windows,
+    )
 
     jobs = load_maintenance_jobs(db)
 
+    train_windows = load_train_windows(db)
+
     return optimize_jobs(
-        jobs,
+        jobs=jobs,
+        train_windows=train_windows,
         time_limit_sec=time_limit_sec
     )
