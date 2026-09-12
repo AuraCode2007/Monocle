@@ -1,27 +1,37 @@
-from fastapi import FastAPI, Query
-from fastapi.middleware.cors import CORSMiddleware
 
-from data_generator import generate_railway_data
-from optimizer import solve_block_optimization, evaluate_manual_schedule
+from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 from routers import tms, tdms, smms, control_room
+
+from database import get_db
+from db_adapter import (
+    load_maintenance_jobs,
+    load_train_windows,
+)
+from scheduler import optimize_jobs
 
 import uvicorn
 
 
 app = FastAPI(
-    title='Monocle - Intelligent Block Planning Engine',
-    description='Backend API for Automatic Railway Maintenance Block Scheduling',
-    version='1.0.0'
+    title="Monocle - Intelligent Block Planning Engine",
+    description="Backend API for Automatic Railway Maintenance Block Scheduling",
+    version="1.0.0"
 )
 
 
+# ==========================================
+# CORS
+# ==========================================
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -36,93 +46,69 @@ app.include_router(control_room.router)
 
 
 # ==========================================
-# EXISTING OPTIMIZER APIs
+# BASIC API
 # ==========================================
 
-@app.get('/')
+@app.get("/")
 def root():
     return {
-        'system': 'RailSync-AI',
-        'ministry': 'Ministry of Railways (Government of India)',
-        'status': 'ONLINE',
-        'engine': 'Google OR-Tools CP-SAT'
+        "system": "Monocle",
+        "ministry": "Ministry of Railways (Government of India)",
+        "status": "ONLINE",
+        "engine": "Google OR-Tools CP-SAT"
     }
 
 
-@app.get('/api/v1/corridor')
-def get_corridor_data():
-    return generate_railway_data()
+# ==========================================
+# SCHEDULER API
+# ==========================================
 
-
-@app.get('/api/v1/baseline')
-def get_manual_baseline():
-    data = generate_railway_data() # shouldn't the data here be manually inputted baseline data instead of random?
-    return evaluate_manual_schedule(data)
-
-
-@app.post('/api/v1/optimize')
-def run_optimization(
-    time_limit: int = Query(default=10, ge=2, le=60)
+@app.post("/api/scheduler/run")
+def run_scheduler(
+    db: Session = Depends(get_db)
 ):
-    data = generate_railway_data()
+    """
+    Run the Monocle maintenance scheduler.
 
-    result = solve_block_optimization(
-        data,
-        time_limit_sec=time_limit
+    Data flow:
+        PostgreSQL
+            ↓
+        db_adapter.py
+            ↓
+        MaintenanceJob + TrainSectionWindow
+            ↓
+        scheduler.py
+            ↓
+        Optimized schedule
+    """
+
+    jobs = load_maintenance_jobs(db)
+
+    train_windows = load_train_windows(db)
+
+    result = optimize_jobs(
+        jobs=jobs,
+        train_windows=train_windows,
+        time_limit_sec=15
     )
 
     return result
 
 
-@app.get('/api/v1/simulation/compare')
-def get_simulation_comparison():
+# ==========================================
+# START SERVER
+# ==========================================
 
-    data = generate_railway_data()
-
-    opt_result = solve_block_optimization(
-        data,
-        time_limit_sec=10
-    )
-
-    return {
-        'corridor': data['corridor'],
-        'sections': data['sections'],
-        'trains': data['trains'],
-
-        'manual_schedule': {
-            'metrics': opt_result.get(
-                'manual_baseline',
-                {}
-            ),
-            'tasks': data['tasks']
-        },
-
-        'ai_optimized_schedule': {
-            'metrics': opt_result.get(
-                'optimized_results',
-                {}
-            ),
-            'tasks': opt_result.get(
-                'optimized_results',
-                {}
-            ).get(
-                'scheduled_tasks',
-                []
-            )
-        }
-    }
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     print(
-        'Starting RailSync-AI API Server '
-        'at http://127.0.0.1:8000 ...'
+        "Starting Monocle API Server "
+        "at http://127.0.0.1:8000 ..."
     )
 
     uvicorn.run(
-        'main:app',
-        host='127.0.0.1',
+        "main:app",
+        host="127.0.0.1",
         port=8000,
         reload=False
     )
