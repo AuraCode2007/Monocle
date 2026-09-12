@@ -4,197 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
-/* =========================================================
-   MONOCLE  LIGHT INDUSTRIAL PALETTE
-   Update: Removed a universal colour rule at the end which was 
-   blocking the colour changes
-   ========================================================= */
-
-:root {
-  --rail-primary: #F0F0F0;
-  --rail-secondary: #8B88C6;
-  --rail-gold: #D1A751;
-  --rail-charcoal: #4F4F53;
-
-  --rail-white: #FFFFFF;
-  --rail-surface: #F0F0F0;
-  --rail-surface-soft: #E7E7E7;
-  --rail-border: rgba(79, 79, 83, 0.18);
-
-  --rail-text: #4F4F53;
-  --rail-text-dark: #2E2E33;
-  --rail-muted: #6C6C72;
-}
-
-/* =========================================================
-   BASE
-   ========================================================= */
-
-@layer base {
-  html,
-  body,
-  #root {
-    min-height: 100%;
-  }
-
-  body {
-    margin: 0;
-    background: #F0F0F0 !important;
-    color: #4F4F53 !important;
-    font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::selection {
-    background: #8B88C6;
-    color: #FFFFFF;
-  }
-}
-
-/* =========================================================
-   GLOBAL TAILWIND DARK-CLASS OVERRIDES
-   These make existing components light without changing
-   their JSX/layout.
-   ========================================================= */
-
-[class*="bg-slate-950"] {
-  background-color: #F0F0F0 !important;
-}
-
-[class*="bg-slate-900"] {
-  background-color: #FFFFFF !important;
-}
-
-[class*="bg-slate-800"] {
-  background-color: #F0F0F0 !important;
-}
-
-[class*="bg-slate-700"] {
-  background-color: #E0E0DF !important;
-}
-
-[class*="border-slate-950"],
-[class*="border-slate-900"],
-[class*="border-slate-800"] {
-  border-color: rgba(79, 79, 83, 0.16) !important;
-}
-
-[class*="border-slate-700"] {
-  border-color: rgba(79, 79, 83, 0.28) !important;
-}
-
-[class*="text-white"],
-[class*="text-slate-100"],
-[class*="text-slate-200"] {
-  color: #2E2E33 !important;
-}
-
-[class*="text-slate-300"] {
-  color: #4F4F53 !important;
-}
-
-[class*="text-slate-400"],
-[class*="text-slate-500"] {
-  color: #6C6C72 !important;
-}
-
-/* =========================================================
-   ACCENT COLOR MAPPING
-   ========================================================= */
-
-/* Emerald → Lavender */
-[class*="bg-emerald-"] {
-  background-color: rgba(139, 136, 198, 0.16) !important;
-}
-
-[class*="text-emerald-"] {
-  color: #8B88C6 !important;
-}
-
-[class*="border-emerald-"] {
-  border-color: rgba(139, 136, 198, 0.55) !important;
-}
-
-/* Cyan → Lavender */
-[class*="bg-cyan-"] {
-  background-color: rgba(139, 136, 198, 0.16) !important;
-}
-
-[class*="text-cyan-"] {
-  color: #8B88C6 !important;
-}
-
-[class*="border-cyan-"] {
-  border-color: rgba(139, 136, 198, 0.55) !important;
-}
-
-/* Amber → Gold */
-[class*="bg-amber-"] {
-  background-color: rgba(209, 167, 81, 0.18) !important;
-}
-
-[class*="text-amber-"] {
-  color: #9B7625 !important;
-}
-
-[class*="border-amber-"] {
-  border-color: rgba(209, 167, 81, 0.62) !important;
-}
-
-/* Rose → Gold */
-[class*="bg-rose-"] {
-  background-color: rgba(209, 167, 81, 0.18) !important;
-}
-
-[class*="text-rose-"] {
-  color: #9B7625 !important;
-}
-
-[class*="border-rose-"] {
-  border-color: rgba(209, 167, 81, 0.62) !important;
-}
-
-/* Purple → Lavender */
-[class*="bg-purple-"] {
-  background-color: rgba(139, 136, 198, 0.16) !important;
-}
-
-[class*="text-purple-"] {
-  color: #8B88C6 !important;
-}
-
-[class*="border-purple-"] {
-  border-color: rgba(139, 136, 198, 0.55) !important;
-}
-
-/* =========================================================
-   SOLID ACCENTS
-   ========================================================= */
-
-[class~="bg-emerald-500"],
-[class~="bg-emerald-600"],
-[class~="bg-cyan-500"],
-[class~="bg-cyan-600"] {
-  background-color: #8B88C6 !important;
-}
-
-[class~="bg-amber-500"],
-[class~="bg-amber-600"],
-[class~="bg-rose-500"],
-[class~="bg-rose-600"] {
-  background-color: #D1A751 !important;
-}
-
-[class~="bg-purple-500"],
-[class~="bg-purple-600"] {
-  background-color: #8B88C6 !important;
-}
-
-/* =========================================================
-   GLASS CARDS → WHITE CARDS
-   ========================================================= */
-=======
 /* ─────────────────────────────────────────────────────────────────────────────
    DESIGN TOKENS — FundFlow Fintech Aesthetic
 ───────────────────────────────────────────────────────────────────────────── */
@@ -348,7 +157,6 @@
   background-color: var(--ff-danger) !important;
   color: #FFFFFF !important;
 }
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 
 button[class*="bg-emerald-"],
 button[class*="bg-cyan-"],
@@ -365,32 +173,6 @@ button[class*="bg-rose-"] {
    FROSTED GLASS CARD PRIMITIVES
 ───────────────────────────────────────────────────────────────────────────── */
 .glass-card {
-<<<<<<< HEAD
-  background: #FFFFFF !important;
-  border: 1px solid rgba(79, 79, 83, 0.16);
-  box-shadow: 0 4px 14px rgba(79, 79, 83, 0.08);
-}
-
-.glass-card-hover {
-  transition: all 0.2s ease;
-}
-
-.glass-card-hover:hover {
-  border-color: rgba(139, 136, 198, 0.72);
-  box-shadow: 0 8px 20px rgba(79, 79, 83, 0.13);
-}
-
-/* =========================================================
-   MONOCLE HEADER
-   Header intentionally stays charcoal.
-   ========================================================= */
-
-.monocle-shell-header,
-.monocle-shell-header [class*="bg-slate-950"],
-.monocle-shell-header [class*="bg-slate-900"],
-.monocle-shell-header [class*="bg-slate-800"] {
-  background: #4F4F53 !important;
-=======
   background: rgba(245, 248, 255, 0.50);
   backdrop-filter: blur(20px);
   border: 1px solid var(--ff-border-light);
@@ -426,7 +208,6 @@ button[class*="bg-rose-"] {
 .monocle-shell-header [class*="text-cyan-"],
 .monocle-shell-header [class*="text-purple-"] {
   background: transparent !important;
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 }
 
 .monocle-shell-header [class*="text-white"],
@@ -447,40 +228,6 @@ button[class*="bg-rose-"] {
 
 .monocle-shell-header select,
 .monocle-shell-header option {
-<<<<<<< HEAD
-  color: #F0F0F0 !important;
-  background: #4F4F53 !important;
-}
-
-.monocle-shell-header [class*="border-slate-"] {
-  border-color: rgba(240, 240, 240, 0.22) !important;
-}
-
-/* =========================================================
-   DASHBOARD CONTENT
-   ========================================================= */
-
-.monocle-content {
-  background: #F0F0F0 !important;
-}
-
-.monocle-content main {
-  background: #F0F0F0 !important;
-}
-
-.monocle-content [class*="bg-slate-950"],
-.monocle-content [class*="bg-slate-900"],
-.monocle-content section,
-.monocle-content article {
-  background: #FFFFFF !important;
-  color: #2E2E33 !important;
-}
-
-.monocle-content .glass-card {
-  background: #FFFFFF !important;
-  color: #2E2E33 !important;
-  border-color: rgba(79, 79, 83, 0.16) !important;
-=======
   background: var(--ff-surface) !important;
   color: var(--ff-ink) !important;
 }
@@ -491,42 +238,17 @@ button[class*="bg-rose-"] {
 .monocle-content,
 .monocle-content main {
   background: transparent !important;
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 }
 
 .monocle-content [class*="text-white"],
 .monocle-content [class*="text-slate-100"],
-<<<<<<< HEAD
-.monocle-content [class*="text-slate-200"] {
-  color: #2E2E33 !important;
-}
-
-.monocle-content [class*="text-slate-300"] {
-  color: #4F4F53 !important;
-=======
 .monocle-content [class*="text-slate-200"],
 .monocle-content [class*="text-slate-300"] {
   color: var(--ff-ink) !important;
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 }
 
 .monocle-content [class*="text-slate-400"],
 .monocle-content [class*="text-slate-500"] {
-<<<<<<< HEAD
-  color: #6C6C72 !important;
-}
-
-.monocle-content [class*="border-slate-"] {
-  border-color: rgba(79, 79, 83, 0.18) !important;
-}
-
-/* =========================================================
-   DASHBOARD ACCENT DETAILS
-   ========================================================= */
-
-.monocle-content .glass-card:first-of-type {
-  border-top: 3px solid #8B88C6;
-=======
   color: var(--ff-muted) !important;
 }
 
@@ -577,7 +299,6 @@ button[class*="bg-rose-"] {
   backdrop-filter: blur(15px);
   border-color: var(--ff-border-light) !important;
   box-shadow: var(--ff-shadow-glass);
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 }
 
 .monocle-content .glass-card:hover,
@@ -586,176 +307,6 @@ button[class*="bg-rose-"] {
   box-shadow: var(--ff-shadow-hover) !important;
 }
 
-<<<<<<< HEAD
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-button[class*="bg-emerald-"],
-button[class*="bg-cyan-"],
-button[class*="bg-purple-"] {
-  background-color: #8B88C6 !important;
-  color: #FFFFFF !important;
-}
-
-button[class*="bg-amber-"],
-button[class*="bg-rose-"] {
-  background-color: #D1A751 !important;
-  color: #4F4F53 !important;
-}
-
-/* =========================================================
-   COMPONENT CLASSES
-   ========================================================= */
-
-@layer components {
-  .railway-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors cursor-pointer;
-  }
-
-  .railway-btn-primary {
-    @apply railway-btn;
-    background: #8B88C6 !important;
-    color: #FFFFFF !important;
-  }
-
-  .railway-btn-primary:hover {
-    background: #7D79B5 !important;
-  }
-
-  .railway-btn-secondary {
-    @apply railway-btn;
-    border: 1px solid rgba(79, 79, 83, 0.24) !important;
-    background: #FFFFFF !important;
-    color: #4F4F53 !important;
-  }
-
-  .railway-btn-secondary:hover {
-    border-color: #8B88C6 !important;
-    background: #F0F0F0 !important;
-  }
-
-  .railway-badge-resolved {
-    border: 1px solid rgba(139, 136, 198, 0.42);
-    background: rgba(139, 136, 198, 0.14);
-    color: #706CA8;
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.625rem;
-  }
-
-  .railway-badge-warning {
-    border: 1px solid rgba(209, 167, 81, 0.55);
-    background: rgba(209, 167, 81, 0.16);
-    color: #8C6B1F;
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.625rem;
-  }
-
-  .railway-badge-conflict {
-    border: 1px solid rgba(209, 167, 81, 0.55);
-    background: rgba(209, 167, 81, 0.16);
-    color: #8C6B1F;
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.625rem;
-  }
-
-  .railway-text-conflict {
-    color: #9B7625 !important;
-  }
-
-  .railway-text-resolved {
-    color: #706CA8 !important;
-  }
-
-  .railway-text-warning {
-    color: #9B7625 !important;
-  }
-
-  .railway-dept-eng {
-    background: #8B88C6 !important;
-    border-color: #7D79B5 !important;
-    color: #FFFFFF !important;
-  }
-
-  .railway-dept-trd {
-    background: #D1A751 !important;
-    border-color: #B9933D !important;
-    color: #4F4F53 !important;
-  }
-
-  .railway-dept-snt {
-    background: #4F4F53 !important;
-    border-color: #4F4F53 !important;
-    color: #FFFFFF !important;
-  }
-
-  .railway-dept-joint {
-    background: #8B88C6 !important;
-    border-color: #7D79B5 !important;
-    color: #FFFFFF !important;
-  }
-}
-
-/* =========================================================
-   SELECT
-   ========================================================= */
-
-.railway-select option {
-  background: #FFFFFF;
-  color: #4F4F53;
-}
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #E0E0DF;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #8B88C6;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #7D79B5;
-}
-
-/* =========================================================
-   LEAFLET MAP
-   ========================================================= */
-
-.leaflet-container {
-  background: #E0E0DF !important;
-  font-family: 'IBM Plex Sans', 'Trebuchet MS', sans-serif !important;
-}
-
-.leaflet-popup-content-wrapper {
-  background: #4F4F53 !important;
-  color: #F0F0F0 !important;
-  border: 1px solid rgba(209, 167, 81, 0.55) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 12px 25px rgba(79, 79, 83, 0.25) !important;
-}
-
-.leaflet-popup-tip {
-  background: #4F4F53 !important;
-}
-
-/* =========================================================
-   DEMO FRAME
-   ========================================================= */
-
-.demo-live-frame {
-  border: 1px solid rgba(79, 79, 83, 0.14);
-  box-shadow: inset 0 0 40px rgba(79, 79, 83, 0.06);
-=======
 .monocle-content .bg-rose-500\/5,
 .monocle-content .bg-emerald-500\/5,
 .monocle-content .bg-cyan-500\/5,
@@ -900,37 +451,12 @@ button[class*="bg-rose-"] {
 .demo-live-frame {
   border: 2px solid var(--ff-accent-light);
   box-shadow: inset 0 0 40px rgba(91, 127, 255, 0.15);
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9
 }
 
 .demo-pulse-dot {
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-<<<<<<< HEAD
-  background: #D1A751;
-}
-
-@keyframes demo-frame-pulse {
-  0%, 100% {
-    opacity: 0.55;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes demo-dot-pulse {
-  70% {
-    box-shadow: 0 0 0 8px rgba(209, 167, 81, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(209, 167, 81, 0);
-  }
-}
-=======
   background: var(--ff-accent);
   box-shadow: 0 0 0 2px var(--ff-accent-light);
 }
@@ -964,4 +490,3 @@ body::before {
   position: relative;
   z-index: 1;
 }
->>>>>>> d91138328f37e3d36f0c4aab6916bfbb4abc75d9

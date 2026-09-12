@@ -28,6 +28,7 @@ from database import Base
 # rail_maintenance_data.sql, request_status_enum from the migration).
 # create_type=False tells SQLAlchemy "map to it, don't try to CREATE TYPE".
 dept_enum = PGEnum("TMS", "TDMS", "SMMS", name="dept_enum", create_type=False)
+role_enum = PGEnum("TMS", "TDMS", "SMMS", "CONTROL_ROOM", name="role_enum", create_type=False)
 
 request_status_enum = PGEnum(
     "PENDING",
@@ -134,5 +135,5 @@ class User(Base):
     user_id = Column(String(10), nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
-    department = Column(department, nullable=False)
+    role = Column(role_enum, nullable=False)
     email = Column(String(100), nullable=False)

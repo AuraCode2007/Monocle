@@ -21,7 +21,6 @@ CREATE TABLE control_room_master (
     required_duration_mins INT NOT NULL,               -- stores work duration in minutes
     department_specific_details JSONB NOT NULL,         -- stores the department specific data in JSON
     priority INT DEFAULT 0,                             -- Numerical scale (0=PENDING, 1=LOW, 2=MEDIUM, 3=HIGH) managed by backend
-    blockchain_tx_hash VARCHAR(66) DEFAULT NULL,        -- For SIH Blockchain tracking
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP      -- stores the time when log in is done by default it is current 
 );
 
@@ -38,8 +37,7 @@ CREATE TABLE tms_track_assets (
     tdms_collab_req BOOLEAN DEFAULT false,              -- whether collaboration with tdms is required or not
     smms_collab_req BOOLEAN DEFAULT false,              -- whether collaboration with smms is required or not
     required_duration_mins INT NOT NULL,                -- Time req to complete work 
-    reported_by VARCHAR(100) NOT NULL,                  -- stores name of official who reported
-    blockchain_tx_hash VARCHAR(66) DEFAULT NULL         
+    reported_by VARCHAR(100) NOT NULL                  -- stores name of official who reported
 );
 
 CREATE TABLE tdms_power_assets (
@@ -54,8 +52,7 @@ CREATE TABLE tdms_power_assets (
     tms_collab_req BOOLEAN DEFAULT false,                -- whether two departments require collaboration or not
     smms_collab_req BOOLEAN DEFAULT false,
     required_duration_mins INT NOT NULL,
-    reported_by VARCHAR(100) NOT NULL,
-    blockchain_tx_hash VARCHAR(66) DEFAULT NULL          -- Security code
+    reported_by VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE smms_signal_assets (
@@ -68,8 +65,7 @@ CREATE TABLE smms_signal_assets (
     tdms_collab_req BOOLEAN DEFAULT false,
     tms_collab_req BOOLEAN DEFAULT false,               -- Whether collaboration is required or not
     required_duration_mins INT NOT NULL,
-    reported_by VARCHAR(100) NOT NULL,
-    blockchain_tx_hash VARCHAR(66) DEFAULT NULL         -- Security code
+    reported_by VARCHAR(100) NOT NULL
 );
 
 -- 5. Enhanced Trigger Function to handle both INSERTS and UPDATES (UPSERT)
@@ -77,7 +73,7 @@ CREATE OR REPLACE FUNCTION sync_to_control_room()
 RETURNS TRIGGER AS $$
 BEGIN
     IF TG_TABLE_NAME = 'tms_track_assets' THEN
-        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details, blockchain_tx_hash)
+        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details)
         VALUES (
             NEW.track_job_id, 'TMS', NEW.work_category, NEW.required_duration_mins,
             jsonb_build_object(
@@ -88,17 +84,16 @@ BEGIN
                 'structure_type', NEW.structure_type,
                 'tdms_collab_req', NEW.tdms_collab_req,
                 'smms_collab_req', NEW.smms_collab_req
-            ),
-            NEW.blockchain_tx_hash
+            )
+
         )
         ON CONFLICT (job_id) DO UPDATE 
-        SET blockchain_tx_hash = EXCLUDED.blockchain_tx_hash,
-            work_category = EXCLUDED.work_category,
+        SET work_category = EXCLUDED.work_category,
             required_duration_mins = EXCLUDED.required_duration_mins,
             department_specific_details = EXCLUDED.department_specific_details;
 
     ELSIF TG_TABLE_NAME = 'tdms_power_assets' THEN
-        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details, blockchain_tx_hash)
+        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details)
         VALUES (
             NEW.power_job_id, 'TDMS', NEW.work_category, NEW.required_duration_mins,
             jsonb_build_object(
@@ -109,17 +104,15 @@ BEGIN
                 'power_isolation_needed', NEW.power_isolation_needed,
                 'tms_collab_req', NEW.tms_collab_req,
                 'smms_collab_req', NEW.smms_collab_req
-            ),
-            NEW.blockchain_tx_hash
+            )
         )
         ON CONFLICT (job_id) DO UPDATE 
-        SET blockchain_tx_hash = EXCLUDED.blockchain_tx_hash,
-            work_category = EXCLUDED.work_category,
+        SET work_category = EXCLUDED.work_category,
             required_duration_mins = EXCLUDED.required_duration_mins,
             department_specific_details = EXCLUDED.department_specific_details;
 
     ELSIF TG_TABLE_NAME = 'smms_signal_assets' THEN
-        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details, blockchain_tx_hash)
+        INSERT INTO control_room_master (job_id, department, work_category, required_duration_mins, department_specific_details)
         VALUES (
             NEW.signal_job_id, 'SMMS', NEW.work_category, NEW.required_duration_mins,
             jsonb_build_object(
@@ -128,12 +121,10 @@ BEGIN
                 'interlocking_panel', NEW.interlocking_panel,
                 'tdms_collab_req', NEW.tdms_collab_req,
                 'tms_collab_req', NEW.tms_collab_req
-            ),
-            NEW.blockchain_tx_hash
+            )
         )
         ON CONFLICT (job_id) DO UPDATE 
-        SET blockchain_tx_hash = EXCLUDED.blockchain_tx_hash,
-            work_category = EXCLUDED.work_category,
+        SET work_category = EXCLUDED.work_category,
             required_duration_mins = EXCLUDED.required_duration_mins,
             department_specific_details = EXCLUDED.department_specific_details;
     END IF;
@@ -148,23 +139,64 @@ CREATE TRIGGER smms_sync_trigger AFTER INSERT OR UPDATE ON smms_signal_assets FO
 
 -- 7. CSV Integration via PostgreSQL COPY command
 -- Update the file paths to point to your physical directory environment.
-\copy tms_track_assets(track_job_id, line_section, line_direction, start_km, end_km, structure_type, work_category, tdms_collab_req, smms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) FROM 'tms_track_assets.csv' DELIMITER ',' CSV HEADER;
-\copy tdms_power_assets(power_job_id, line_section, line_direction, source_mast_no, target_mast_no, power_isolation_needed, work_category, tms_collab_req, smms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) FROM 'tdms_power_assets.csv' DELIMITER ',' CSV HEADER;
-\copy smms_signal_assets(signal_job_id, station_code, point_machine_no, interlocking_panel, work_category, tdms_collab_req, tms_collab_req, required_duration_mins, reported_by, blockchain_tx_hash) FROM 'smms_signal_assets.csv' DELIMITER ',' CSV HEADER;
+\copy tms_track_assets(track_job_id, line_section, line_direction, start_km, end_km, structure_type, work_category, tdms_collab_req, smms_collab_req, required_duration_mins, reported_by) FROM 'tms_track_assets.csv' DELIMITER ',' CSV HEADER;
+\copy tdms_power_assets(power_job_id, line_section, line_direction, source_mast_no, target_mast_no, power_isolation_needed, work_category, tms_collab_req, smms_collab_req, required_duration_mins, reported_by) FROM 'tdms_power_assets.csv' DELIMITER ',' CSV HEADER;
+\copy smms_signal_assets(signal_job_id, station_code, point_machine_no, interlocking_panel, work_category, tdms_collab_req, tms_collab_req, required_duration_mins, reported_by) FROM 'smms_signal_assets.csv' DELIMITER ',' CSV HEADER;
 
 -- 8 A table of corridors and line direction
-CREATE TABLE corridor_list (
-    sl_no SERIAL PRIMARY KEY,
+CREATE TABLE track_list (
+    sl_no SERIAL,
+    section_id BIGSERIAL PRIMARY KEY,
     line_section VARCHAR(20) NOT NULL,
     line_direction VARCHAR(10) NOT NULL,
     -- Allows these columns to be referenced as a foreign key target
     CONSTRAINT unique_corridor_combination UNIQUE (line_section, line_direction)
 );
+ALTER SEQUENCE track_list_section_id_seq RESTART WITH 5000; -- Starting the section_id from 5000
+
+CREATE TABLE corridor_to_track_mapping (
+    corridor_name VARCHAR(15) NOT NULL,
+    section_id INT NOT NULL,
+    
+    CONSTRAINT fk_mapping_section_id FOREIGN KEY (section_id) 
+        REFERENCES track_list (section_id)
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+        
+    PRIMARY KEY (corridor_name, section_id)
+);
+
+-- B. Create the background trigger automation function
+CREATE OR REPLACE FUNCTION auto_map_track_data()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO corridor_to_track_mapping (section_id, corridor_name)
+    VALUES (
+        NEW.section_id, 
+        CASE 
+            WHEN NEW.line_section IN ('HWH-DEL', 'HWH-GAYA', 'PNBE-HWH', 'LKO-NDLS', 'CNB-ALD', 'ASN-GAYA') THEN 'Howrah-Delhi'
+            WHEN NEW.line_section IN ('BCT-NDLS', 'ADI-BCT', 'NZM-KOTA', 'RE-JP') THEN 'Mumbai-Delhi'
+            WHEN NEW.line_section IN ('MAS-HWH', 'VSKP-MAS', 'TATA-HWH') THEN 'East Coast'
+            WHEN NEW.line_section IN ('PUNE-SUR') THEN 'Mumbai-Chennai'
+            ELSE 'Other'
+        END
+    )
+    ON CONFLICT (corridor_name, section_id) DO NOTHING;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- C. Attach the trigger sentinel to track_list
+CREATE TRIGGER track_list_sync_trigger
+AFTER INSERT OR UPDATE ON track_list
+FOR EACH ROW
+EXECUTE FUNCTION auto_map_track_data();
 
 -- 9. Create Train Section Windows Table (For Traffic & Maintenance Block Scheduling)
 CREATE TABLE train_section_windows (
-    id BIGSERIAL PRIMARY KEY, 
-    train_number VARCHAR(20) NOT NULL,
+    id BIGSERIAL, 
+    train_number VARCHAR(20) NOT NULL PRIMARY KEY,
     train_name VARCHAR(100),
     -- 1 = highest priority, 5 = lowest priority
     priority INT NOT NULL CHECK (priority BETWEEN 1 AND 5), 
@@ -178,17 +210,17 @@ CREATE TABLE train_section_windows (
 
     -- Composite Foreign Key linking to the master corridor list
     CONSTRAINT fk_train_corridor FOREIGN KEY (line_section, line_direction) 
-        REFERENCES corridor_list (line_section, line_direction)
+        REFERENCES track_list (line_section, line_direction)
         ON UPDATE CASCADE 
         ON DELETE RESTRICT
 );
 
 -- 1. Truncate target table to avoid duplicate entry errors if re-running
-TRUNCATE TABLE corridor_list RESTART IDENTITY CASCADE;
+TRUNCATE TABLE track_list RESTART IDENTITY CASCADE;
 
 -- 2. CSV Integration via PostgreSQL COPY command
 -- Note: Ensure the file path explicitly points to your environment's layout.
-\copy corridor_list(line_section, line_direction) FROM 'corridor_list.csv' DELIMITER ',' CSV HEADER;
+\copy track_list(line_section, line_direction) FROM 'track_list.csv' DELIMITER ',' CSV HEADER;
 
 -- CSV Integration via PostgreSQL COPY command
 \copy train_section_windows(train_number, train_name, priority, line_section, line_direction, enter_time_mins, exit_time_mins, train_type) FROM 'train_section_windows.csv' DELIMITER ',' CSV HEADER;
