@@ -52,7 +52,7 @@ class MaintenanceJob:
         return f"{self.department}:{self.section}:{self.direction}"
 
 
-    @dataclass
+@dataclass
 class TrainSectionWindow:
     train_number: str
     train_name: str
