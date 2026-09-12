@@ -228,25 +228,24 @@ export default function LoginPage({ onLoginSuccess }) {
                         onClick={() => handleSelectDept(dept)}
                         onMouseEnter={() => setHoveredDept(dept.id)}
                         onMouseLeave={() => setHoveredDept(null)}
-                        className="w-full text-left rounded-2xl p-4 transition-all duration-200"
+                        className="w-full text-left rounded-2xl p-4 transition-colors duration-200"
                         style={{
                           background: isHovered ? dept.bg : 'rgba(255,255,255,0.50)',
                           border: `2px solid ${isHovered ? dept.border : '#E8E8E8'}`,
                           backdropFilter: 'blur(10px)',
-                          transform: isHovered ? 'translateX(4px)' : 'none',
                         }}
                       >
                         <div className="flex items-center gap-3">
                           <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200"
                             style={{ background: dept.accent + '22', border: `1.5px solid ${dept.border}` }}
                           >
-                            <Icon className="w-5 h-5" style={{ color: dept.accent }} />
+                            <Icon className="w-5 h-5 transition-colors duration-200" style={{ color: dept.accent }} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
                               <span
-                                className="text-[10px] font-black uppercase tracking-[0.18em] px-2 py-0.5 rounded-full"
+                                className="text-[10px] font-black uppercase tracking-[0.18em] px-2 py-0.5 rounded-full transition-colors duration-200"
                                 style={{ background: dept.bg, color: dept.accent, border: `1px solid ${dept.border}` }}
                               >
                                 {dept.abbr}
@@ -256,15 +255,13 @@ export default function LoginPage({ onLoginSuccess }) {
                             <div className="text-xs truncate" style={{ color: '#2D6A4F' }}>{dept.sub}</div>
                           </div>
                           <ChevronRight
-                            className="w-4 h-4 shrink-0 transition-transform"
-                            style={{ color: isHovered ? dept.accent : '#ccc', transform: isHovered ? 'translateX(3px)' : 'none' }}
+                            className="w-4 h-4 shrink-0 transition-colors duration-200"
+                            style={{ color: isHovered ? dept.accent : '#ccc' }}
                           />
                         </div>
-                        {isHovered && (
-                          <p className="mt-2 text-xs leading-relaxed pl-13" style={{ color: '#666', paddingLeft: '52px' }}>
-                            {dept.desc}
-                          </p>
-                        )}
+                        <p className="mt-2 text-xs leading-relaxed" style={{ color: '#666', paddingLeft: '52px' }}>
+                          {dept.desc}
+                        </p>
                       </button>
                     );
                   })}

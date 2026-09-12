@@ -9,7 +9,6 @@ import ConflictResolver from './components/ConflictResolver';
 import SimulationSandbox from './components/SimulationSandbox';
 import RollingCalendar from './components/RollingCalendar';
 import NationalGrid from './components/NationalGrid';
-import AiAssistantModal from './components/AiAssistantModal';
 import OperationsCommandCenter from './components/OperationsCommandCenter';
 import LoginPage from './components/LoginPage';
 import TmsDashboard from './components/TmsDashboard';
@@ -145,7 +144,6 @@ const DEMO_STEPS = [
 ];
 
 export default function App() {
-  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [demoActive, setDemoActive]           = useState(false);
   const [demoPhase, setDemoPhase]             = useState(0);
   const [activeGroup, setActiveGroup]         = useState('OPERATIONS');
@@ -315,7 +313,6 @@ export default function App() {
             activeRole={userRole}
             onRoleChange={setActiveRole}
             isApiConnected={isApiConnected}
-            onOpenAssistant={() => setIsAssistantOpen(true)}
             language={language}
             labels={t}
             onChangeLanguage={setLanguage}
@@ -515,9 +512,6 @@ export default function App() {
           ))}
         </div>
       </div>
-
-      {/* ── AI Assistant Modal ── */}
-      <AiAssistantModal isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
 
       {/* ── Footer ── */}
       <footer className="mt-auto pt-6 text-center text-xs flex flex-col sm:flex-row justify-between items-center gap-2 border-t"

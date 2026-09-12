@@ -1,12 +1,12 @@
 import React from 'react';
-import { Train, Zap, ShieldCheck, RefreshCw, UserCheck, Bot, MapPin, Database } from 'lucide-react';
+import { Train, Zap, ShieldCheck, RefreshCw, UserCheck, MapPin, Database } from 'lucide-react';
 import { LANGUAGES } from '../i18n';
 import { useRailwayStore } from '../store/useRailwayStore';
 
 export default function Header({
   isOptimized, onToggleOptimize, isSolving,
   activeRole, onRoleChange,
-  isApiConnected, onOpenAssistant,
+  isApiConnected,
   language, labels, onChangeLanguage,
 }) {
   const {
@@ -152,31 +152,6 @@ export default function Header({
             <RefreshCw className={`w-3 h-3 ${isDbSyncing ? 'animate-spin text-emerald-600' : 'text-slate-500 hover:text-emerald-600'}`} />
           </button>
         </div>
-
-        {/* AI Assistant */}
-        <button
-          onClick={onOpenAssistant}
-          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer"
-          style={{
-            background:  'rgba(245, 248, 255, 0.70)',
-            backdropFilter: 'blur(15px)',
-            border:      '1px solid #D1DEFF',
-            color:       '#3D4561',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background    = 'rgba(91, 127, 255, 0.15)';
-            e.currentTarget.style.borderColor   = '#7A96FF';
-            e.currentTarget.style.color         = '#5B7FFF';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background    = 'rgba(245, 248, 255, 0.70)';
-            e.currentTarget.style.borderColor   = '#D1DEFF';
-            e.currentTarget.style.color         = '#3D4561';
-          }}
-        >
-          <Bot className="w-3.5 h-3.5" style={{ color: '#5B7FFF' }} />
-          <span className="hidden sm:inline">{labels.askAi}</span>
-        </button>
 
         {/* Optimize / Reset button */}
         <button
