@@ -42,7 +42,7 @@ def read_and_update_excel_sheet(number_of_entries: int = 1):
     file_name = 'employee_data.xlsx' # Change file_name accordingly
     df = pd.read_excel(file_name)
 
-    # 2. Get the last n rows using tail[n] and convert them to a liat of dictionaries
+    # 2. Get the last n rows using tail[n] and convert them to a list of dictionaries
     row_dict_list = df.tail(number_of_entries).to_dict(orient='records')
 
     # Setting the configuration common to each email.
@@ -59,14 +59,14 @@ def read_and_update_excel_sheet(number_of_entries: int = 1):
 
         reciever = row['Name']
         reciever_email = row['Email']
-        reciever_password = row['Password']
+        reciever_password = row['Passwords']
 
         body = f"""Hello {reciever}, to log into Monocle use the following email and password combination:
         Email: {reciever_email}
         Password: {reciever_password}"""
 
         # send the password as an email
-        send_password_to_reciever(SENDER, ADMIN_EMAIL_PASSWORD, reciever, SUBJECT, body)
+        send_password_to_reciever(SENDER, ADMIN_EMAIL_PASSWORD, reciever_email, SUBJECT, body)
 
     # 4. Save the updated DataFrame back to the Excel file
     # index=False prevents pandas from accidentally writing row numbers into your sheet
