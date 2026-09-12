@@ -143,7 +143,21 @@ export const runEmergencySolver = (incident) =>
     body: JSON.stringify(incident),
   });
 
+
+// =========================
+// SCHEDULER (CP-SAT)
+// =========================
+
+export const getSchedulerGanttData = (timeLimit = 15) =>
+  request(`/api/v1/scheduler/gantt?time_limit=${timeLimit}`);
+
+export const runScheduler = (timeLimit = 15) =>
+  request(`/api/v1/scheduler/run?time_limit=${timeLimit}`, {
+    method: 'POST',
+  });
+
 export default {
+
   getTMSJobs,
   getTMSJob,
   createTMSJob,
@@ -169,4 +183,7 @@ export default {
   getBaseline,
   runOptimizer,
   runEmergencySolver,
+
+  getSchedulerGanttData,
+  runScheduler,
 };

@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 from data_generator import generate_railway_data
 from optimizer import solve_block_optimization, evaluate_manual_schedule
+from scheduler import schedule_jobs_from_db
+from database import get_db
 
 from routers import tms, tdms, smms, control_room
 
@@ -111,6 +114,37 @@ def get_simulation_comparison():
             )
         }
     }
+
+
+
+# ==========================================
+# SCHEDULER (CP-SAT) APIs
+# ==========================================
+
+@app.get('/api/v1/scheduler/gantt')
+def get_scheduler_gantt(
+    time_limit: int = Query(default=15, ge=2, le=60),
+    db: Session = Depends(get_db)
+):
+    """
+    Run the CP-SAT scheduler against real DB jobs and return
+    structured output for the Gantt chart.
+    Returns: status, scheduled_jobs, blocks, metrics, validation.
+    """
+    return schedule_jobs_from_db(db, time_limit_sec=time_limit)
+
+
+@app.post('/api/v1/scheduler/run')
+def run_scheduler(
+    time_limit: int = Query(default=15, ge=2, le=60),
+    db: Session = Depends(get_db)
+):
+    """
+    Force a fresh CP-SAT solve. Identical to GET /gantt but
+    exposed as POST so the frontend can distinguish user-triggered
+    solves from auto-fetches.
+    """
+    return schedule_jobs_from_db(db, time_limit_sec=time_limit)
 
 
 if __name__ == '__main__':
