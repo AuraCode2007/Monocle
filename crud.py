@@ -1,29 +1,14 @@
 """
-Business logic / DB access layer for RailSync-AI maintenance requests.
-
-Read path: every "view" function JOINs a department table to
-control_room_master on job_id, because reported_by (and only reported_by)
-is NOT mirrored into control_room_master.department_specific_details by the
-existing sync triggers - every other department-specific field is. The join
-gives back the complete, authoritative row instead of trusting the JSONB
-mirror for fields it wasn't built to carry.
+Business logic / DB access layer for Monocle maintenance requests.
 
 Write path for CREATE: insert into the department table only. The existing
 AFTER INSERT trigger on that table creates the matching control_room_master
-row automatically (with priority=0, status='PENDING'). We then call
-Shayaan's priority checker and UPDATE control_room_master.priority directly -
+row automatically (with priority=0, status='PENDING'). We then call 
+priority checker and UPDATE control_room_master.priority directly -
 department tables have no priority column at all, by design, so the frontend
 literally cannot receive it back through them.
 
-Write path for UPDATE: update the department table row. The existing
-AFTER UPDATE trigger re-syncs work_category / required_duration_mins /
-department_specific_details / blockchain_tx_hash into control_room_master.
-It does NOT touch priority or status (its SET clause never mentions them),
-so editing a request never resets its priority or its place in the workflow.
-
-Soft delete: there is no FK between the department tables and
-control_room_master (the trigger keeps them in sync one-way, it does not
-enforce referential integrity), and no ON DELETE trigger exists. Hard-deleting
+Soft delete: Hard-deleting
 either row would leave the other one orphaned with no automatic cleanup, so
 "delete" is implemented as a status transition to CANCELLED on
 control_room_master instead. See the chat response for the fuller

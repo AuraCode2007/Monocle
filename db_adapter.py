@@ -9,7 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from scheduler_models import MaintenanceJob
-
+from scheduler_models import MaintenanceJob, TrainSectionWindow
 
 def load_tms_jobs(db: Session) -> List[MaintenanceJob]:
     query = text("""
@@ -178,3 +178,38 @@ def load_maintenance_jobs(db: Session) -> List[MaintenanceJob]:
     smms_jobs = load_smms_jobs(db)
 
     return tms_jobs + tdms_jobs + smms_jobs
+
+def load_train_windows(db) -> List[TrainSectionWindow]:
+    query = text("""
+        SELECT
+            train_number,
+            train_name,
+            priority,
+            line_section,
+            line_direction,
+            enter_time_mins,
+            exit_time_mins,
+            train_type
+        FROM train_section_windows
+        ORDER BY line_section, line_direction, enter_time_mins
+    """)
+
+    rows = db.execute(query).mappings().all()
+
+    trains = []
+
+    for row in rows:
+        trains.append(
+            TrainSectionWindow(
+                train_number=str(row["train_number"]),
+                train_name=row["train_name"],
+                priority=int(row["priority"]),
+                section=row["line_section"],
+                direction=row["line_direction"],
+                enter_time_mins=int(row["enter_time_mins"]),
+                exit_time_mins=int(row["exit_time_mins"]),
+                train_type=row["train_type"],
+            )
+        )
+
+    return trains
