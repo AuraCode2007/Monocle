@@ -9,7 +9,7 @@ CREATE TABLE users (
     username VARCHAR(50) UNIQUE NOT NULL,  -- stores user name
     password_hash VARCHAR(255) NOT NULL,   -- stores password 
     role role_enum NOT NULL,               -- sets the role of the user of the dept to which they belong
-    email VARCHAR(100)                     -- stores email not a necessary condition
+    email VARCHAR(100) NOT NULL            -- stores email not a necessary condition
 );
 
 -- 3. Create Central Control Room Table (The Merged Table)

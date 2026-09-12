@@ -126,14 +126,13 @@ class ControlRoomMaster(Base):
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
 
-class Employee(Base):
-    """
-    Maps to employees - the table containing data of all employees.
-    """
-    __tablename__ = "employees"
+class User(Base):
+    """Maps to users table (For FastAPI Authentication)."""
+    __tablename__ = "users"
 
-    employee_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True, nullable=False)
-    department = Column(String, index=True, nullable=False)
-    email_address = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=False)
+    user_sl = Column(Integer, primary_key=True)
+    user_id = Column(String(10), nullable=False)
+    username = Column(String(50), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    department = Column(department, nullable=False)
+    email = Column(String(100), nullable=False)
