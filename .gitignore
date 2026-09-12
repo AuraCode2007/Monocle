@@ -8,3 +8,7 @@ env/
 venv/
 .DS_Store
 *.log
+
+# Database files (regenerated from rail_maintenance_data.sql)
+*.db
+*.sqlite3

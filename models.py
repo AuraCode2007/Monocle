@@ -28,6 +28,7 @@ from database import Base
 # rail_maintenance_data.sql, request_status_enum from the migration).
 # create_type=False tells SQLAlchemy "map to it, don't try to CREATE TYPE".
 dept_enum = PGEnum("TMS", "TDMS", "SMMS", name="dept_enum", create_type=False)
+role_enum = PGEnum("TMS", "TDMS", "SMMS", "CONTROL_ROOM", name="role_enum", create_type=False)
 
 request_status_enum = PGEnum(
     "PENDING",
@@ -125,3 +126,14 @@ class ControlRoomMaster(Base):
     status = Column(request_status_enum, nullable=False, server_default=text("'PENDING'"))
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+class User(Base):
+    """Maps to users table (For FastAPI Authentication)."""
+    __tablename__ = "users"
+
+    user_sl = Column(Integer, primary_key=True)
+    user_id = Column(String(10), nullable=False)
+    username = Column(String(50), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    role = Column(role_enum, nullable=False)
+    email = Column(String(100), nullable=False)
