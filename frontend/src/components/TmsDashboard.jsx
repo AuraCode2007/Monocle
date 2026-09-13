@@ -32,7 +32,7 @@ export default function TmsDashboard({ user }) {
   const fetchTmsJobs = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/departments/tms/jobs');
+      const res = await fetch('http://127.0.0.1:8001/api/tms/jobs');
       if (res.ok) {
         const data = await res.json();
         setJobs(data.jobs || []);
@@ -50,7 +50,7 @@ export default function TmsDashboard({ user }) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/departments/tms/jobs', {
+      const res = await fetch('http://127.0.0.1:8001/api/tms/jobs', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(formData),

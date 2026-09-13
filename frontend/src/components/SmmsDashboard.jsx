@@ -79,7 +79,7 @@ export default function SmmsDashboard({ user }) {
   const fetchSmmsJobs = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/departments/smms/jobs');
+      const res = await fetch('http://127.0.0.1:8001/api/smms/jobs');
       if (res.ok) {
         const data = await res.json();
         setJobs(data.jobs || []);
@@ -99,7 +99,7 @@ export default function SmmsDashboard({ user }) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/departments/smms/jobs', {
+      const res = await fetch('http://127.0.0.1:8001/api/smms/jobs', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(formData),

@@ -288,20 +288,20 @@ export const useRailwayStore = create((set, get) => ({
 
   fetchDatabaseTasks: async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/tasks');
+      const res = await fetch('http://127.0.0.1:8001/api/control-room/jobs');
       if (!res.ok) throw new Error('Tasks request failed');
       const data = await res.json();
       
       let statusData = null;
       try {
-        const sRes = await fetch('http://127.0.0.1:8000/api/v1/database/status');
+        const sRes = await fetch('http://127.0.0.1:8001/');
         if (sRes.ok) statusData = await sRes.json();
       } catch {
         // ignore status error
       }
 
       set({
-        dbTasks: data.tasks || [],
+        dbTasks: Array.isArray(data) ? data : data.tasks || [],
         isDbConnected: statusData?.connected ?? true,
         dbStatus: statusData,
         isApiConnected: true,
@@ -315,7 +315,7 @@ export const useRailwayStore = create((set, get) => ({
   syncDatabase: async () => {
     set({ isDbSyncing: true });
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/database/sync', { method: 'POST' });
+      const res = await fetch('http://127.0.0.1:8001/', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         await get().fetchDatabaseTasks();
@@ -331,7 +331,7 @@ export const useRailwayStore = create((set, get) => ({
   loadBaseline: async () => {
     try {
       await get().fetchDatabaseTasks();
-      const response = await fetch('http://127.0.0.1:8000/api/v1/baseline');
+      const response = await fetch('http://127.0.0.1:8001/');
       if (!response.ok) throw new Error('Baseline request failed');
       const baseline = await response.json();
       set((state) => ({
@@ -357,7 +357,7 @@ export const useRailwayStore = create((set, get) => ({
 
     set({ isSolving: true });
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/optimize', { method: 'POST' });
+      const response = await fetch('http://127.0.0.1:8001/api/scheduler/run', { method: 'POST' });
       if (!response.ok) throw new Error('Optimizer request failed');
       const result = await response.json();
       const optimized = result.optimized_results;
@@ -424,7 +424,7 @@ export const useRailwayStore = create((set, get) => ({
     if (!incident) return;
     set({ emergencySolving: true });
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/emergency/solve', {
+      const response = await fetch('http://127.0.0.1:8001/api/scheduler/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(incident),
