@@ -43,9 +43,9 @@ export const CORRIDORS = {
       { number: 'BOXN_UP_1', name: 'Coal Rake Freight (UP)', priority: 4, type: 'FREIGHT', dir: 'UP', startKm: 0, endKm: 440, startMin: 120, endMin: 480, lat: 28.45, lng: 77.65, speedKmh: 75, color: '#64748b' },
     ],
     tasks: [
-      { id: 'TASK_001', department: 'ENG', section_id: 'SEC_101', section_name: 'GZB - ALJN (UP)', description: 'Deep screening of ballast by BCM machine', block_type: 'TRAFFIC', machine_required: 'Plasser BCM 08-32', duration_mins: 180, severity: 5, requested_start: 360, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 240, optimized_start_hhmm: '01:00', optimized_end_hhmm: '04:00', lat: 28.25, lng: 77.78 },
-      { id: 'TASK_002', department: 'TRD', section_id: 'SEC_101', section_name: 'GZB - ALJN (UP)', description: 'OHE contact wire wear replacement (25kV)', block_type: 'POWER', machine_required: 'Tower Wagon', duration_mins: 150, severity: 4, requested_start: 480, requested_end: 630, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', is_joint: true, lat: 28.25, lng: 77.78 },
-      { id: 'TASK_003', department: 'S&T', section_id: 'SEC_103', section_name: 'ALJN - TDL (UP)', description: 'Point machine overhaul & testing', block_type: 'DISCONNECTION', machine_required: 'Point Test Kit', duration_mins: 90, severity: 4, requested_start: 600, requested_end: 690, optimized_start_mins: 135, optimized_end_mins: 225, optimized_start_hhmm: '02:15', optimized_end_hhmm: '03:45', lat: 27.55, lng: 78.16 },
+      { id: 'TASK_001', department: 'ENG', section_id: 'SEC_101', section_name: 'GZB - ALJN (UP)', description: 'Deep screening of ballast by BCM machine', block_type: 'TRAFFIC', machine_required: 'Plasser BCM 08-32', duration_mins: 180, severity: 1, requested_start: 360, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 240, optimized_start_hhmm: '01:00', optimized_end_hhmm: '04:00', lat: 28.25, lng: 77.78 },
+      { id: 'TASK_002', department: 'TRD', section_id: 'SEC_101', section_name: 'GZB - ALJN (UP)', description: 'OHE contact wire wear replacement (25kV)', block_type: 'POWER', machine_required: 'Tower Wagon', duration_mins: 150, severity: 2, requested_start: 480, requested_end: 630, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', is_joint: true, lat: 28.25, lng: 77.78 },
+      { id: 'TASK_003', department: 'S&T', section_id: 'SEC_103', section_name: 'ALJN - TDL (UP)', description: 'Point machine overhaul & testing', block_type: 'DISCONNECTION', machine_required: 'Point Test Kit', duration_mins: 90, severity: 2, requested_start: 600, requested_end: 690, optimized_start_mins: 135, optimized_end_mins: 225, optimized_start_hhmm: '02:15', optimized_end_hhmm: '03:45', lat: 27.55, lng: 78.16 },
       { id: 'TASK_004', department: 'ENG', section_id: 'SEC_105', section_name: 'TDL - ETW (UP)', description: 'Turnout rail renewal & tamping', block_type: 'TRAFFIC', machine_required: 'CSM 09-32 Tamping', duration_mins: 120, severity: 3, requested_start: 840, requested_end: 960, optimized_start_mins: 30, optimized_end_mins: 150, optimized_start_hhmm: '00:30', optimized_end_hhmm: '02:30', lat: 26.98, lng: 78.65 },
     ]
   },
@@ -83,7 +83,7 @@ export const CORRIDORS = {
       { number: '12951', name: 'Mumbai Rajdhani', priority: 1, type: 'RAJDHANI', dir: 'UP', startKm: 0, endKm: 492, startMin: 1020, endMin: 1380, lat: 20.20, lng: 72.85, speedKmh: 120, color: '#06b6d4' },
     ],
     tasks: [
-      { id: 'TASK_WR_01', department: 'ENG', section_id: 'SEC_202', section_name: 'BVI - ST (UP)', description: 'Ultrasonic Flaw Detection (USFD) weld repair', block_type: 'TRAFFIC', machine_required: 'USFD Rig', duration_mins: 150, severity: 5, requested_start: 420, requested_end: 570, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', lat: 20.25, lng: 72.85 },
+      { id: 'TASK_WR_01', department: 'ENG', section_id: 'SEC_202', section_name: 'BVI - ST (UP)', description: 'Ultrasonic Flaw Detection (USFD) weld repair', block_type: 'TRAFFIC', machine_required: 'USFD Rig', duration_mins: 150, severity: 1, requested_start: 420, requested_end: 570, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', lat: 20.25, lng: 72.85 },
       { id: 'TASK_WR_02', department: 'TRD', section_id: 'SEC_202', section_name: 'BVI - ST (UP)', description: 'OHE insulator washing & neutral section test', block_type: 'POWER', machine_required: 'OHE Washer Wagon', duration_mins: 120, severity: 3, requested_start: 540, requested_end: 660, optimized_start_mins: 60, optimized_end_mins: 180, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:00', is_joint: true, lat: 20.25, lng: 72.85 },
     ]
   },
@@ -122,8 +122,8 @@ export const CORRIDORS = {
       { number: 'COAL_RAKE_1', name: 'Dhanbad Coal Rake', priority: 4, type: 'FREIGHT', dir: 'UP', startKm: 259, endKm: 675, startMin: 200, endMin: 650, lat: 24.00, lng: 86.10, speedKmh: 75, color: '#64748b' },
     ],
     tasks: [
-      { id: 'TASK_ER_01', department: 'ENG', section_id: 'SEC_303', section_name: 'ASN - DHN (UP)', description: 'Heavy axle coal track deep screening', block_type: 'TRAFFIC', machine_required: 'Plasser BCM', duration_mins: 180, severity: 5, requested_start: 360, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 240, optimized_start_hhmm: '01:00', optimized_end_hhmm: '04:00', lat: 23.74, lng: 86.70 },
-      { id: 'TASK_ER_02', department: 'TRD', section_id: 'SEC_303', section_name: 'ASN - DHN (UP)', description: 'Overhead 25kV feeder wire replacement', block_type: 'POWER', machine_required: 'Tower Wagon', duration_mins: 150, severity: 4, requested_start: 480, requested_end: 630, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', is_joint: true, lat: 23.74, lng: 86.70 },
+      { id: 'TASK_ER_01', department: 'ENG', section_id: 'SEC_303', section_name: 'ASN - DHN (UP)', description: 'Heavy axle coal track deep screening', block_type: 'TRAFFIC', machine_required: 'Plasser BCM', duration_mins: 180, severity: 1, requested_start: 360, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 240, optimized_start_hhmm: '01:00', optimized_end_hhmm: '04:00', lat: 23.74, lng: 86.70 },
+      { id: 'TASK_ER_02', department: 'TRD', section_id: 'SEC_303', section_name: 'ASN - DHN (UP)', description: 'Overhead 25kV feeder wire replacement', block_type: 'POWER', machine_required: 'Tower Wagon', duration_mins: 150, severity: 2, requested_start: 480, requested_end: 630, optimized_start_mins: 60, optimized_end_mins: 210, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:30', is_joint: true, lat: 23.74, lng: 86.70 },
     ]
   },
 
@@ -160,7 +160,7 @@ export const CORRIDORS = {
       { number: '12027', name: 'Bengaluru Shatabdi', priority: 1, type: 'SHATABDI', dir: 'UP', startKm: 0, endKm: 360, startMin: 1040, endMin: 1320, lat: 13.02, lng: 79.40, speedKmh: 120, color: '#3b82f6' },
     ],
     tasks: [
-      { id: 'TASK_SR_01', department: 'ENG', section_id: 'SEC_402', section_name: 'AJJ - KPD (UP)', description: 'Turnout track renewal & tamping', block_type: 'TRAFFIC', machine_required: 'CSM Tamping', duration_mins: 120, severity: 4, requested_start: 420, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 180, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:00', lat: 13.03, lng: 79.40 },
+      { id: 'TASK_SR_01', department: 'ENG', section_id: 'SEC_402', section_name: 'AJJ - KPD (UP)', description: 'Turnout track renewal & tamping', block_type: 'TRAFFIC', machine_required: 'CSM Tamping', duration_mins: 120, severity: 2, requested_start: 420, requested_end: 540, optimized_start_mins: 60, optimized_end_mins: 180, optimized_start_hhmm: '01:00', optimized_end_hhmm: '03:00', lat: 13.03, lng: 79.40 },
       { id: 'TASK_SR_02', department: 'TRD', section_id: 'SEC_402', section_name: 'AJJ - KPD (UP)', description: 'OHE bracket overhaul', block_type: 'POWER', machine_required: 'Tower Wagon', duration_mins: 90, severity: 3, requested_start: 480, requested_end: 570, optimized_start_mins: 60, optimized_end_mins: 150, optimized_start_hhmm: '01:00', optimized_end_hhmm: '02:30', is_joint: true, lat: 13.03, lng: 79.40 },
     ]
   }
@@ -213,15 +213,21 @@ export const useRailwayStore = create((set, get) => ({
   filterDept: 'ALL',
   isApiConnected: false,
   optimizerMetrics: {
-    conflicts: 10,
-    delayMinutesSaved: 0,
-    jointBlocks: 0,
-    availabilityBoostPct: 0,
+    conflicts: 12,
+    baselineConflicts: 12,
+    baselineDelayMinutes: 540,
+    delayMinutesSaved: 270,
+    jointBlocks: 6,
+    availabilityBoostPct: 1.3,
     baselineAvailabilityPct: 58,
+    optimizedConflicts: 0,
+    optimizedDelayMinutes: 270,
+    optimizedJointBlocks: 6,
+    optimizedAvailabilityPct: 59.3,
     source: 'simulation',
     affectedTrains: [],
-    passengerTrainsProtected: 0,
-    estimatedPassengerDelayAvoidedMinutes: 0,
+    passengerTrainsProtected: 5,
+    estimatedPassengerDelayAvoidedMinutes: 540,
     decisionExplanations: [],
     solverTimeSec: 0,
   },
@@ -300,8 +306,54 @@ export const useRailwayStore = create((set, get) => ({
         // ignore status error
       }
 
+
+      const rawTasks = Array.isArray(data) ? data : data.tasks || [];
+      const mappedTasks = rawTasks.map((t, idx) => {
+        // Map database row to UI Task format
+        const lineSection = t.department_specific_details?.line_section || '';
+        const lineDir = t.department_specific_details?.line_direction || 'UP';
+        
+        // Determine corridor mapping
+        let corridorId = 'NDLS_CNB';
+        let secPrefix = 'SEC_10';
+        let numSecs = 8;
+        
+        if (['ADI-BCT', 'CSTM-MAO', 'NGP-CSMT', 'PUNE-SUR', 'BCT-NDLS'].includes(lineSection)) {
+            corridorId = 'MMCT_ADI';
+            secPrefix = 'SEC_20';
+            numSecs = 4;
+        } else if (['HWH-GAYA', 'PNBE-HWH', 'BJU-GHY', 'TATA-HWH', 'ASN-GAYA', 'GHY-NJP', 'GKP-CPR', 'R-NGP', 'SDAH-LGL', 'HWH-DEL'].includes(lineSection)) {
+            corridorId = 'HWH_DDU';
+            secPrefix = 'SEC_30';
+            numSecs = 5;
+        } else if (['MAS-HWH', 'SBC-MAS', 'VSKP-MAS', 'MDU-TPJ', 'SC-BZA'].includes(lineSection)) {
+            corridorId = 'MAS_SBC';
+            secPrefix = 'SEC_40';
+            numSecs = 4;
+        }
+        
+        const hash = t.job_id ? t.job_id.split('').reduce((a,b) => a + b.charCodeAt(0), 0) : idx;
+        const secNum = (hash % numSecs) + 1;
+        
+        return {
+          id: t.job_id,
+          department: t.department,
+          corridor_id: corridorId,
+          section_id: secPrefix + secNum,
+          section_name: lineSection + ' (' + lineDir + ')',
+          description: t.work_category,
+          block_type: t.department === 'TDMS' ? 'POWER' : (t.department === 'SMMS' ? 'DISCONNECTION' : 'TRAFFIC'),
+          duration_mins: t.required_duration_mins || 60,
+          severity: (t.priority && t.priority > 0) ? t.priority : (t.department_specific_details?.tms_collab_req || t.department_specific_details?.tdms_collab_req || t.department_specific_details?.smms_collab_req ? 1 : 2),
+          requested_start: 360 + (hash % 600),
+          is_joint: t.department_specific_details?.tms_collab_req || t.department_specific_details?.tdms_collab_req || t.department_specific_details?.smms_collab_req || false,
+          ...t
+        };
+      });
+
       set({
-        dbTasks: Array.isArray(data) ? data : data.tasks || [],
+        dbTasks: mappedTasks,
+
         isDbConnected: statusData?.connected ?? true,
         dbStatus: statusData,
         isApiConnected: true,
@@ -363,17 +415,25 @@ export const useRailwayStore = create((set, get) => ({
       const optimized = result.optimized_results;
       const baseline = result.manual_baseline;
 
+      const existingMetrics = get().optimizerMetrics;
       set({
         isOptimized: true,
         isSolving: false,
         isApiConnected: true,
         optimizationResult: result,
         optimizerMetrics: {
-          conflicts: baseline?.total_conflicts ?? 10,
+          ...existingMetrics,
+          conflicts: baseline?.total_conflicts ?? existingMetrics.baselineConflicts ?? existingMetrics.conflicts,
+          baselineConflicts: existingMetrics.baselineConflicts ?? existingMetrics.conflicts,
+          baselineDelayMinutes: existingMetrics.baselineDelayMinutes,
           delayMinutesSaved: optimized?.train_delay_minutes_saved ?? 0,
           jointBlocks: optimized?.joint_blocks_synchronized ?? 0,
           availabilityBoostPct: optimized?.asset_availability_boost_pct ?? 0,
-          baselineAvailabilityPct: 58,
+          baselineAvailabilityPct: existingMetrics.baselineAvailabilityPct ?? 58,
+          optimizedConflicts: 0,
+          optimizedDelayMinutes: optimized?.train_delay_minutes_saved ?? 0,
+          optimizedJointBlocks: optimized?.joint_blocks_synchronized ?? 0,
+          optimizedAvailabilityPct: (existingMetrics.baselineAvailabilityPct ?? 58) + (optimized?.asset_availability_boost_pct ?? 0),
           source: 'backend',
           affectedTrains: optimized?.affected_trains ?? [],
           passengerTrainsProtected: optimized?.passenger_trains_protected ?? 0,

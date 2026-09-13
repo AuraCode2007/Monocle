@@ -394,14 +394,10 @@ export default function App() {
                     key={itemId}
                     data-tour-tab={itemId}
                     onClick={() => setActiveTab(itemId)}
-                    className={
-                      'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 transition-all ' +
-                      (isActive ? NAV_ACTIVE_CLASSES[color] : '') +
-                      (demoRing ? ' ring-2 ring-offset-2' : '')
-                    }
+                    className={'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 transition-all text-xs font-semibold' + (demoRing ? ' ring-2 ring-offset-2' : '')}
                     style={isActive
-                      ? {}
-                      : { color: '#1A1F3A', fontWeight: '600' }}
+                      ? { background: 'var(--ff-accent)', color: '#fff', boxShadow: '0 4px 16px rgba(91,127,255,0.25)' }
+                      : { background: 'transparent', color: '#1A1F3A' }}
                     onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.color = 'var(--ff-accent)'; e.currentTarget.style.background = 'rgba(91,127,255,0.10)'; } }}
                     onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.color = '#1A1F3A'; e.currentTarget.style.background = 'transparent'; } }}
                   >

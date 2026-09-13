@@ -360,9 +360,11 @@ def update_tdms_request(db: Session, job_id: str, payload: TdmsRequestUpdate) ->
 
 
 def _smms_details(payload) -> Dict[str, Any]:
+    st_code = getattr(payload, 'station_code', None) or getattr(payload, 'station', None) or 'NDLS'
+    pm_no = getattr(payload, 'point_machine_no', None) or getattr(payload, 'signal_number', None) or 'PM-001'
     return {
-        "station_code": payload.station_code,
-        "point_machine_no": payload.point_machine_no,
+        "station_code": st_code,
+        "point_machine_no": pm_no,
         "interlocking_panel": payload.interlocking_panel,
         "tdms_collab_req": bool(payload.tdms_collab_req),
         "tms_collab_req": bool(payload.tms_collab_req),
@@ -390,10 +392,13 @@ def _smms_to_dict(asset: SmmsSignalAsset, crm: ControlRoomMaster) -> Dict[str, A
 def create_smms_request(db: Session, payload: SmmsRequestCreate) -> Dict[str, Any]:
     job_id = generate_job_id(db, "SMMS")
 
+    st_code = payload.station_code or payload.station or 'NDLS'
+    pm_no = payload.point_machine_no or payload.signal_number or 'PM-001'
+
     asset = SmmsSignalAsset(
         signal_job_id=job_id,
-        station_code=payload.station_code,
-        point_machine_no=payload.point_machine_no,
+        station_code=st_code,
+        point_machine_no=pm_no,
         interlocking_panel=payload.interlocking_panel,
         work_category=payload.work_category,
         tdms_collab_req=payload.tdms_collab_req,

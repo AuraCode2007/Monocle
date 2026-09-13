@@ -6,8 +6,8 @@ from typing import Optional
 # TMS
 # -------------------------
 
-class TMSCreate(BaseModel):
-    track_job_id: str
+class TmsRequestCreate(BaseModel):
+    track_job_id: Optional[str] = None
     line_section: str
     line_direction: str
     start_km: float
@@ -19,8 +19,10 @@ class TMSCreate(BaseModel):
     required_duration_mins: int = Field(gt=0)
     reported_by: str
 
+TMSCreate = TmsRequestCreate
 
-class TMSUpdate(BaseModel):
+
+class TmsRequestUpdate(BaseModel):
     line_section: Optional[str] = None
     line_direction: Optional[str] = None
     start_km: Optional[float] = None
@@ -32,13 +34,15 @@ class TMSUpdate(BaseModel):
     required_duration_mins: Optional[int] = Field(default=None, gt=0)
     reported_by: Optional[str] = None
 
+TMSUpdate = TmsRequestUpdate
+
 
 # -------------------------
 # TDMS
 # -------------------------
 
-class TDMSCreate(BaseModel):
-    power_job_id: str
+class TdmsRequestCreate(BaseModel):
+    power_job_id: Optional[str] = None
     line_section: str
     line_direction: str
     source_mast_no: str
@@ -50,8 +54,10 @@ class TDMSCreate(BaseModel):
     required_duration_mins: int = Field(gt=0)
     reported_by: str
 
+TDMSCreate = TdmsRequestCreate
 
-class TDMSUpdate(BaseModel):
+
+class TdmsRequestUpdate(BaseModel):
     line_section: Optional[str] = None
     line_direction: Optional[str] = None
     source_mast_no: Optional[str] = None
@@ -63,15 +69,19 @@ class TDMSUpdate(BaseModel):
     required_duration_mins: Optional[int] = Field(default=None, gt=0)
     reported_by: Optional[str] = None
 
+TDMSUpdate = TdmsRequestUpdate
+
 
 # -------------------------
 # SMMS
 # -------------------------
 
-class SMMSCreate(BaseModel):
-    signal_job_id: str
-    station_code: str
-    point_machine_no: str
+class SmmsRequestCreate(BaseModel):
+    signal_job_id: Optional[str] = None
+    station_code: Optional[str] = None
+    station: Optional[str] = None
+    point_machine_no: Optional[str] = None
+    signal_number: Optional[str] = None
     interlocking_panel: str
     work_category: str
     tdms_collab_req: bool = False
@@ -79,13 +89,19 @@ class SMMSCreate(BaseModel):
     required_duration_mins: int = Field(gt=0)
     reported_by: str
 
+SMMSCreate = SmmsRequestCreate
 
-class SMMSUpdate(BaseModel):
+
+class SmmsRequestUpdate(BaseModel):
     station_code: Optional[str] = None
+    station: Optional[str] = None
     point_machine_no: Optional[str] = None
+    signal_number: Optional[str] = None
     interlocking_panel: Optional[str] = None
     work_category: Optional[str] = None
     tdms_collab_req: Optional[bool] = None
     tms_collab_req: Optional[bool] = None
     required_duration_mins: Optional[int] = Field(default=None, gt=0)
     reported_by: Optional[str] = None
+
+SMMSUpdate = SmmsRequestUpdate

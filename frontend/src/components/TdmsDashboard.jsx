@@ -4,6 +4,7 @@ import {
   Layers, Radio, Hammer, X
 } from 'lucide-react';
 import { useLanguage } from '../i18n';
+import { useRailwayStore } from '../store/useRailwayStore';
 
 export default function TdmsDashboard({ user }) {
   const { t } = useLanguage();
@@ -35,7 +36,7 @@ export default function TdmsDashboard({ user }) {
       const res = await fetch('http://127.0.0.1:8001/api/tdms/jobs');
       if (res.ok) {
         const data = await res.json();
-        setJobs(data.jobs || []);
+        setJobs(Array.isArray(data) ? data : data.jobs || []);
       }
     } catch (e) {
       console.error('Failed to fetch TDMS jobs:', e);
@@ -58,10 +59,12 @@ export default function TdmsDashboard({ user }) {
         body:    JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success) {
-        setSuccessMsg(`${tdms.jobSubmitted} ${data.job.power_job_id}`);
+      if (res.ok || data.success || data.job) {
+        const jobId = data.job?.job_id || data.job?.power_job_id || 'TDMS-NEW';
+        setSuccessMsg(`${tdms.jobSubmitted} ${jobId}`);
         setShowModal(false);
         await fetchTdmsJobs();
+        useRailwayStore.getState().fetchDatabaseTasks();
         setTimeout(() => setSuccessMsg(''), 5000);
       }
     } catch (err) {

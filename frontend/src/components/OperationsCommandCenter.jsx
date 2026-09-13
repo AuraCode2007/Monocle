@@ -60,13 +60,15 @@ export default function OperationsCommandCenter() {
   const corridor = getCorridor();
   const tasks = getTasks();
   const trains = getTrains();
-  const criticalTasks = tasks.filter((task) => task.severity >= 4).slice(0, 3);
+  const criticalTasks = [...tasks].sort((a, b) => (a.severity || 3) - (b.severity || 3)).slice(0, 3);
   const roleLabel = activeRole.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const baselineConflicts = optimizerMetrics.baselineConflicts ?? optimizerMetrics.conflicts ?? 12;
+  const baselineDelay = optimizerMetrics.baselineDelayMinutes ?? (baselineConflicts * 45);
   const comparisonRows = [
-    { label: labels.activeConflicts, manual: optimizerMetrics.conflicts, ai: 0, unit: labels.clashes },
-    { label: labels.passengerDelay, manual: optimizerMetrics.conflicts * 45, ai: optimizerMetrics.delayMinutesSaved, unit: labels.minutes },
-    { label: labels.jointPossessions, manual: 0, ai: optimizerMetrics.jointBlocks, unit: labels.blocks },
-    { label: labels.assetAvailability, manual: `${optimizerMetrics.baselineAvailabilityPct}%`, ai: `${optimizerMetrics.baselineAvailabilityPct + optimizerMetrics.availabilityBoostPct}%`, unit: '' },
+    { label: labels.activeConflicts, manual: baselineConflicts, ai: isOptimized ? (optimizerMetrics.optimizedConflicts ?? 0) : baselineConflicts, unit: labels.clashes },
+    { label: labels.passengerDelay, manual: baselineDelay, ai: isOptimized ? (optimizerMetrics.optimizedDelayMinutes ?? optimizerMetrics.delayMinutesSaved ?? 270) : baselineDelay, unit: labels.minutes },
+    { label: labels.jointPossessions, manual: 0, ai: isOptimized ? (optimizerMetrics.optimizedJointBlocks ?? optimizerMetrics.jointBlocks ?? 6) : 0, unit: labels.blocks },
+    { label: labels.assetAvailability, manual: `${optimizerMetrics.baselineAvailabilityPct}%`, ai: isOptimized ? `${optimizerMetrics.optimizedAvailabilityPct ?? (optimizerMetrics.baselineAvailabilityPct + optimizerMetrics.availabilityBoostPct)}%` : `${optimizerMetrics.baselineAvailabilityPct}%`, unit: '' },
   ];
   const roleBrief = ROLE_BRIEFS[activeRole] || ROLE_BRIEFS.SECTION_CONTROLLER;
 

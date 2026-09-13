@@ -7,7 +7,7 @@ export default function MetricCards({ isOptimized, metrics }) {
   const labels = t.dashboard.metrics;
   const baselineTone = 'railway-text-warning';
   const baselineSoftTone = 'text-amber-400/80';
-  const conflicts = metrics?.conflicts ?? 10;
+  const conflicts = metrics?.baselineConflicts ?? metrics?.conflicts ?? 0;
   const delayMinutesSaved = metrics?.delayMinutesSaved ?? 0;
   const jointBlocks = metrics?.jointBlocks ?? 0;
   const availabilityBoostPct = metrics?.availabilityBoostPct ?? 0;

@@ -4,6 +4,7 @@ import {
   Layers, Zap, Hammer, MapPin, X
 } from 'lucide-react';
 import { useLanguage } from '../i18n';
+import { useRailwayStore } from '../store/useRailwayStore';
 
 const WORK_CATEGORIES = [
   'Signal Aspect Failure',
@@ -82,7 +83,7 @@ export default function SmmsDashboard({ user }) {
       const res = await fetch('http://127.0.0.1:8001/api/smms/jobs');
       if (res.ok) {
         const data = await res.json();
-        setJobs(data.jobs || []);
+        setJobs(Array.isArray(data) ? data : data.jobs || []);
       } else {
         setJobs(DEMO_JOBS);
       }
@@ -105,13 +106,16 @@ export default function SmmsDashboard({ user }) {
         body:    JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success) {
-        setSuccessMsg(`${smms.jobSubmitted} ${data.job?.signal_job_id || 'SMMS-NEW'}`);
+      if (res.ok || data.success || data.job) {
+        const jobId = data.job?.job_id || data.job?.signal_job_id || 'SMMS-NEW';
+        setSuccessMsg(`${smms.jobSubmitted} ${jobId}`);
         setShowModal(false);
         await fetchSmmsJobs();
+        useRailwayStore.getState().fetchDatabaseTasks();
         setTimeout(() => setSuccessMsg(''), 5000);
       }
-    } catch {
+    } catch (err) {
+      console.error('Error creating SMMS job:', err);
       const localJob = {
         signal_job_id: `SMMS-${String(jobs.length + 1).padStart(3, '0')}`,
         ...formData,

@@ -137,7 +137,7 @@ export default function SimulationSandbox() {
           <button
             onClick={() => injectEmergencyDefect('OHE_FAILURE')}
             disabled={emergencyActive}
-            className="self-start px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs font-bold transition-all flex items-center gap-1.5"
+            className="self-start px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:from-slate-800 disabled:to-slate-800 disabled:shadow-none disabled:text-slate-500 text-white text-xs font-bold shadow-lg shadow-amber-500/25 transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <AlertTriangle className="w-3.5 h-3.5" /> {ui.injectOhe}
           </button>
