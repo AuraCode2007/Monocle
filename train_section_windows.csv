@@ -1,0 +1,16 @@
+id,train_number,train_name,priority,line_section,line_direction,enter_time_mins,exit_time_mins,train_type
+1,12301,Howrah Rajdhani Express,1,HWH-DEL,UP,258,310,Premium Superfast
+2,12302,New Delhi Howrah Rajdhani Express,1,HWH-DEL,DN,793,824,Premium Superfast
+3,12951,Mumbai Central Rajdhani Express,2,BCT-NDLS,UP,973,1081,Premium Superfast
+4,12952,New Delhi Mumbai Central Rajdhani Express,3,BCT-NDLS,DN,1008,1173,Premium Superfast
+5,12839,Howrah Chennai Mail,4,MAS-HWH,UP,766,917,Superfast Mail
+6,12381,Poorva Express,5,HWH-GAYA,DN,445,477,Superfast Mail
+7,12393,Sampoorna Kranti Express,4,PNBE-HWH,UP,170,232,Superfast
+8,12901,Ahmedabad Mumbai Central Gujarat Mail,5,ADI-BCT,UP,824,855,Superfast Mail
+9,12420,Gomti Express,1,LKO-NDLS,DN,153,281,Express
+10,12904,Golden Temple Mail,4,NZM-KOTA,UP,77,232,Superfast Mail
+11,14164,Sangam Express,3,CNB-ALD,DN,938,1021,Express
+12,14816,Rewari Hisar Passenger,3,RE-JP,UP,435,541,Express
+13,12319,Kolkata Agra Cantt Express,4,ASN-GAYA,DN,956,1052,Express
+14,37811,Howrah Barddhaman Local,3,HWH-DEL,UP,305,373,Suburban Local
+15,BOXN-4021,Coal Freight Rake,3,HWH-DEL,DN,1093,1246,Freight

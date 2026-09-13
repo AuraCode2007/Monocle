@@ -1,0 +1,26 @@
+sl_no,power_job_id,line_section,line_direction,source_mast_no,target_mast_no,power_isolation_needed,work_category,tms_collab_req,smms_collab_req,required_duration_mins,reported_by
+1,JOB-OHE-001,TATA - HWH,DN,104/35,104/73,true,Isolator Testing,false,false,50,K. C. Meena
+2,JOB-OHE-002,TATA - HWH,UP,58/19,58/59,false,Cross Catenary Overhaul,false,true,50,D. K. Mahato
+3,JOB-OHE-003,TATA - HWH,UP,14/12,14/88,true,Section Insulator Repair,true,true,60,S. C. Tiwari
+4,JOB-OHE-004,ADI - BCT,DN,842/46,842/94,false,Jumper Wire Renewal,false,true,45,K. C. Meena
+5,JOB-OHE-005,CNB - ALD,DN,257/33,257/58,true,OHE Cross-Over Sag Correction,false,true,105,K. S. Rao
+6,JOB-OHE-006,ASN - GAYA,DN,454/03,454/71,true,Overhead Tension Balance,false,false,60,Nitin Deshmukh
+7,JOB-OHE-007,HWH - GAYA,UP,785/20,785/91,true,Contact Tension Weight Bolt,false,true,65,Nitin Deshmukh
+8,JOB-OHE-008,BCT - NDLS,UP,359/05,359/88,true,Catenary Splice Install,true,true,110,K. S. Rao
+9,JOB-OHE-009,CNB - ALD,DN,375/21,375/89,true,Contact Wire Replacement,true,false,105,K. C. Meena
+10,JOB-OHE-010,HWH - DEL,DN,368/40,368/55,false,Contact Tension Weight Bolt,true,true,180,B. N. Rao
+11,JOB-OHE-011,LKO - NDLS,UP,22/34,22/58,false,Section Insulator Repair,false,true,200,Satyawan Singh
+12,JOB-OHE-012,ADI - BCT,UP,204/08,204/69,false,Section Insulator Repair,true,false,140,N. C. Das
+13,JOB-OHE-013,NZM - KOTA,UP,446/30,446/84,false,Earth Discharge Rod Testing,false,false,80,V. P. Solanki
+14,JOB-OHE-014,BCT - NDLS,DN,743/33,743/55,false,Isolator Testing,false,false,140,P. K. Mishra
+15,JOB-OHE-015,ADI - BCT,DN,382/12,382/78,false,Cross Catenary Overhaul,false,false,65,R. N. Prasad
+16,JOB-OHE-016,ADI - BCT,UP,597/49,597/66,false,Catenary Splice Install,true,false,125,M. M. Kulkarni
+17,JOB-OHE-017,CNB - ALD,UP,556/27,556/77,true,Contact Tension Weight Bolt,false,false,125,V. P. Solanki
+18,JOB-OHE-018,HWH - DEL,UP,794/15,794/63,false,Earth Discharge Rod Testing,true,false,105,P. Venkatesh
+19,JOB-OHE-019,PUNE - SUR,UP,166/36,166/77,true,OHE Cantilever Fitting Check,true,true,50,N. C. Das
+20,JOB-OHE-020,CNB - ALD,UP,237/18,237/69,true,OHE Cross-Over Sag Correction,true,true,95,Nitin Deshmukh
+21,JOB-OHE-021,NZM - KOTA,UP,656/44,656/86,false,Isolator Testing,false,true,110,N. C. Das
+22,JOB-OHE-022,PNBE - HWH,UP,816/14,816/58,false,Overhead Tension Balance,false,true,70,P. K. Mishra
+23,JOB-OHE-023,BCT - NDLS,UP,661/19,661/92,true,OHE Bracket Adjustment,true,true,160,P. K. Mishra
+24,JOB-OHE-024,LKO - NDLS,UP,55/20,55/54,false,Jumper Wire Renewal,true,true,80,M. M. Kulkarni
+25,JOB-OHE-025,RE - JP,UP,527/32,527/93,false,Return Conductor Connection,false,false,105,D. K. Mahato

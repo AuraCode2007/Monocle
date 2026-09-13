@@ -1,0 +1,26 @@
+sl_no,track_job_id,line_section,line_direction,start_km,end_km,structure_type,work_category,tdms_collab_req,smms_collab_req,required_duration_mins,reported_by
+1,JOB-TMS-001,PNBE - HWH,UP,25.009,25.621,Curve Track,Track Tamping Machine,false,false,360,Nitin Saxena
+2,JOB-TMS-002,ASN - GAYA,DN,241.208,242.626,Turnout Points,Slope Stabilization,false,true,360,Ramesh Yadav
+3,JOB-TMS-003,PUNE - SUR,DN,112.458,113.822,High Speed Loop,Defect Track Isolation,true,false,135,A. V. Joshi
+4,JOB-TMS-004,HWH - DEL,DN,560.769,561.736,Main Line Curve,Derailment Switch Check,false,false,140,Vikram Singh
+5,JOB-TMS-005,TATA - HWH,DN,577.216,579.663,Turnout Points,TRT Machine Sleepers,true,false,100,Alok Mishra
+6,JOB-TMS-006,CNB - ALD,UP,333.207,334.750,Bridge No 42,Sleeper Renewal,false,true,70,Rajesh Verma
+7,JOB-TMS-007,ADI - BCT,DN,134.988,136.335,Turnout Points,TRT Machine Sleepers,true,true,240,S. Chakraborty
+8,JOB-TMS-008,LKO - NDLS,UP,382.896,384.313,Bridge No 42,Sleeper Renewal,true,true,300,A. K. Sharma
+9,JOB-TMS-009,NZM - KOTA,UP,194.244,194.372,Viaduct Pier,Points Rail Replacement,true,false,110,Alok Mishra
+10,JOB-TMS-010,PNBE - HWH,UP,308.479,310.154,Embankment,Defect Track Isolation,false,false,75,A. V. Joshi
+11,JOB-TMS-011,ADI - BCT,DN,589.712,592.121,Curve Track,Guard Rail Tightening,true,true,100,Ramesh Yadav
+12,JOB-TMS-012,ADI - BCT,DN,242.665,242.817,High Speed Loop,Derailment Switch Check,true,false,140,Ram Niwas
+13,JOB-TMS-013,HWH - GAYA,DN,663.258,663.692,Main Line Curve,Deep Screening,true,true,110,Nitin Saxena
+14,JOB-TMS-014,PUNE - SUR,DN,795.694,797.030,Crossover Track,TRT Machine Sleepers,true,true,160,A. V. Joshi
+15,JOB-TMS-015,MAS - HWH,UP,180.873,182.662,Station Yard,Insulated Joint Fix,true,true,140,Rajesh Verma
+16,JOB-TMS-016,LKO - NDLS,DN,485.865,487.819,Viaduct Pier,Insulated Joint Fix,true,true,300,Vijay Mehta
+17,JOB-TMS-017,NZM - KOTA,DN,38.650,39.561,Main Track,Expansion Joint Repair,true,true,80,P. Sreenu
+18,JOB-TMS-018,BCT - NDLS,UP,725.143,726.286,Turnout Points,Expansion Joint Repair,true,false,120,Ram Niwas
+19,JOB-TMS-019,HWH - DEL,DN,38.195,39.388,Crossover Track,Track Tamping Machine,false,false,80,Ramesh Yadav
+20,JOB-TMS-020,ASN - GAYA,UP,284.050,285.304,Embankment,Sleeper Renewal,true,false,240,P. Sreenu
+21,JOB-TMS-021,ADI - BCT,DN,128.461,129.946,Main Track,Expansion Joint Repair,true,false,240,Ranjit Singh
+22,JOB-TMS-022,HWH - DEL,UP,534.194,535.907,Embankment,Slope Stabilization,false,true,100,Ramesh Yadav
+23,JOB-TMS-023,RE - JP,UP,494.736,494.883,Cutting Section,Expansion Joint Repair,false,true,45,P. Sreenu
+24,JOB-TMS-024,NZM - KOTA,DN,181.863,183.625,Viaduct Pier,Sleeper Renewal,false,false,70,P. Sreenu
+25,JOB-TMS-025,CNB - ALD,DN,805.525,807.061,Cutting Section,Insulated Joint Fix,true,false,240,R. K. Meena

@@ -1,0 +1,26 @@
+sl_no,signal_job_id,line_section,point_machine_no,interlocking_panel,work_category,tdms_collab_req,tms_collab_req,required_duration_mins,reported_by
+1,JOB-SIG-001,PNBE,PM-221E,RRI-CABIN-A,Point Machine Detection Check,false,true,30,A. K. Mahapatra
+2,JOB-SIG-002,RE,PM-173D,RRI-SOUTH,Route Indicator Lamp Fix,true,false,60,T. Elangovan
+3,JOB-SIG-003,ADI,PM-173B,EI-SOUTH,Shunt Signal Card Fix,true,false,65,S. S. Chatterjee
+4,JOB-SIG-004,BCT,PM-197B,RRI-YARD,Point Rod Adjustment,true,true,85,Deepak Kumar
+5,JOB-SIG-005,NDLS,PM-132B,EI-WEST,Route Indicator Lamp Fix,true,true,95,T. Elangovan
+6,JOB-SIG-006,PNBE,PM-238D,RRI-CENTRAL,Route Indicator Lamp Fix,true,false,60,S. K. Mishra
+7,JOB-SIG-007,RE,PM-273C,EI-EAST,Signal Lamp Replacement,true,false,90,S. Mukherjee
+8,JOB-SIG-008,ADI,PM-019E,RRI-CABIN-A,Block Instrument Calibration,true,true,60,S. K. Mishra
+9,JOB-SIG-009,TATA,PM-333F,EI-CABIN,Data Logger Loop Module Fix,true,false,30,A. K. Mahapatra
+10,JOB-SIG-010,LKO,PM-017B,EI-SOUTH,Fuse Auto-Changeover Test,false,false,65,S. K. Mishra
+11,JOB-SIG-011,SUR,PM-091B,RRI-CABIN-A,Route Indicator Lamp Fix,true,true,90,R. S. Kadam
+12,JOB-SIG-012,SUR,PM-051B,PI-CENTRAL,Fuse Auto-Changeover Test,false,false,75,S. Mukherjee
+13,JOB-SIG-013,TATA,PM-163A,EI-EAST,Fuse Auto-Changeover Test,true,true,85,M. V. Naidu
+14,JOB-SIG-014,VSKP,PM-103A,RRI-EAST,Signal Lamp Replacement,false,false,45,A. K. Mahapatra
+15,JOB-SIG-015,CNB,PM-045C,RRI-SOUTH,LED Signal Aspect Clean,false,true,105,A. K. Mahapatra
+16,JOB-SIG-016,HWH,PM-213F,RRI-CENTRAL,Data Logger Loop Module Fix,false,false,80,V. P. Srivastava
+17,JOB-SIG-017,VSKP,PM-272A,RRI-CENTRAL,Signal Aspect Voltage Tuning,true,true,40,S. S. Chatterjee
+18,JOB-SIG-018,ALD,PM-272D,EI-SOUTH,Shunt Signal Card Fix,true,true,65,M. V. Naidu
+19,JOB-SIG-020,ASN,PM-297D,PI-CENTRAL,Point Rod Adjustment,true,true,50,S. K. Mishra
+20,JOB-SIG-019,RE,PM-103A,RRI-CABIN-A,Axle Counter Testing,true,false,80,A. K. Mahapatra
+21,JOB-SIG-021,RE,PM-206A,EI-CABIN,Signal Aspect Voltage Tuning,true,false,65,H. J. Patel
+22,JOB-SIG-022,LKO,PM-312F,RRI-SOUTH,Point Rod Adjustment,true,true,75,T. Elangovan
+23,JOB-SIG-023,BCT,PM-298E,EI-CABIN,Route Indicator Lamp Fix,false,false,95,S. N. Prasad
+24,JOB-SIG-024,HWH,PM-070D,EI-WEST,Fuse Auto-Changeover Test,true,true,45,R. S. Kadam
+25,JOB-SIG-025,LKO,PM-272A,RRI-CABIN-A,Data Logger Loop Module Fix,false,true,60,A. K. Tiwari

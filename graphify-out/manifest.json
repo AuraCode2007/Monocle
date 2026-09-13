@@ -1,0 +1,284 @@
+{
+  "crud.py": {
+    "mtime": 1789246372.291705,
+    "seen": 1789250234.0105317,
+    "ast_hash": "469fc1d0142facdee16ae0d010c03159",
+    "semantic_hash": ""
+  },
+  "data_generator.py": {
+    "mtime": 1789245584.846491,
+    "seen": 1789250234.0105357,
+    "ast_hash": "fa2cb847833cc4cf84ff1aef8d2327e7",
+    "semantic_hash": ""
+  },
+  "database.py": {
+    "mtime": 1789245584.853221,
+    "seen": 1789250234.0105374,
+    "ast_hash": "6fa168068590ad5ab176c1fa19b4d246",
+    "semantic_hash": ""
+  },
+  "frontend/.oxlintrc.json": {
+    "mtime": 1789079945.7536047,
+    "seen": 1789250234.0105386,
+    "ast_hash": "2d750bd852cf8fe072f64a62ab29084b",
+    "semantic_hash": ""
+  },
+  "frontend/package.json": {
+    "mtime": 1789079945.756827,
+    "seen": 1789250234.0105395,
+    "ast_hash": "375e9a27bb895e5f6c3c4ed5ac39549b",
+    "semantic_hash": ""
+  },
+  "frontend/postcss.config.js": {
+    "mtime": 1789079945.758605,
+    "seen": 1789250234.0105402,
+    "ast_hash": "5b84f4567208c7c747079c0477373231",
+    "semantic_hash": ""
+  },
+  "frontend/src/App.jsx": {
+    "mtime": 1789245584.853221,
+    "seen": 1789250234.010541,
+    "ast_hash": "4ba7c11d7bc55927e3fa0c0209d83947",
+    "semantic_hash": ""
+  },
+  "frontend/src/auth.js": {
+    "mtime": 1789245584.853221,
+    "seen": 1789250234.010542,
+    "ast_hash": "d442a86b7eb5c188d9d2688f14c648bd",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/ConflictResolver.jsx": {
+    "mtime": 1789079945.7685146,
+    "seen": 1789250234.0105422,
+    "ast_hash": "22cddbb6b3ddabb333cc160ff93eb816",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/CorridorMap.jsx": {
+    "mtime": 1789079945.7685146,
+    "seen": 1789250234.0105426,
+    "ast_hash": "acf728573bc01d90b01882398a267a9c",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/GanttView.jsx": {
+    "mtime": 1789245584.8599849,
+    "seen": 1789250234.0105436,
+    "ast_hash": "9ce2cf97836ed8b16d863f69b44b0aba",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/GisRailwayMap.jsx": {
+    "mtime": 1789079945.7695131,
+    "seen": 1789250234.0105443,
+    "ast_hash": "456433ecbd4ff7d988053f69c61bad1d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Header.jsx": {
+    "mtime": 1789245584.8599849,
+    "seen": 1789250234.0105448,
+    "ast_hash": "ed723726f259af0b75e099ca38b4f896",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/LoginPage.jsx": {
+    "mtime": 1789229968.5478566,
+    "seen": 1789250234.0105455,
+    "ast_hash": "49afb3adaff5382b984164f8aa881327",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/MetricCards.jsx": {
+    "mtime": 1789079945.7725224,
+    "seen": 1789250234.010546,
+    "ast_hash": "8abd2e356ed47f8b1c43870bd312361e",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/NationalGrid.jsx": {
+    "mtime": 1789079945.7725224,
+    "seen": 1789250234.0105467,
+    "ast_hash": "8c6b80441896a0dce1141d5e46024ec1",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/OperationsCommandCenter.jsx": {
+    "mtime": 1789079945.7738676,
+    "seen": 1789250234.0105472,
+    "ast_hash": "d14d896e1ebdeb9e4034730672891f5a",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/OptimizationExplainabilityPanel.jsx": {
+    "mtime": 1789079945.7738676,
+    "seen": 1789250234.0105479,
+    "ast_hash": "e77ca1c023c0e628a9340f73e2a30192",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/RollingCalendar.jsx": {
+    "mtime": 1789079945.7748752,
+    "seen": 1789250234.0105486,
+    "ast_hash": "6f278998ce44ffc9e1c617eb8ec635ab",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/SimulationSandbox.jsx": {
+    "mtime": 1789079945.7748752,
+    "seen": 1789250234.010549,
+    "ast_hash": "ea54b344bb18389eda1992af68d0c526",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/SmmsDashboard.jsx": {
+    "mtime": 1789245584.8599849,
+    "seen": 1789250234.0105495,
+    "ast_hash": "93a7c6c40e7c1df6370764e209909090",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/StringChart.jsx": {
+    "mtime": 1789079945.7758746,
+    "seen": 1789250234.0105503,
+    "ast_hash": "899520ea13d3581ce71f0b71b3d63eee",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/TdmsDashboard.jsx": {
+    "mtime": 1789245584.8652978,
+    "seen": 1789250234.0105536,
+    "ast_hash": "0da31d90e866532b58cd9dbd62a24231",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/TmsDashboard.jsx": {
+    "mtime": 1789245584.866573,
+    "seen": 1789250234.010554,
+    "ast_hash": "d81a6c456be8396cb6e1c6ef98f56b1f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/TrackHealthScorer.jsx": {
+    "mtime": 1789079945.7758746,
+    "seen": 1789250234.0105546,
+    "ast_hash": "5ed55bce6e01b87016683407dddc92ae",
+    "semantic_hash": ""
+  },
+  "frontend/src/i18n.js": {
+    "mtime": 1789245584.866573,
+    "seen": 1789250234.0105555,
+    "ast_hash": "49b284a8f8d093e0160930f7e125aeb3",
+    "semantic_hash": ""
+  },
+  "frontend/src/main.jsx": {
+    "mtime": 1789079945.7790115,
+    "seen": 1789250234.010556,
+    "ast_hash": "a38114282d7db8fd62ecf39aab37c5b0",
+    "semantic_hash": ""
+  },
+  "frontend/src/store/useRailwayStore.js": {
+    "mtime": 1789245584.8718824,
+    "seen": 1789250234.0105565,
+    "ast_hash": "99642ebef8b5cf9886d1173c7daae931",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/audioAlerts.js": {
+    "mtime": 1789079945.781553,
+    "seen": 1789250234.0105572,
+    "ast_hash": "26e2398d8c4360bc3af3a06194e7c128",
+    "semantic_hash": ""
+  },
+  "frontend/tailwind.config.js": {
+    "mtime": 1789245584.8738277,
+    "seen": 1789250234.0105577,
+    "ast_hash": "4d6a11f48e20c21b743549e4a26c8fd4",
+    "semantic_hash": ""
+  },
+  "frontend/vite.config.js": {
+    "mtime": 1789079945.781553,
+    "seen": 1789250234.0105584,
+    "ast_hash": "9331e7d7740bf0286a7f5666477715da",
+    "semantic_hash": ""
+  },
+  "main.py": {
+    "mtime": 1789245620.960451,
+    "seen": 1789250234.010559,
+    "ast_hash": "7dcd1933f29a588e5bafd85927abac35",
+    "semantic_hash": ""
+  },
+  "ml_scorer.py": {
+    "mtime": 1789079945.7840264,
+    "seen": 1789250234.0105598,
+    "ast_hash": "ddb53e6f91c6e41309a4ee9769c789c5",
+    "semantic_hash": ""
+  },
+  "optimizer.py": {
+    "mtime": 1789079945.7840264,
+    "seen": 1789250234.0105605,
+    "ast_hash": "f63ed13907e82c35f4d28557c6a9b1e4",
+    "semantic_hash": ""
+  },
+  "priority.py": {
+    "mtime": 1789245584.8758683,
+    "seen": 1789250234.0105612,
+    "ast_hash": "1bc9e0123cb51947b4d22ab0e220d457",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1789245584.8370943,
+    "seen": 1789250234.0105617,
+    "ast_hash": "7c27c27fbd983df4dbd4288b7756d13b",
+    "semantic_hash": ""
+  },
+  "dashboard.html": {
+    "mtime": 1789245584.846491,
+    "seen": 1789250234.0105624,
+    "ast_hash": "57c4abb4170861a3699f6f75328a4d7a",
+    "semantic_hash": ""
+  },
+  "frontend/README.md": {
+    "mtime": 1789079945.7536047,
+    "seen": 1789250234.010563,
+    "ast_hash": "2e7344e9810cbd1b6fdb6aa7efe117e7",
+    "semantic_hash": ""
+  },
+  "frontend/index.html": {
+    "mtime": 1789245584.853221,
+    "seen": 1789250234.0105634,
+    "ast_hash": "4e08841a7a6610ac8fd5b6510e2a69c7",
+    "semantic_hash": ""
+  },
+  "frontend/public/README-RAILWAY-IMAGE.md": {
+    "mtime": 1789079945.758605,
+    "seen": 1789250234.010564,
+    "ast_hash": "328e5e7ece00aa30c1f7437ed9f83857",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1789245584.8832228,
+    "seen": 1789250234.0105646,
+    "ast_hash": "ea3340970d0ea866f152934bdf62a790",
+    "semantic_hash": ""
+  },
+  "frontend/public/favicon.svg": {
+    "mtime": 1789079945.7600052,
+    "seen": 1789250234.010565,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": ""
+  },
+  "frontend/public/icons.svg": {
+    "mtime": 1789079945.7600052,
+    "seen": 1789250234.010566,
+    "ast_hash": "21c7473c592c67dc87223d49892c8f0a",
+    "semantic_hash": ""
+  },
+  "frontend/public/railway-tunnel.jpg": {
+    "mtime": 1789079945.7620132,
+    "seen": 1789250234.0105689,
+    "ast_hash": "5347cc26e4aa436ccb8563ea9ea368e1",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/hero.png": {
+    "mtime": 1789079945.7660146,
+    "seen": 1789250234.0105698,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/react.svg": {
+    "mtime": 1789079945.7660146,
+    "seen": 1789250234.0105703,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/vite.svg": {
+    "mtime": 1789079945.7675085,
+    "seen": 1789250234.010571,
+    "ast_hash": "6d5180a782d64c8cf51ba01c2a2184d8",
+    "semantic_hash": ""
+  }
+}
