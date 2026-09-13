@@ -1,6 +1,8 @@
 
+import json
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from routers import tms, tdms, smms, control_room
@@ -91,6 +93,18 @@ def run_scheduler(
         train_windows=train_windows,
         time_limit_sec=15
     )
+    
+    scheduled_jobs = raw_result.get("scheduled_jobs", [])
+    if scheduled_jobs:
+        try:
+            db.execute(
+                text("SELECT load_schedule_from_json(:schedule_json)"),
+                {"schedule_json": json.dumps(scheduled_jobs)}
+            )
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print("Warning: Failed to persist schedule to database:", e)
     
     metrics = raw_result.get("metrics", {})
     validation = raw_result.get("validation", {})
